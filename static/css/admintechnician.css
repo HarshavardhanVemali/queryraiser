@@ -1,0 +1,146 @@
+
+
+.add-field-button-container button, 
+.add-technician-button-container button {
+    background-color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px; 
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #3874ff;
+    color: white;
+    font-size: 12px;
+    font-weight: 400;
+}
+.add-field-button-container button:hover, 
+.add-technician-button-container button:hover{
+    background-color: #004dff;
+}
+.add-field-button-container svg, 
+.add-technician-button-container svg {
+    margin-right: 5px;
+}
+.form-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+    opacity: 1;
+}
+
+
+
+#closebtn {
+    position: relative;
+
+    cursor: pointer;
+    transition: fill 0.3s ease, stroke-width 0.3s ease;
+}
+
+#closebtn:hover {
+    fill: #ea4335;
+    stroke-width: 1;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 5px;
+    min-width: 120px; 
+}
+
+.form-row input[type="text"],
+.form-row select { 
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px; 
+}
+
+.button-container button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: dodgerblue; 
+    cursor: pointer;
+}
+.fieldslist,.technicianlist{
+    font-weight: 100;
+    font-size: 20px;
+    margin-top: 10px;
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 1px solid rgba(203, 208, 221, 0.54);
+}
+.fieldstablecontainer,.techniciantablecontainer{
+    display: flex;
+    justify-content: center;
+}
+.table-container{
+    margin-top: 12px;
+    background-color: white;
+}
+#fieldstable,#techniciantable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+#fieldstable th, #fieldstable td ,#techniciantable th,#techniciantable td{
+    padding:10px;
+    font-size: 13px;
+    text-align: left;
+    font-weight: 200;
+    color: #9fa6bc;
+}
+
+#fieldstable th ,#techniciantable th{
+    border-bottom: 1px solid rgba(203, 208, 221, 0.54);
+    color: black;
+    font-size: 16px;
+    font-weight: 590;
+}
+
+#fieldstable tbody tr,#techniciantable tbody tr{
+    border-bottom: 1px solid rgba(203, 208, 221, 0.54);
+}
+
+.delete-button {
+    background-color: #f44336;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center; 
+}
+
+.delete-button svg {
+    margin-right: 5px;
+}

@@ -1,0 +1,146 @@
+.tablelist{
+    font-weight: 100;
+    font-size: 20px;
+    margin-top: 10px;
+    background-color: #fff;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 1px solid rgba(203, 208, 221, 0.54);
+}
+.table-container{
+    margin-top: 12px;
+    background-color: #fff;
+}
+.tables {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+.tables th, .tables  td {
+    padding:8px;
+    font-size: 13px;
+    text-align: left;
+    font-weight: 200;
+
+}
+.tables  th {
+    border-bottom: 1px solid rgba(203, 208, 221, 0.54);
+    color: black;
+    font-size: 16px;
+    font-weight: 590;
+}
+.tables  tbody tr{
+    border-bottom: 1px solid rgba(203, 208, 221, 0.54);
+}
+.tables td img {
+    min-width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+.quickstatslist {
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 10px;
+    background: #fff;
+    overflow-x: auto;
+    min-height: 200px;
+}
+#quickstatstable-container{
+    margin-top: 30px;
+    
+}
+#quickstatstable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    table-layout: fixed;
+    white-space: nowrap;
+    overflow-x: auto;
+    text-align: center;
+    
+}
+
+#quickstatstable th,
+#quickstatstable td {
+    padding: 8px;
+    font-size: 13px;
+    text-align: left;
+    font-weight: 200;
+    white-space: nowrap;
+    min-width: 200px;
+    text-align: center;
+}
+#quickstatstable th {
+    color: black;
+    font-size: 16px;
+    font-weight: 300;
+    display: inline-block;  
+    text-align: center;    
+    vertical-align: middle; 
+    white-space: nowrap;    
+    padding: 3px;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+#quickstatstable th svg {
+    display: inline-block;
+    vertical-align: middle; 
+}
+
+#quickstatstable th span {
+    display: inline-block;
+    vertical-align: middle;  
+}
+
+#quickstatstable tbody tr {
+    border-bottom: none;
+}
+
+#quickstatstable th,#quickstatstable  td {
+    padding:8px;
+    font-size: 13px;
+    text-align: left;
+    font-weight: 200;
+    white-space: nowrap;
+}
+#quickstatstable th {
+    border-bottom: 1px solid rgba(203, 208, 221, 0.54);
+    color: black;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 300;
+}
+.complaintstatus>h3{
+    margin-left: 20px;
+}
+.complaintstatusgraph{
+    border: 1px solid rgba(203, 208, 221, 0.54);
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 10px;
+    background: #fff;
+    overflow-x: auto;
+    min-height: 400px;
+}
+.recentcomplainttable>h3{
+    margin-left: 20px;
+}
+.assignedcomplaints>h3{
+    margin-left: 20px;
+}
+.performance>h3{
+    margin-left: 20px;
+}
+.performancegraphs{
+    border: 1px solid rgba(203, 208, 221, 0.54);
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 10px;
+    background: #fff;
+    overflow-x: auto;
+    min-height: 400px;
+}

@@ -1,0 +1,195 @@
+.no-image{
+    display: inline-block;
+    padding: 10px;
+    background-color: #fff; 
+    border-radius: 5px;
+    color: #000;
+    font-size: 15px;
+    padding: 14px;
+    margin-right: 20px;
+    margin-left: 20px;
+    text-align: center;
+    border-radius: 50%;
+}
+.hidden {
+    display: none;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+.overlay.active {
+    display: block;
+}
+.addfacultyform-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+    opacity: 1;
+}
+
+.addfacultyform-container form {
+    display: flex;
+    flex-direction: column;
+}
+#form-row {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#form-row label {
+    display: block;
+    margin-bottom: 5px;
+    min-width: 150px;
+}
+
+#form-row input[type="text"],
+#form-row input[type="file"],
+#form-row input[type="number"],
+#form-row input[type='tel'],
+#form-row select {
+    border: 1px solid #333;
+    border-radius: 5px;
+    width: 50%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+#form-row input[type="file"]{
+    border: none;
+    border-radius: 0px;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+#addfacultybutton{
+    width: 100px;
+    padding: 5px;
+    height: 35px;
+    align-items: center;
+    border-radius: 4px;
+    background-color: dodgerblue;
+    border: none;
+    cursor: pointer;
+}
+#addfacultybutton:hover{
+    background-color: lightskyblue;
+}
+#closebtn {
+    position: relative;
+    left: 100%; 
+    transform: translateX(-100%); 
+    cursor: pointer;    
+    margin-bottom: 10px; 
+}
+
+#closebtn:hover{
+    fill: #ea4335;
+    stroke-width: 1;
+}
+.facultylist{
+    font-weight: 100;
+    font-size: 20px;
+    margin-top: 10px;
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 1px solid rgba(203, 208, 221, 0.54);
+}
+.facultytablecontainer{
+    display: flex;
+    justify-content: center;
+}
+.table-container{
+    margin-top: 12px;
+    background-color: white;
+}
+#facultytable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+#facultytable th, #facultytable td {
+    padding:10px;
+    font-size: 13px;
+    text-align: left;
+    font-weight: 200;
+    color: #9fa6bc;
+}
+
+#facultytable th {
+    border-bottom: 1px solid rgba(203, 208, 221, 0.54);
+    color: black;
+    font-size: 16px;
+    font-weight: 590;
+}
+
+#facultytable tbody tr{
+    border-bottom: 1px solid rgba(203, 208, 221, 0.54);
+}
+#facultytable td img {
+    min-width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+
+
+.departmentinformation{
+    display: flex;
+    align-items: center;
+}
+.departmentinformation img{
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+    border-radius: 50%;
+}
+.search {
+    display: flex;
+    align-items: center; 
+    border: 1px solid #cbd0dd;
+    border-radius: 40px;
+    padding-left: 5px;
+    padding-right: 5px; 
+    background-color: white;
+}
+.search:hover,.search:focus{
+    outline: none;
+    border-color: #4285f4; 
+    box-shadow: 0px 0px 8px rgba(66, 133, 244, 0.5); 
+}
+.search input[type="text"] {
+    border: none;
+    padding: 10px; 
+    outline: none;
+    background: transparent;
+    width: 250px;
+     
+}
+
+.search svg {
+    margin-left: 3px;
+    width: 15px; 
+    height: 15px;
+    cursor: pointer;
+    margin-right: 10px;
+}
