@@ -25,7 +25,7 @@
 
 .overlay-content {
     background-color: #fff;
-    margin: 15% auto; 
+    margin: 10% auto; 
     padding: 30px;
     border-radius: 10px;
     max-width: 500px;
@@ -76,7 +76,42 @@
         opacity: 1;
     }
 }
+.overlay-content h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #007bff;
+    text-align: center; 
+}
 
+.complaint-details {
+    display: grid;
+    grid-template-columns: 1fr 2fr; 
+    gap: 10px; 
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.complaint-details label {
+    font-weight: bold;
+    text-align: left;
+}
+
+.complaint-details span {
+    text-align: left;
+}
+
+.assign-technician {
+    text-align: center; 
+}
+select{
+    height: 30px;
+    border-radius: 5px;
+}
+select:focus{
+    outline: none;
+    border-color: #4285f4; 
+    box-shadow: 0px 0px 8px rgba(66, 133, 244, 0.5); 
+}
 </style>
 <body>
     <header>
@@ -171,7 +206,7 @@
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                           </svg>New Complaints</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'adminfield' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'adminassignedcomplaints' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
                             <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
                             <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
                           </svg>Assigned Complaints</a></li>
@@ -269,17 +304,45 @@
                 <div class="overlay-content">
                     <span class="close-button" onclick="closeComplaintOverlay()">×</span>
                     <h3 id="overlayTitle"></h3> 
-                    <p><strong>Description:</strong> <span id="overlayDescription"></span></p>
-                    <p><strong>Department:</strong> <span id="overlayDepartment"></span></p>
-                    <p><strong>Complaint Raised By:</strong> <span id="overlayFaculty"></span></p>
-                    <p><strong>Date Raised:</strong> <span id="overlayDate"></span></p>
-                    <div>
-                        <button onclick="" class="save-button">
+                    <div class="complaint-details">
+                        <label for="overlayDescription">Description</label>
+                        <span id="overlayDescription"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayComplaintId">Complaint ID</label>
+                        <span id="overlayComplaintId"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayDepartment">Department</label>
+                        <span id="overlayDepartment"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayFaculty">Complaint Raised By</label>
+                        <span id="overlayFaculty"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayDate">Date Raised</label>
+                        <span id="overlayDate"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="technicianfield">Field</label> 
+                        <select name="technicianfield" id="technicianfield" required onchange="updateTechnicianDropdown(this.value)">
+                            <option value="" disabled selected>Select Field</option>
+                        </select>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="technicianSelect">Technician</label> 
+                        <select name="technicianSelect" id="technicianSelect" required>
+                            <option value="" disabled selected>Select Technician</option>
+                        </select>
+                    </div>
+                    <div class="assign-technician">
+                        <button id="assign-technician" class="save-button">
                             Assign Technician
                         </button>
                     </div>
                 </div>
-            </div>            
+            </div>             
         </main> 
         <footer class="footer position-absolute">
             <div>
@@ -330,17 +393,13 @@
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td style="color:#007bff;">${complaint.id}</td> 
+                        <td style="color:#007bff;" id="complaint_${complaint.id}">${complaint.id}</td> 
                         <td>${complaint.created_at}</td> 
                         <td style="color:#007bff;">${complaint.faculty__faculty_name}</td> 
                         <td style="color:#525b75;">${complaint.department__department_name}</td>
                         <td style="color:#000;font-weight:590;">${complaint.title}</td> 
-                        <td><button onclick="openComplaintOverlay(this)" data-complaint="${encodeURIComponent(JSON.stringify(complaint))}" class="save-button" style="display:flex;align-items:center;gap:5px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-                            </svg> View
-                        </button></td>                
+                         <td><button onclick="openComplaintOverlay(this)" data-complaint-id="${complaint.id}" data-complaint="${encodeURIComponent(JSON.stringify(complaint))}" class="save-button">Assign Technician
+                        </button></td>                   
                     `;
                     newcomplaintTableBody.appendChild(row);
                 });
@@ -351,22 +410,113 @@
         });
     }
     function openComplaintOverlay(button) {
+        const complaintId = button.dataset.complaintId;
         const complaint = JSON.parse(decodeURIComponent(button.dataset.complaint));
-
         document.getElementById('overlayTitle').textContent = complaint.title;
         document.getElementById('overlayDescription').textContent = complaint.description;
+        document.getElementById('overlayComplaintId').textContent=complaint.id;
         document.getElementById('overlayFaculty').textContent = complaint.faculty__faculty_name;
         document.getElementById('overlayDepartment').textContent = complaint.department__department_name;
         document.getElementById('overlayDate').textContent = complaint.created_at;
 
         document.getElementById('complaintOverlay').style.display = 'block';
+        document.getElementById('assign-technician').addEventListener('click',function(event){
+            const technicianField = document.getElementById('technicianfield').value;
+            const technicianNumber = document.getElementById('technicianSelect').value;
+            const nationalNumberMatch = technicianNumber.match(/National Number: (\d+)/);
+            const nationalNumber = nationalNumberMatch ? nationalNumberMatch[1] : null;
+            fetch('/assigntechnician/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ 
+                    'complaint_id': complaintId, 
+                    'technician': nationalNumber 
+                }) 
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeComplaintOverlay();
+                    alert(data.message); 
+                    getnewcomplaints();
+
+                } else {
+                    console.error('Error assigning technician:', data.error);
+                    alert(data.error); 
+                }
+            })
+            .catch(error => {
+                console.error('Error assigning technician:', error);
+            });
+        });
     }
     function closeComplaintOverlay() {
         document.getElementById('complaintOverlay').style.display = 'none';
     }
     document.addEventListener('DOMContentLoaded', () => {
         getnewcomplaints();
+        getTechnicianFieldsForDropdown();
     });
+    function getTechnicianFieldsForDropdown() {
+        fetch('/getfields/', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        }) 
+            .then(response => response.json())
+            .then(data => {
+                const technicianFieldSelect = document.getElementById('technicianfield');
+                technicianFieldSelect.innerHTML = '<option value="" disabled selected>Select Field</option>';
+                data.forEach(field => {
+                    const option = document.createElement('option');
+                    option.value = field.field_name;
+                    option.text = field.field_name;
+                    technicianFieldSelect.add(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching technician fields:', error);
+            });
+    }
+    function updateTechnicianDropdown(field_name) {
+        if (field_name) {
+            fetch('/get_technicians_by_field/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ 'field_name': field_name }) 
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const technicianSelect = document.getElementById('technicianSelect'); // Assuming you add a technicianSelect element
+                    technicianSelect.innerHTML = '<option value="" disabled selected>Select Technician</option>'; // Clear existing options
+                    data.technicians.forEach(technician => {
+                        const option = document.createElement('option');
+                        option.value = technician.technician_number; 
+                        option.text = technician.technician_name;
+                        technicianSelect.add(option);
+                    });
+                } else {
+                    console.error('Error fetching technicians:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching technicians:', error);
+            });
+        } else {
+            const technicianSelect = document.getElementById('technicianSelect');
+            technicianSelect.innerHTML = '<option value="" disabled selected>Select Technician</option>';
+        }
+    }
+    
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {

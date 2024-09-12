@@ -67,11 +67,17 @@
 #quickstatstable td {
     padding: 8px;
     font-size: 13px;
-    text-align: left;
     font-weight: 200;
     white-space: nowrap;
     min-width: 200px;
     text-align: center;
+    display: inline-block;  
+    text-align: center;    
+    vertical-align: middle; 
+    white-space: nowrap;    
+    padding: 3px;
+    border-radius: 4px;
+    margin-right: 5px;
 }
 #quickstatstable th {
     color: black;
@@ -83,7 +89,7 @@
     white-space: nowrap;    
     padding: 3px;
     border-radius: 4px;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 #quickstatstable th svg {
@@ -103,7 +109,7 @@
 #quickstatstable th,#quickstatstable  td {
     padding:8px;
     font-size: 13px;
-    text-align: left;
+    text-align: center;
     font-weight: 200;
     white-space: nowrap;
 }
@@ -114,6 +120,11 @@
     text-align: center;
     font-weight: 300;
 }
+#quickstatstable td{
+    padding-top: 50px;
+    font-size: 20px;
+}
+
 .complaintstatus>h3{
     margin-left: 20px;
 }
@@ -125,6 +136,16 @@
     background: #fff;
     overflow-x: auto;
     min-height: 400px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+#complaintPieChart,#complaintBarChart{
+    width: 500px !important;
+    height: 450px !important;
+}
+.recentcomplainttable>h3{
+    margin-left: 20px;
 }
 .raisecomplaint{
     margin-top: 10%;
