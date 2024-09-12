@@ -86,7 +86,7 @@ class Faculty(User):
     faculty_name = models.CharField(max_length=100)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     faculty_image = models.ImageField(upload_to='faculty_images/', blank=True, null=True)
-    faculty_phonenumber=PhoneNumberField(max_length=10, region='IN',null=True)
+    faculty_phonenumber=PhoneNumberField(max_length=13, region='IN',null=True)
     def __str__(self):
         return self.faculty_name
 
