@@ -462,18 +462,24 @@
                 const technicianPerformance = data.technician_performance;
                 const tbody = document.querySelector('.technicianperformance table tbody');
                 tbody.innerHTML = ''; 
-
-                technicianPerformance.forEach(technician => {
+                if(technicianPerformance.length===0){
                     const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td style="color:#525b75;">${technician.name}</td>
-                        <td style="color:#007bff;">${technician.assigned}</td>
-                        <td style="color:#28a745;">${technician.resolved}</td>
-                        <td style="color:#dc3545;">${technician.pending}</td>
-                        <td style="color:#525b75;">${technician.rating}</td>
-                    `;
+                    row.innerHTML = '<td colspan="5">No Technician found.</td>';
                     tbody.appendChild(row);
-                });
+                }
+                else{
+                    technicianPerformance.forEach(technician => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td style="color:#525b75;">${technician.name}</td>
+                            <td style="color:#007bff;">${technician.assigned}</td>
+                            <td style="color:#28a745;">${technician.resolved}</td>
+                            <td style="color:#dc3545;">${technician.pending}</td>
+                            <td style="color:#525b75;">${technician.rating}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
             } else {
                 console.error('Error fetching technician performance:', data.error);
             }
