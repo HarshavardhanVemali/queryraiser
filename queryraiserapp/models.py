@@ -97,7 +97,7 @@ class TechnicianField(models.Model):
     
 class Technician(User):
     technician_name=models.CharField(max_length=100)
-    technician_number=PhoneNumberField(max_length=10, region='IN')
+    technician_number=PhoneNumberField(max_length=13, region='IN')
     technician_field=models.ForeignKey(TechnicianField,on_delete=models.CASCADE)
     class Meta:
         unique_together = ('technician_number','technician_field')
