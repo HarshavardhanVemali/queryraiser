@@ -36,6 +36,7 @@ urlpatterns = [
     path('admintechnicianperformance/',views.admintechnicianperformance,name='admintechnicianperformance'),
     path('adminnewcomplaints/',views.adminnewcomplaints,name='adminnewcomplaints'),
     path('adminnewcomplaintstable/',views.adminnewcomplaintstable,name='adminnewcomplaintstable'),
+    path('adminassigntechnician/',views.adminassigntechnician,name='adminassigntechnician'),
     path('facultylogin/',views.facultylogin,name='facultylogin'),
     path('facultydashboard/',views.facultydashboard,name='facultydashboard'),
     path('facultyraisecomplaint/',views.facultyraisecomplaint,name='facultyraisecomplaint'),

@@ -545,6 +545,10 @@ def adminnewcomplaintstable(request):
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)        
 
+@admin_required
+def adminassigntechnician(request):
+    return render(request,'adminassigntechnician.html')
+
 #facultylogin
 
 @faculty_required
