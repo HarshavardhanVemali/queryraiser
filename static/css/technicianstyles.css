@@ -6,6 +6,7 @@
     padding-left: 20px;
     padding-right: 20px;
     border: 1px solid rgba(203, 208, 221, 0.54);
+    padding-bottom: 10px;
 }
 .table-container{
     margin-top: 12px;
@@ -17,7 +18,7 @@
     margin-bottom: 10px;
 }
 .tables th, .tables  td {
-    padding:8px;
+    padding:15px;
     font-size: 13px;
     text-align: left;
     font-weight: 200;
@@ -67,11 +68,17 @@
 #quickstatstable td {
     padding: 8px;
     font-size: 13px;
-    text-align: left;
     font-weight: 200;
     white-space: nowrap;
     min-width: 200px;
     text-align: center;
+    display: inline-block;  
+    text-align: center;    
+    vertical-align: middle; 
+    white-space: nowrap;    
+    padding: 3px;
+    border-radius: 4px;
+    margin-right: 5px;
 }
 #quickstatstable th {
     color: black;
@@ -83,7 +90,7 @@
     white-space: nowrap;    
     padding: 3px;
     border-radius: 4px;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 #quickstatstable th svg {
@@ -103,7 +110,7 @@
 #quickstatstable th,#quickstatstable  td {
     padding:8px;
     font-size: 13px;
-    text-align: left;
+    text-align: center;
     font-weight: 200;
     white-space: nowrap;
 }
@@ -113,6 +120,10 @@
     font-size: 14px;
     text-align: center;
     font-weight: 300;
+}
+#quickstatstable td{
+    padding-top: 50px;
+    font-size: 20px;
 }
 .complaintstatus>h3{
     margin-left: 20px;
@@ -125,6 +136,13 @@
     background: #fff;
     overflow-x: auto;
     min-height: 400px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+#complaintPieChart,#complaintBarChart{
+    width: 500px !important;
+    height: 450px !important;
 }
 .recentcomplainttable>h3{
     margin-left: 20px;
@@ -143,4 +161,16 @@
     background: #fff;
     overflow-x: auto;
     min-height: 400px;
+}
+.save-button{
+    padding: 8px 12px;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+.save-button:hover {
+    background-color: #0056b3;
 }

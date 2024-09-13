@@ -42,7 +42,7 @@ class TechnicianAdmin(admin.ModelAdmin):
     list_filter=('technician_name','technician_number','technician_field')
 
 class ComplaintAdmin(admin.ModelAdmin):
-    list_display=('id','faculty','department','technician','title','description','created_at','updated_at','status','technician_comments','faculty_feedback','rating')
+    list_display=('id','faculty','department','technician','title','description','created_at','updated_at','status','technician_comments','faculty_status','rating')
     search_fields=('id','faculty','department','technician','status')
     list_filter=('id','faculty','department','technician','status')
 

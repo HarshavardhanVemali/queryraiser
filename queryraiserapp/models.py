@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.hashers import make_password
+from django.core.validators import MinValueValidator, MaxValueValidator
 from phonenumbers import (
     PhoneNumber,
     parse,
@@ -108,7 +109,6 @@ class Complaint(models.Model):
     STATUS_CHOICES = [
         ('new', 'New'),
         ('assigned', 'Assigned'),
-        ('in_progress', 'In Progress'),
         ('resolved', 'Resolved'),
         ('pending_review', 'Pending Review'),
         ('closed', 'Closed'),
@@ -123,14 +123,23 @@ class Complaint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
-    technician_comments = models.TextField(null=True, blank=True)
-    technician_resolve_time = models.DateTimeField(null=True, blank=True)
-    faculty_feedback = models.CharField(
+    technician_status=models.CharField(
         max_length=100, 
         choices=[('resolved', 'Resolved'), ('pending', 'Pending')],
         null=True, blank=True
     )
+    technician_comments = models.TextField(null=True, blank=True)
+    technician_resolve_time = models.DateTimeField(null=True, blank=True)
+    faculty_status = models.CharField(
+        max_length=100, 
+        choices=[('resolved', 'Resolved'), ('pending', 'Pending')],
+        null=True, blank=True
+    )
+    faculty_comments=models.TextField(null=True,blank=True)
     faculty_feedback_time = models.DateTimeField(null=True, blank=True) 
-    rating=models.IntegerField(null=True)
+    rating = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(5)])
+    reopen_count = models.IntegerField(default=0)
+    assigned_time = models.DateTimeField(null=True, blank=True)
+    closed_time = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return f"Complaint #{self.id} - {self.title}"

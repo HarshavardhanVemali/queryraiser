@@ -11,25 +11,27 @@ from django.contrib.auth import logout
 import uuid
 from django.contrib.auth import authenticate, login
 from .models import FailedLoginAttempts
-from phonenumbers import format_number, PhoneNumberFormat
+from phonenumbers import format_number, PhoneNumberFormat, parse, NumberParseException
 from django.core import serializers 
 from django.utils import timezone 
 from django.db.models import Avg 
+import re
 
 def admin_required(view_func):
     return user_passes_test(
         lambda u: u.is_superuser or u.has_perm('queryraiserapp.is_admin'), 
-        login_url='/adminlogin/' 
+        login_url='/adminlogin/'
     )(view_func)
+
 def faculty_required(view_func):
     return user_passes_test(
-        lambda u: (u.is_active or u.has_perm('queryraiserapp.is_faculty')) and not(u.is_superuser) and not(u.has_perm('queryraiserapp.is_technician')), 
+        lambda u: u.is_active and not u.is_superuser and u.role == 'faculty',  
         login_url='/facultylogin/'
     )(view_func)
 
 def technician_required(view_func):
     return user_passes_test(
-        lambda u: (u.is_active or u.has_perm('queryraiserapp.is_technician')) and not(u.is_superuser) and not(u.has_perm('queryraiserapp.is_faculty')), 
+        lambda u: u.is_active and not u.is_superuser and u.role == 'technician', 
         login_url='/technicianlogin/'
     )(view_func)
 
@@ -720,15 +722,15 @@ def facultycomplaintcount(request):
 
 @faculty_required
 @require_POST
-def adminrecentcomplaints(request):
+def facultyrecentcomplaints(request):
     if request.method == 'POST':
         faculty_id=request.session.get('register_number')
         try:
             faculty=Faculty.objects.filter(faculty_id=faculty_id).first()
-            recent_complaints = Complaint.objects.filter().values(
-                'id','title','created_at', 
-                'faculty__faculty_name',
-                'department__department_name',
+            recent_complaints = Complaint.objects.filter(faculty=faculty).values(
+                'id',
+                'title',
+                'created_at',
                 'technician__technician_name',
                 'status'
             ).order_by('-created_at')[:10]
@@ -755,6 +757,7 @@ def adminrecentcomplaints(request):
 def techniciandashboard(request):
     technician_name= request.session.get('technician_name')
     technician_number = request.session.get('technician_number')
+    print(technician_number)
     context = {
         'technician_name': technician_name,
         'technician_number': technician_number,
@@ -769,7 +772,7 @@ def technicianlogin(request):
             user = User.objects.get(username=username)
             if user.role == 'technician': 
                 try:
-                    technician=Technician.objects.get('technician_number=username')
+                    technician=Technician.objects.get(technician_number=username)
                 except Technician.DoesNotExist:
                     return render(request,'index.html',{'technician_error_message':'Invalid User'})
                 user = authenticate(request, username=username, password=password)
@@ -787,3 +790,149 @@ def technicianlogin(request):
             return render(request, 'index.html', {'technician_error_message': 'User does not exist.'})
 
     return render(request, 'index.html')
+
+@technician_required
+@require_POST
+@csrf_exempt
+def techniciancomplaintcount(request):
+    technician_number = request.session.get('technician_number')
+    if not technician_number:
+        return JsonResponse({'success': False, 'error': 'Require Technician number.'})
+    try:
+        technician_number = re.sub(r"[^0-9+]", "", technician_number) 
+        technician = Technician.objects.filter(technician_number=technician_number).first()
+        if not technician:  
+            return JsonResponse({'success':False,'error':f'Technician with {technician_number} number does not exist.'})
+
+        complaint_counts = {
+            'assigned': Complaint.objects.filter(status='assigned', technician=technician).count(),
+            'resolved': Complaint.objects.filter(status='resolved', technician=technician).count(),
+            'pending_review': Complaint.objects.filter(status='pending_review', technician=technician).count(),
+            'closed': Complaint.objects.filter(status='closed', technician=technician).count(),
+        }
+        return JsonResponse({'success': True, 'complaint_counts': complaint_counts})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+@technician_required
+@require_POST
+def technicianrecentcomplaints(request):
+    technician_number = request.session.get('technician_number')
+    if not technician_number:
+        return JsonResponse({'success': False, 'error': 'Require Technician number.'})
+    try:
+        technician_number = re.sub(r"[^0-9+]", "", technician_number) 
+        technician = Technician.objects.filter(technician_number=technician_number).first()
+        if not technician:
+            return JsonResponse({'success':False,'error':f'Technician with {technician_number} number does not exist.'})
+
+        recent_complaints = Complaint.objects.filter(technician=technician).values(
+            'id',
+            'title',
+            'created_at',
+            'faculty__faculty_name',
+            'status'
+        ).order_by('-created_at')[:10]
+
+        for complaint in recent_complaints:
+            complaint['status'] = complaint['status'].capitalize()
+            complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+
+        return JsonResponse(list(recent_complaints), safe=False)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+    
+@technician_required
+def technicianassignedcomplaints(request):
+    return render(request,'technicianassignedcomplaints.html')
+
+@technician_required
+@require_POST
+@csrf_exempt
+def get_assigned_complaints_at_technician(request):
+    if request.method=='POST':
+        technician_number = request.session.get('technician_number')
+        if not technician_number:
+            return JsonResponse({'success': False, 'error': 'Require Technician number.'})
+        try:
+            technician_number = re.sub(r"[^0-9+]", "", technician_number) 
+            technician = Technician.objects.filter(technician_number=technician_number).first()
+            if not technician:
+                return JsonResponse({'success':False,'error':f'Technician with {technician_number} number does not exist.'})
+            assigned_complaints = Complaint.objects.filter(status='assigned',technician=technician).values(
+                'id',
+                'title',
+                'created_at',
+                'faculty__faculty_name',
+                'department__department_name',
+                'description',
+            ).order_by('-created_at') 
+            for complaint in assigned_complaints:
+                complaint['status'] = complaint['status'].capitalize()
+                complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')  
+            return JsonResponse(list(assigned_complaints), safe=False)
+
+        except Exception as e: 
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
+@technician_required
+def technicianupdatepage(request):
+    return render(request,'technicianupdatestatus.html')
+
+@technician_required
+@require_POST
+@csrf_exempt
+def techniciangetupdatestatus(request):
+    if request.method=='POST':
+        technician_number = request.session.get('technician_number')
+        if not technician_number:
+            return JsonResponse({'success': False, 'error': 'Require Technician number.'})
+        try:
+            technician_number = re.sub(r"[^0-9+]", "", technician_number) 
+            technician = Technician.objects.filter(technician_number=technician_number).first()
+            if not technician:
+                return JsonResponse({'success':False,'error':f'Technician with {technician_number} number does not exist.'})
+            complaints = Complaint.objects.filter(technician=technician).exclude(status='closed').values(
+                'id',
+                'title',
+                'created_at',
+                'faculty__faculty_name',
+                'department__department_name',
+                'description',
+                'status',
+            ).order_by('-created_at') 
+            for complaint in complaints:
+                complaint['status'] = complaint['status'].capitalize()
+                complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')  
+            return JsonResponse(list(complaints), safe=False)
+
+        except Exception as e: 
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+    
+@technician_required
+@require_POST
+@csrf_exempt
+def technicianupdatestatus(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            status = data.get('status')
+            complaint_id = data.get('complaint_id')
+            if not complaint_id:
+                return JsonResponse({'success': False, 'error': 'Complaint ID is required.'})
+            if not status:
+                return JsonResponse({'success': False, 'error': 'Status is required.'})
+            complaint = Complaint.objects.get(id=complaint_id)
+            complaint.technician_status = status
+            complaint.save()
+            return JsonResponse({'success': True, 'message': 'Status updated successfully.'})
+        except Complaint.DoesNotExist:
+            return JsonResponse({'success': False, 'error': f'Complaint with id {complaint_id} not found.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'})

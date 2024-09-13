@@ -188,12 +188,13 @@
                 <div class="tablelist">
                
                     <div class="table-container">
-                        <table class="tables">
+                        <table class="tables" id="recentcomplaintstable">
                             <thead>
                                 <tr>
                                     <th>Complaint ID</th>
                                     <th>Date Raised</th>
-                                    <th>Technician Assigned</th>
+                                    <th>Title</th>
+                                    <th>Technician</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -202,7 +203,9 @@
                                 </tbody>
                         </table>
                     </div>
-                    <a href="" style="font-size: 13px;color: #007bff;">View all</a>
+                    <a href="" style="font-size: 13px;color: #007bff;display: flex;align-items: center;gap: 5px;" id="viewall">View all <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+                      </svg></a>
                 </div>
             </div>
         </main> 
@@ -306,8 +309,46 @@
             console.error('Error fetching Complaints count:', error);
         });
     }
+    function getrecentcomplaints(){
+        fetch('/facultyrecentcomplaints/',{
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+        }
+        })
+        .then(response => response.json()) 
+        .then(data => {
+            console.log(data)
+            const recentcomplaintTableBody = document.querySelector('#recentcomplaintstable tbody');
+            recentcomplaintTableBody.innerHTML = '';
+
+            if(data.length===0){
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="7">No Complaints found at this time.</td>';
+                recentcomplaintTableBody.appendChild(row);
+            } else {
+                data.forEach(complaint => { 
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="color:#007bff;">${complaint.id}</td> 
+                        <td>${complaint.created_at}</td> 
+                        <td style="color:#000;font-weight:590;">${complaint.title}</td> 
+                        <td style="color:#6e7891;">${complaint.technician__technician_name}</td> 
+                        <td style="color:#525b75;">${complaint.status}</td>
+                        <td></td>                    
+                    `;
+                    recentcomplaintTableBody.appendChild(row);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching recent complaints:', error);
+        });
+    }
     document.addEventListener('DOMContentLoaded', () => {
         getcomplaintscount();
+        getrecentcomplaints();
     });
     function getCookie(name) {
         let cookieValue = null;
