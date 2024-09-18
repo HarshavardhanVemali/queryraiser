@@ -41,6 +41,9 @@ urlpatterns = [
     path('assigntechnician/',views.assigntechnician,name='assigntechnician'),
     path('adminassignedcomplaints/',views.adminassignedcomplaints,name='adminassignedcomplaints'),
     path('getassignedcomplaints/',views.getassignedcomplaints,name='getassignedcomplaints'),
+    path('adminclosedcomplaintspage/',views.adminclosedcomplaintspage,name='adminclosedcomplaintspage'),
+    path('admin_get_closed_complaints/',views.admin_get_closed_complaints,name='admin_get_closed_complaints'),
+    path('admintechnicianreports/',views.admintechnicianreports,name='admintechnicianreports'),
     path('facultylogin/',views.facultylogin,name='facultylogin'),
     path('facultydashboard/',views.facultydashboard,name='facultydashboard'),
     path('facultyraisecomplaint/',views.facultyraisecomplaint,name='facultyraisecomplaint'),
@@ -56,4 +59,5 @@ urlpatterns = [
     path('techniciangetupdatestatus/',views.techniciangetupdatestatus,name='techniciangetupdatestatus'),
     path('technicianupdatepage/',views.technicianupdatepage,name='technicianupdatepage'),
     path('technicianupdatestatus/',views.technicianupdatestatus,name='technicianupdatestatus'),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+

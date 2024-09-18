@@ -632,7 +632,49 @@ def getassignedcomplaints(request):
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)        
 
+@admin_required
+def adminclosedcomplaintspage(request):
+    return render(request,'adminclosedcomplaints.html')
 
+@admin_required
+@require_POST
+@csrf_exempt
+def admin_get_closed_complaints(request):
+    if request.method=='POST':
+        try:
+            closed_complaints=Complaint.objects.filter(technician_status='resolved',faculty_status='resolved').values(
+            'id',
+            'title',
+            'faculty__faculty_name',
+            'department__department_name',
+            'technician__technician_name',
+            'technician__technician_number',
+            'created_at',
+            'assigned_time',
+            'technician_resolve_time',
+            'description',
+            'technician_comments',
+            'faculty_comments',
+            'rating',
+            'closed_time',
+            'faculty_feedback_time'
+            ).order_by('-created_at')
+            for complaint in closed_complaints:
+                complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['technician_resolve_time'] = timezone.localtime(complaint['technician_resolve_time']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['technician__technician_number'] = format_number(
+                    complaint['technician__technician_number'], 
+                    PhoneNumberFormat.NATIONAL
+                ).lstrip('0').strip()  
+            return JsonResponse(list(closed_complaints), safe=False)
+        except Exception as e: 
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
+@admin_required
+def admintechnicianreports(request):
+    return render(request,'admintechnicianreports.html')
 
 #facultylogin
 
