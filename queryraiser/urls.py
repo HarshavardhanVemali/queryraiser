@@ -49,7 +49,13 @@ urlpatterns = [
     path('facultyraisecomplaint/',views.facultyraisecomplaint,name='facultyraisecomplaint'),
     path('facultycomplaintcount/',views.facultycomplaintcount,name='facultycomplaintcount'),
     path('facultyrecentcomplaints/',views.facultyrecentcomplaints,name='facultyrecentcomplaints'),
+    path('faculty_assigned_tech_page/',views.faculty_assigned_tech_page,name='faculty_assigned_tech_page'),
+    path('faculty_assigned_complaints/',views.faculty_assigned_complaints,name='faculty_assigned_complaints'),
     path('raisecomplaint/',views.raisecomplaint,name='raisecomplaint'),
+    path('faculty_all_complaints_page/',views.faculty_all_complaints_page,name='faculty_all_complaints_page'),
+    path('facultyallcomplaints/',views.facultyallcomplaints,name='facultyallcomplaints'),
+    path('faculty_closed_complaints_page/',views.faculty_closed_complaints_page,name='faculty_closed_complaints_page'),
+    path('faculty_get_closed_complaints/',views.faculty_get_closed_complaints,name='faculty_get_closed_complaints'),
     path('technicianlogin/',views.technicianlogin,name='technicianlogin'),
     path('techniciandashboard/',views.techniciandashboard,name='techniciandashboard'),
     path('techniciancomplaintcount/',views.techniciancomplaintcount,name='techniciancomplaintcount'),
@@ -59,5 +65,8 @@ urlpatterns = [
     path('techniciangetupdatestatus/',views.techniciangetupdatestatus,name='techniciangetupdatestatus'),
     path('technicianupdatepage/',views.technicianupdatepage,name='technicianupdatepage'),
     path('technicianupdatestatus/',views.technicianupdatestatus,name='technicianupdatestatus'),
-]
+    path('technician_all_complaints_page/',views.technician_all_complaints_page,name='technician_all_complaints_page'),
+    path('technician_all_complaints/',views.technician_all_complaints,name='technician_all_complaints'),
+
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
