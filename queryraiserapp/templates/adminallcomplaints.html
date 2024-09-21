@@ -25,7 +25,7 @@
 
 .overlay-content {
     background-color: #fff;
-    margin: 1% auto; 
+    margin: 10% auto; 
     padding: 30px;
     border-radius: 10px;
     max-width: 500px;
@@ -361,12 +361,12 @@
                         <span id="overlayFaculty"></span>
                     </div>
                     <div class="complaint-details">
-                        <label for="overlayDate">Date Raised</label>
-                        <span id="overlayDate"></span>
+                        <label for="overlayStatus">Status</label>
+                        <span id="overlayStatus"></span>
                     </div>
                     <div class="complaint-details">
-                        <label for="overlayDateAssigned">Date Assigned</label>
-                        <span id="overlayDateAssigned"></span>
+                        <label for="overlayDate">Date Raised</label>
+                        <span id="overlayDate"></span>
                     </div>
                     <div class="complaint-details">
                         <label for="overlayAssignedTechnician">Assigned Technician</label>
@@ -377,8 +377,8 @@
                         <span id="overlayTechnicianNumber"></span>
                     </div>
                     <div class="complaint-details">
-                        <label for="overlayTechniciancomments">Technician Comments</label>
-                        <span id="overlayTechniciancomments"></span>
+                        <label for="overlayDateAssigned">Date Assigned</label>
+                        <span id="overlayDateAssigned"></span>
                     </div>
                 </div>
             </div>         
@@ -469,7 +469,7 @@
         document.getElementById('overlayDateAssigned').textContent = complaint.assigned_time;
         document.getElementById('overlayAssignedTechnician').textContent = complaint.technician__technician_name;
         document.getElementById('overlayTechnicianNumber').textContent = complaint.technician__technician_number;
-        document.getElementById('overlayTechniciancomments').textContent = complaint.technician_resolved_comments;
+        document.getElementById('overlayStatus').textContent=complaint.status;
         document.getElementById('complaintOverlay').style.display = 'block';
     }
     function closeComplaintOverlay() {

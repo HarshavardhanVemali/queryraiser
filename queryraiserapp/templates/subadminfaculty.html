@@ -270,6 +270,7 @@
                         <tbody>
                         </tbody>
                     </table>
+                    <p id="noResults" style="display: none;font-size: 14px;text-align: center;">No results found...!</p>
                 </div>
             </div>
         </main> 
@@ -415,8 +416,33 @@ navLinks.forEach(link => {
 
     document.addEventListener('DOMContentLoaded', () => {
         getfaculty();
-
+        const searchInput = document.querySelector('.search input');
+        searchInput.addEventListener('input', filterFaculty); 
     });
+    function filterFaculty() {
+            const searchText = this.value.toLowerCase(); 
+            const tableRows = document.querySelectorAll('#facultytable tbody tr');
+            const noResultsMessage = document.getElementById('noResults'); 
+
+            let hasVisibleRow = false; 
+            tableRows.forEach(row => {
+                const FacultyName = row.querySelector('td:first-child').textContent.toLowerCase().replace(/\s+/g, '').trim();
+                const FacultyNumber = row.querySelector('td:nth-child(2)').textContent.toLowerCase().replace(/\s+/g, '').trim();
+                const FacultyRegister = row.querySelector('td:nth-child(3)').textContent.toLowerCase().replace(/\s+/g, '').trim();
+                const cleanSearchText = searchText.toLowerCase().replace(/\s+/g, '').trim();
+                if (FacultyName.includes(cleanSearchText) || FacultyNumber.includes(cleanSearchText) || FacultyRegister.includes(cleanSearchText)) {
+                    row.style.display = ''; 
+                    hasVisibleRow = true;
+                } else {
+                    row.style.display = 'none'; 
+                }
+            });
+            if (!hasVisibleRow) {
+                noResultsMessage.style.display = 'block';
+            } else {
+                noResultsMessage.style.display = 'none'; 
+            }
+    }
     function savefacultyChanges(facultyId) {
     const facultyNameElement = document.getElementById(`faculty_name_${facultyId}`);
     const facultyPhoneNUmber = document.getElementById(`faculty_phone_${facultyId}`);

@@ -590,6 +590,7 @@ def assigntechnician(request):
             technician = Technician.objects.get(technician_number=technician_number) 
             complaint.technician = technician
             complaint.status = 'assigned' 
+            complaint.assigned_time=timezone.now()
             complaint.save()
             return JsonResponse({'success': True, 'message': 'Technician assigned successfully.'})
         except Complaint.DoesNotExist:
@@ -803,7 +804,7 @@ def adminallcomplaintspage(request):
 def adminallcomplaints(request):
     if request.method=='POST':
         try:
-            pending_complaints=Complaint.objects.all().values(
+            all_complaints=Complaint.objects.all().values(
             'id',
             'title',
             'faculty__faculty_name',
@@ -815,21 +816,29 @@ def adminallcomplaints(request):
             'faculty_status',
             'technician_status',
             'description',
+            'assigned_time',
             ).order_by('-created_at')
-            for complaint in pending_complaints:
+            for complaint in all_complaints:
+                complaint['status'] = complaint['status'].capitalize()
+                complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+                if complaint['assigned_time']is not None:
+                    complaint['assigned_time'] = timezone.localtime(complaint['assigned_time']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['technician__technician_number'] = format_number(
+                    complaint['technician__technician_number'], 
+                    PhoneNumberFormat.NATIONAL
+                ).lstrip('0').strip() 
+                if complaint['status']=='new':
+                    complaint['technician__technician_number']='Not Assigned'
+                    complaint['technician__technician_name']='Not Assigned'
+                    complaint['technician__technician_status']='--'
+                    complaint['assigned_time']=='Not Assigned'
                 if complaint['faculty_status'] is None:
                     complaint['faculty_status']='--'
                 if complaint['technician_status']=='Resolved' and complaint['faculty_status'] is None:
                     complaint['faculty_status']='Pending_Review'
                 if complaint['technician_status'] is None:
                     complaint['technician_status']='--'
-                complaint['status'] = complaint['status'].capitalize()
-                complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
-                complaint['technician__technician_number'] = format_number(
-                    complaint['technician__technician_number'], 
-                    PhoneNumberFormat.NATIONAL
-                ).lstrip('0').strip()  
-            return JsonResponse(list(pending_complaints), safe=False)
+            return JsonResponse(list(all_complaints), safe=False)
         except Exception as e: 
             return JsonResponse({'success': False, 'error': str(e)})
     else:
@@ -1189,6 +1198,10 @@ def facultypendigncomplaints(request):
             return JsonResponse({'success': False, 'error': str(e)})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+    
+@faculty_required
+def facultyfeedbackpage(request):
+    return render(request,'facultyfeedback.html')
 
 #technicianlogin
 

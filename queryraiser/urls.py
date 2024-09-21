@@ -69,6 +69,7 @@ urlpatterns = [
     path('facultyresolvedpage/',views.facultyresolvedpage,name='facultyresolvedpage'),
     path('facultyresolvedcomplaints/',views.facultyresolvedcomplaints,name='facultyresolvedcomplaints'),
     path('facultypendingpage/',views.facultypendingpage,name='facultypendingpage'),
+    path('facultyfeedbackpage/',views.facultyfeedbackpage,name='facultyfeedbackpage'),
     path('technicianlogin/',views.technicianlogin,name='technicianlogin'),
     path('techniciandashboard/',views.techniciandashboard,name='techniciandashboard'),
     path('techniciancomplaintcount/',views.techniciancomplaintcount,name='techniciancomplaintcount'),
