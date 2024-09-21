@@ -497,6 +497,7 @@ main{
     padding-right: 20px;
     border: 1px solid rgba(203, 208, 221, 0.54);
     padding-bottom: 10px;
+    overflow-x: auto;
 }
 .table-container{
     margin-top: 12px;
@@ -512,7 +513,6 @@ main{
     font-size: 13px;
     text-align: left;
     font-weight: 200;
-
 }
 .tables  th {
     border-bottom: 1px solid rgba(203, 208, 221, 0.54);
@@ -520,6 +520,7 @@ main{
     font-size: 16px;
     font-weight: 590;
 }
+
 .tables  tbody tr{
     border-bottom: 1px solid rgba(203, 208, 221, 0.54);
 }

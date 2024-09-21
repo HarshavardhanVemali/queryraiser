@@ -9,7 +9,6 @@ body {
     align-items: center;
     overflow: hidden;
 }
-
 header {
     width: 100%;
     background-color: #fff;
@@ -219,7 +218,7 @@ header {
     flex: 1; 
     transition: all 0.3s ease; 
     scroll-behavior: smooth;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 @media (max-width: 991px) {
@@ -370,7 +369,8 @@ body.dark-mode header{
 
 main{
     width: 100%;
-    margin-top: 10px;
+    padding-bottom: 20px;
+
 }
 .subnav{
     display: flex;
@@ -448,4 +448,17 @@ footer a:hover{
 }
 #addbranchesbutton:hover{
     background-color: #004dff;
+}
+#changepassword{
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid #cbd0dd;
+    border-radius: 4px;
+    gap: 3px;
+    cursor: pointer;
+}
+#changepassword:hover{
+    background-color: #cbd0dd;
+    
 }

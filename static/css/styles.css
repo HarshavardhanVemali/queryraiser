@@ -192,41 +192,32 @@ footer {
     bottom: 0;
     width: 100%;
 }
-footer {
-    background-color: #222;
-    color: #fff; 
-    text-align: center;
-    font-size: 12px;
-    font-weight: 400;
-}
 footer{
     display: flex;
     align-items: center;
     justify-content: center;
 }
-footer img{
-    width: 25px;
-    height: 25px;
-    margin-right: 10px;
-    border-radius: 50%;
-    
+.footer {
+    bottom: 0;
+    border-top: 1px solid #cbd0dd;
+    height: 3.5rem;
+    font-size: 14px; 
+    align-items: center;
+    display: flex;
+    background-color: #f5f7fa;;
+    justify-content: space-between;
 }
-footer a{
-    color: #ffffff;
+.footer p{
+    padding: 0 1.3rem 0 1.3rem;
+    font-weight: 100;
+    color: rgb(49, 55, 74);
+
 }
-#viewportfolio{
+.footer a{
+    color: #3874ff;
     text-decoration: none;
+    font-weight: 100;
 }
-#viewportfolio{
-    background: linear-gradient(180deg, #4285f4, #ea4335);
-    border-radius: 20px;
-    font-size: 8px;
-    padding: 5px;
-    cursor: pointer;
-    color: white;
-    margin-left: 2px;
-}
-#viewportfolio:hover{
-    background-color: white;
-    color: white;
+footer a:hover{
+    text-decoration: underline;
 }

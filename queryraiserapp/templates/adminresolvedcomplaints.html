@@ -3,15 +3,107 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'css/adminpage.css' %}">
-    <link rel="stylesheet" href="{% static 'css/adminfaculty.css' %}">
-    <link rel="stylesheet" href="{% static 'css/admintechnician.css' %}"> 
-    <script src="{% static 'js/scripts.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MVGR(A) | Query Raiser Admin</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/static/images/college_logo.png">
+    <link rel="stylesheet" href="{% static 'css/adminpage.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="{% static 'js/scripts.js' %}"></script>
 </head>
+<style>
+.overlay {
+    display: none; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 1000; 
+    transition: opacity 0.3s ease-in-out; 
+}
+
+.overlay-content {
+    background-color: #fff;
+    margin: 1% auto; 
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.4s ease-in-out; 
+    text-align: center; 
+    font-family: 'Arial', sans-serif; 
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-button:hover {
+    color: #e74c3c;
+}
+.overlay-content h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+}
+.overlay-content p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #555;
+    line-height: 1.5;
+}
+
+.overlay-content p strong {
+    color: #333;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.overlay-content h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #007bff;
+    text-align: center; 
+}
+
+.complaint-details {
+    display: grid;
+    grid-template-columns: 1fr 2fr; 
+    gap: 10px; 
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.complaint-details label {
+    font-weight: bold;
+    text-align: left;
+}
+
+.complaint-details span {
+    text-align: left;
+}
+
+.assign-technician {
+    text-align: center; 
+}
+</style>
 <body>
     <header>
         <div class="header-container">
@@ -70,7 +162,7 @@
                     </ul>
                 </li>
                 <li class="nav-item has-submenu">
-                    <a href="#" class="nav-link active">
+                    <a href="#" class="nav-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                           </svg>
@@ -83,13 +175,13 @@
                             <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
                             <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z"/>
                           </svg>Fields</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="{% url 'admintechnician' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'admintechnician' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
                             <path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11z"/>
                           </svg>Techincians</a></li>
                     </ul>
                 </li>
                 <li class="nav-item has-submenu">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link active">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                           </svg>
@@ -101,7 +193,8 @@
                         
                     </a>
                     <ul class="submenu">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'adminallcomplaintspage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'adminallcomplaintspage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
                           </svg>All Complaints</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'adminnewcomplaints' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -129,7 +222,7 @@
                                 <li class="nav-item"><a class="nav-link" href="{% url 'admintechnicianpendingpage' %}">Techincian</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'adminresolvedpage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'adminresolvedpage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                             <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
                           </svg>Resolved Complaints</a></li>
@@ -192,73 +285,101 @@
         <main class="content"> 
             <div class="subnav d-flex justify-content-between align-items-center"> 
                 <div>
-                    <h3>Techincians</h3>
+                    <h3>Technician Resolved Complaints</h3>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <div class="search" >
-                        <input type="text" placeholder="Search...">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </div>
-                    <div class="add-technician-button-container">
-                        <button id="addtechnicianbtn" onclick="showAddTechnicianForm()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
-                                <path d="M12 7v10M7 12h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg> <span>Add Technician</span>
+                <div class="addbranches" style="display: flex;gap: 10px;"> 
+                    <div>
+                        <button id="addbranchesbutton" onclick="" style="gap: 3px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-spreadsheet" viewBox="0 0 16 16">
+                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V9H3V2a1 1 0 0 1 1-1h5.5zM3 12v-2h2v2zm0 1h2v2H4a1 1 0 0 1-1-1zm3 2v-2h3v2zm4 0v-2h3v1a1 1 0 0 1-1 1zm3-3h-3v-2h3zm-7 0v-2h3v2z"/>
+                              </svg>
+                          <span>Download Sheets</span>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download" viewBox="0 0 16 16">
+                            <path d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/>
+                            <path d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708z"/>
+                          </svg>
                         </button>
                     </div>
+                    <div>
+                        <button id="addbranchesbutton" onclick="" style="gap: 3px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
+                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+                                <path d="M4.603 14.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.188-.012.396-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.066.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.7 11.7 0 0 0-1.997.406 11.3 11.3 0 0 1-1.02 1.51c-.292.35-.609.656-.927.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.245.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 7.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z"/>
+                              </svg>
+                            <span>Download PDF</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download" viewBox="0 0 16 16">
+                                <path d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/>
+                                <path d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708z"/>
+                              </svg>
+                          </button>
+                    </div>
+                  </div>
+            </div>
+            <div class="resolvedcomplainttable">
+                <div class="tablelist">
+                    <div class="table-container">
+                        <table class="tables" id="resolvedcomplaintstable">
+                            <thead>
+                                <tr>
+                                    <th>Complaint ID</th>
+                                    <th>Faculty Name</th>
+                                    <th>Department</th>
+                                    <th>Title</th>
+                                    <th>Technician</th>
+                                    <th>Technician Number</th>
+                                    <th>Date Raised</th>
+                                    <th>TechnicianStatus</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            
-            <div class="overlay">
-                <div id="addtechnicianform-container" class="form-container hidden">
-                    <svg id="closebtn" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" onclick="hideAddForms()">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="15" y1="9" x2="9" y2="15" />
-                        <line x1="9" y1="9" x2="15" y2="15" />
-                    </svg>
-                    <form method="post" enctype="multipart/form-data" id="addtechnicianform" action="{% url 'addtechnician' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_type" value="addtechnicianform" >
-                        <div class="form-row">
-                            <label for="technicianname">Technician Name:</label>
-                            <input type="text" name="technicianname" id="technicianname" placeholder="Technician Name" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="technicianfield">Field:</label>
-                            <select name="technicianfield" id="technicianfield" required>
-                                <option value="" disabled selected>Select Field</option>
-                                </select>
-                        </div>
-                        <div id="form-row">
-                            <label for="phone">Phone Number(IN)</label>
-                            <input type="tel" id="phone" name="phone" placeholder="+91-XXXXXXXXXX" pattern="+?[6-9]\d{9,12}" required>     
-                        </div>
-                        <div class="button-container"> 
-                            <button type="submit" id="addtechnicianbtn">Add</button>
-                        </div>
-                    </form>
+            <div id="complaintOverlay" class="overlay">
+                <div class="overlay-content">
+                    <span class="close-button" onclick="closeComplaintOverlay()">×</span>
+                    <h3 id="overlayTitle"></h3> 
+                    <div class="complaint-details">
+                        <label for="overlayDescription">Description</label>
+                        <span id="overlayDescription"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayComplaintId">Complaint ID</label>
+                        <span id="overlayComplaintId"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayDepartment">Department</label>
+                        <span id="overlayDepartment"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayFaculty">Complaint Raised By</label>
+                        <span id="overlayFaculty"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayDate">Date Raised</label>
+                        <span id="overlayDate"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayDateAssigned">Date Assigned</label>
+                        <span id="overlayDateAssigned"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayAssignedTechnician">Assigned Technician</label>
+                        <span id="overlayAssignedTechnician"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayTechnicianNumber">Technician Number</label>
+                        <span id="overlayTechnicianNumber"></span>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="overlayTechniciancomments">Technician Comments</label>
+                        <span id="overlayTechniciancomments"></span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="technicianlist"> 
-                <div class="table-container">
-                    <table id="techniciantable">
-                        <thead>
-                            <th>Technician Name</th>
-                            <th>Phone Number</th>
-                            <th>Field</th>
-                            <th></th>
-                            <th></th> 
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            </div>         
         </main> 
         <footer class="footer position-absolute">
             <div>
@@ -269,6 +390,7 @@
             </div>
       </footer> 
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script>
     const navLinks = document.querySelectorAll('.nav-link');
     const submenus = document.querySelectorAll('.submenu');
@@ -279,203 +401,94 @@
                 e.preventDefault();
                 const submenu = this.nextElementSibling;
                 submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+                
             }
         });
     });
+
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            getTechnicians(); 
-            getTechnicianFieldsForDropdown();
-        });
-        function getTechnicians() {
-            fetch('/gettechnicians/',{
-                method: 'POST', 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    const technicianTableBody = document.querySelector('#techniciantable tbody');
-                    technicianTableBody.innerHTML = '';
-                    if (data.length > 0) {
-                        data.forEach(technician => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td contenteditable="true" style="color:#3874ff;" id="technician_name_${technician.technician_number}">${technician.technician_name}</td>
-                                <td contenteditable="true" id="technician_number_${technician.technician_number}" style="color:black;">${technician.technician_number}</td>
-                                <td id="technician_field_${technician.technician_number}">${technician.technician_field__field_name}</td>
-                                <td><button class="save-button" onclick="saveTechnician('${technician.technician_number}')">Save</button></td> 
-                                <td><button class="delete-button" onclick="deleteTechnician('${technician.technician_number}','${technician.technician_field__field_name}')">
-                                    <svg style="margin-right: 3px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="h-5 w-5 shrink-0">
-                                    <path fill="currentColor" fill-rule="evenodd" d="M10.556 4a1 1 0 0 0-.97.751l-.292 1.14h5.421l-.293-1.14A1 1 0 0 0 13.453 4zm6.224 1.892-.421-1.639A3 3 0 0 0 13.453 2h-2.897A3 3 0 0 0 7.65 4.253l-.421 1.639H4a1 1 0 1 0 0 2h.1l1.215 11.425A3 3 0 0 0 8.3 22H15.7a3 3 0 0 0 2.984-2.683l1.214-11.425H20a1 1 0 1 0 0-2zm1.108 2H6.112l1.192 11.214A1 1 0 0 0 8.3 20H15.7a1 1 0 0 0 .995-.894zM10 10a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1m4 0a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1" clip-rule="evenodd"></path>
-                                </svg>Delete</button></td> 
-                
-                            `;
-                            technicianTableBody.appendChild(row);
-                        });
-                    } else {
-                        const row = document.createElement('tr');
-                        row.innerHTML = '<td colspan="4">No technicians found.</td>'; 
-                        technicianTableBody.appendChild(row);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching technicians:', error);
+    function getresolvedcomplaints(){
+        fetch('/adminresolvedcomplaints/',{
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json()) 
+        .then(data => {
+            console.log(data)
+            const resolvedcomplaintTableBody = document.querySelector('#resolvedcomplaintstable tbody');
+            resolvedcomplaintTableBody.innerHTML = '';
+
+            if(data.length===0){
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="10">No Resolved complaints found right now.</td>';
+                resolvedcomplaintTableBody.appendChild(row);
+            } else {
+                data.forEach(complaint => { 
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="color:#007bff;">${complaint.id}</td> 
+                        <td style="color:#007bff;">${complaint.faculty__faculty_name}</td> 
+                        <td style="color:#525b75;">${complaint.department__department_name}</td>
+                        <td style="color:#000;font-weight:590;">${complaint.title}</td>
+                        <td style="color:#525b75;">${complaint.technician__technician_name}</td> 
+                        <td style="color:#525b75;">${complaint.technician__technician_number}</td> 
+                        <td>${complaint.created_at}</td>
+                        <td>${complaint.technician_status}</td>
+                        <td>${complaint.faculty_status}</td>
+                        <td><button onclick="openComplaintOverlay(this)" data-complaint="${encodeURIComponent(JSON.stringify(complaint))}" class="save-button" style="display:flex;align-items:center;gap:5px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                            </svg> View
+                        </button></td>
+                    `;
+                    resolvedcomplaintTableBody.appendChild(row);
                 });
-        }
-
-        function getTechnicianFieldsForDropdown() {
-            fetch('/getfields/', {
-                method: 'POST', 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                }
-            }) 
-                .then(response => response.json())
-                .then(data => {
-                    const technicianFieldSelect = document.getElementById('technicianfield');
-                    technicianFieldSelect.innerHTML = '<option value="" disabled selected>Select Field</option>'; // Clear previous options
-                    data.forEach(field => {
-                        const option = document.createElement('option');
-                        option.value = field.field_name;
-                        option.text = field.field_name;
-                        technicianFieldSelect.add(option);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching technician fields:', error);
-                });
-        }
-        function saveTechnician(technicianNumber) {
-            const technicianNameElement = document.getElementById(`technician_name_${technicianNumber}`);
-            const technicianNumberElement = document.getElementById(`technician_number_${technicianNumber}`);
-            const technicianFieldElement = document.getElementById(`technician_field_${technicianNumber}`); 
-            const technicianName = technicianNameElement.textContent.trim();
-            const ChangedtechnicianNumber = technicianNumberElement.textContent.trim();
-            const technicianField = technicianFieldElement.textContent.trim();
-
-            if (technicianName === "") {
-                alert("Technician name must be filled out");
-                getTechnicians(); 
-                return;
             }
-            if (!isValidIndianPhoneNumber(ChangedtechnicianNumber)) {
-                alert("Invalid phone number.");
-                getTechnicians();
-                return;
-            }
-            function isValidIndianPhoneNumber(phoneNumber) {
-                const cleanedPhoneNumber = phoneNumber.replace(/\s/g, '').replace(/^0+/, ''); 
-                const phoneRegex = /^[6-9]\d{9}$/;  
-                return phoneRegex.test(cleanedPhoneNumber);
-            }
-            fetch('/savetechnician/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({ 
-                    change_technician_number: ChangedtechnicianNumber, 
-                    technician_name: technicianName,
-                    technician_field: technicianField ,
-                    technician_number:technicianNumber,
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Changes saved successfully.');
-                    getTechnicians(); 
-                } else {
-                    alert('Failed to save changes: ' + data.error); 
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-        function deleteTechnician(technicianNumber, technicianField) {
-            if (confirm("Are you sure you want to delete this Technician? This action cannot be undone.")) {
-                fetch('/deletetechnician/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: JSON.stringify({ 
-                        technician_number: technicianNumber, 
-                        technician_field: technicianField 
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Technician deleted successfully.');
-                        getTechnicians(); 
-                    } else {
-                        alert('Failed to delete technician: ' + data.error); 
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        }
-
-        function showAddTechnicianForm() {
-            hideAddForms(); 
-            document.getElementById('addtechnicianform-container').classList.remove('hidden');
-            document.querySelector('.overlay').style.display = 'block'; 
-        }
-
-        function hideAddForms() {
-            document.getElementById('addtechnicianform-container').classList.add('hidden');
-            document.querySelector('.overlay').style.display = 'none'; 
-        }
-
-        document.getElementById('addtechnicianform').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-            fetch(form.action, {
-                method: form.method,
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Technician added successfully.');
-                    form.reset(); 
-                    hideAddForms(); 
-                    getTechnicians(); 
-                } else {
-                    alert('Failed to add technician.'+data.error); 
-                }
-            })
-            .catch(error => {
-                console.error('Error adding technician:', error);
-                alert('Error adding technician. Please try again later.', error);
-            });
+        })
+        .catch(error => {
+            console.error('Error fetching recent complaints:', error);
         });
+    }
+    function openComplaintOverlay(button) {
+        const complaint = JSON.parse(decodeURIComponent(button.dataset.complaint));
 
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
+        document.getElementById('overlayTitle').textContent = complaint.title;
+        document.getElementById('overlayDescription').textContent = complaint.description;
+        document.getElementById('overlayComplaintId').textContent=complaint.id;
+        document.getElementById('overlayFaculty').textContent = complaint.faculty__faculty_name;
+        document.getElementById('overlayDepartment').textContent = complaint.department__department_name;
+        document.getElementById('overlayDate').textContent = complaint.created_at;
+        document.getElementById('overlayDateAssigned').textContent = complaint.assigned_time;
+        document.getElementById('overlayAssignedTechnician').textContent = complaint.technician__technician_name;
+        document.getElementById('overlayTechnicianNumber').textContent = complaint.technician__technician_number;
+        document.getElementById('overlayTechniciancomments').textContent = complaint.technician_resolved_comments;
+        document.getElementById('complaintOverlay').style.display = 'block';
+    }
+    function closeComplaintOverlay() {
+        document.getElementById('complaintOverlay').style.display = 'none';
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        getresolvedcomplaints();
+    });
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
             }
-            return cookieValue;
+          }
         }
+        return cookieValue;
+      }
     </script>
 </body>
 </html>

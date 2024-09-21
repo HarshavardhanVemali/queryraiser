@@ -89,7 +89,7 @@
                     <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
                     <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
                 </svg>Pending Issues</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'adminclosedcomplaintspage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <li class="nav-item"><a class="nav-link" href="{% url 'technicianclosedpage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>Closed Complaints</a></li>
@@ -97,10 +97,10 @@
                     <path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1z"/>
                     <path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                   </svg>Notifications</a></li>
-                <li><a class="nav-link" href="{% url 'adminpage' %}" style="font-weight: 100;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                <li><a class="nav-link" href="{% url 'technicianratingpage' %}" style="font-weight: 100;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
                     <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
                   </svg>Rating</a></li>
-                <li><a class="nav-link" href="{% url 'adminpage' %}" style="font-weight: 100;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                <li><a class="nav-link" href="{% url 'technicianprofilepage' %}" style="font-weight: 100;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                     <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
                 </svg>Profile</a></li>                    
                 <li class="logout-item">
@@ -202,14 +202,10 @@
                                 </tbody>
                         </table>
                     </div>
-                    <a href="" style="font-size: 13px;color: #007bff;display: flex;align-items: center;gap: 5px;" id="viewall">View all <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                    <a href="{% url 'technician_all_complaints_page' %}" style="font-size: 13px;color: #007bff;display: flex;align-items: center;gap: 5px;" id="viewall">View all <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
                       </svg></a>
                 </div>
-            </div>
-            <div class="performance">
-                <h3>Performance Metrics</h3>
-                <div class="performancegraphs"></div>
             </div>
         </main> 
         <footer class="footer position-absolute">
@@ -256,10 +252,10 @@
                 const complaintCounts = data.complaint_counts;
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td style="color:#fd7e14;">${complaintCounts.assigned}</td> 
+                    <td style="color:#007bff;">${complaintCounts.assigned}</td> 
                     <td style="color:#28a745;">${complaintCounts.resolved}</td>
-                    <td style="color:#dc3545;">${complaintCounts.pending_review}</td> 
-                    <td style="color:#6f42c1;">${complaintCounts.closed}</td> 
+                    <td style="color:#ffc107;">${complaintCounts.pending_review}</td> 
+                    <td style="color:#dc3545;">${complaintCounts.closed}</td> 
                 `;
                 quickstatsTableBody.appendChild(row); 
                 const chartLabels = Object.keys(complaintCounts);
@@ -274,12 +270,10 @@
                             label: 'Complaint Status',
                             data: chartData,
                             backgroundColor: [
-                                '#007bff', 
-                                '#fd7e14',
-                                '#28a745', 
-                                '#ffc107', 
-                                '#dc3545', 
-                                '#6f42c1'  
+                                'rgba(0, 123, 255, 0.5)',
+                                'rgba(40, 167, 69, 0.5)',   
+                                'rgba(255, 193, 7, 0.5)',
+                                'rgba(220, 53, 69, 0.5)'  
                             ],
                         }]
                     },
@@ -294,12 +288,10 @@
                         label: 'Complaint Status',
                         data: chartData,
                         backgroundColor: [
-                            '#007bff', 
-                            '#fd7e14', 
-                            '#28a745', 
-                            '#ffc107', 
-                            '#dc3545',
-                            '#6f42c1' 
+                           'rgba(0, 123, 255, 0.5)', 
+                            'rgba(40, 167, 69, 0.5)',
+                            'rgba(255, 193, 7, 0.5)',
+                            'rgba(220, 53, 69, 0.5)'  
                         ],
                     }]
                 },
@@ -338,9 +330,8 @@
                         <td>${complaint.created_at}</td> 
                         <td style="color:#007bff;">${complaint.faculty__faculty_name}</td> 
                         <td style="color:#525b75;">${complaint.department__department_name}</td>
-                        <td style="color:#525b75;">${complaint.status}</td>
                         <td style="color:#000;font-weight:590;">${complaint.title}</td> 
-                        
+                        <td style="color:#525b75;">${complaint.status}</td>
                         <td></td>                    
                     `;
                     recentcomplaintTableBody.appendChild(row);
