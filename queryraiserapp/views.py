@@ -237,6 +237,7 @@ def addfaculty(request):
                 )
                 faculty_permission = Permission.objects.get(codename='is_faculty')
                 faculty.user_permissions.add(faculty_permission) 
+                faculty = Faculty.objects.get(pk=faculty.pk)
                 if faculty:
                     return JsonResponse({'success': True})
                 else:
@@ -370,6 +371,7 @@ def addtechnician(request):
             )
             technician_permission = Permission.objects.get(codename='is_technician')
             technician.user_permissions.add(technician_permission)
+            technician = Technician.objects.get(pk=technician.pk) 
             if technician:
                 return JsonResponse({'success': True})
             else:
@@ -665,11 +667,21 @@ def admin_get_closed_complaints(request):
             ).order_by('-created_at')
             for complaint in closed_complaints:
                 complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['faculty_feedback_time']=timezone.localtime(complaint['faculty_feedback_time']).strftime('%Y-%m-%d %H:%M:%S')
                 complaint['technician_resolve_time'] = timezone.localtime(complaint['technician_resolve_time']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['closed_time'] = timezone.localtime(complaint['closed_time']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['assigned_time'] = timezone.localtime(complaint['assigned_time']).strftime('%Y-%m-%d %H:%M:%S')
                 complaint['technician__technician_number'] = format_number(
                     complaint['technician__technician_number'], 
                     PhoneNumberFormat.NATIONAL
                 ).lstrip('0').strip()  
+                if complaint['technician_resolved_comments'] is None:
+                    complaint['technician_resolved_comments']='--'
+                    print('Hello')
+                if complaint['faculty_resolved_comments'] is None:
+                    complaint['faculty_resolved_comments']='--'
+                if complaint['rating'] is None:
+                    complaint['rating']='N/A'
             return JsonResponse(list(closed_complaints), safe=False)
         except Exception as e: 
             return JsonResponse({'success': False, 'error': str(e)})
