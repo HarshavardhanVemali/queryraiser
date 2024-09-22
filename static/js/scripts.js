@@ -81,6 +81,16 @@ function showSpinner() {
 function hideSpinner() {
     document.getElementById('loading-spinner').style.display = 'none';
 }
+const links = document.querySelectorAll('a');
+
+links.forEach(link => {
+    link.addEventListener('click', () => {
+        document.getElementById('loading-spinner').style.display = 'flex';
+    });
+});
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('loading-spinner').style.display = 'none';
+});
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

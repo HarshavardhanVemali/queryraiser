@@ -184,8 +184,7 @@
     </script>
     <script>
     function getassignedcomplaints(){
-        showSpinner();
-        fetch('/faculty_assigned_complaints/',{
+        return fetch('/faculty_assigned_complaints/',{
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -194,14 +193,12 @@
         })
         .then(response => response.json()) 
         .then(data => {
-            hideSpinner();
             const assignedcomplaintTableBody = document.querySelector('#assignedcomplaintstable tbody');
             assignedcomplaintTableBody.innerHTML = '';
             if(data.length===0){
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="6">No assigned complaints found right now.</td>';
                 assignedcomplaintTableBody.appendChild(row);
-                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
@@ -219,12 +216,12 @@
                         </button></td>  
                     `;
                     assignedcomplaintTableBody.appendChild(row);
-                    hideSpinner();
                 });
             }
         })
         .catch(error => {
             console.error('Error fetching assigned complaints:', error);
+            throw error
         });
     }
     function sendmessage(button) {
@@ -237,7 +234,17 @@
         window.open(whatsappLink, '_blank');
     }
     document.addEventListener('DOMContentLoaded', () => {
-        getassignedcomplaints();
+        showSpinner();
+        Promise.all([
+        getassignedcomplaints()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
     function getCookie(name) {
         let cookieValue = null;

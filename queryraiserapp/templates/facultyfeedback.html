@@ -233,13 +233,21 @@
         });
         </script>
     <script>
-    
     document.addEventListener('DOMContentLoaded', () => {
-        fetchUnratedComplaints();
+        showSpinner();
+        Promise.all([
+        fetchUnratedComplaints()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
     function fetchUnratedComplaints() {
-        showSpinner();
-        fetch('/facultyfeedbacktable/', {
+        return fetch('/facultyfeedbacktable/', {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken')
@@ -247,7 +255,6 @@
         })
         .then(response => response.json())
         .then(data => {
-            hideSpinner();
             if (data.unrated_complaints.length === 0) {
                 displayNoComplaintsMessage('unratedcomplaintstable');
             } else {
@@ -260,7 +267,10 @@
                 populateRatedComplaintsTable(data.rated_complaints);
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            throw error
+        });
     }
 
     function populateUnratedComplaintsTable(complaints) {
@@ -352,7 +362,6 @@
                 location.reload(); 
                 
             } else {
-                hideSpinner();
                 console.error('Error saving rating.'); 
             }
         })

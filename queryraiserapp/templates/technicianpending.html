@@ -230,8 +230,7 @@
     </script>
     <script>
     function getpendingcomplaints(){
-        showSpinner();
-        fetch('/technicianpendingcomplaints/',{
+        return fetch('/technicianpendingcomplaints/',{
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -240,7 +239,6 @@
         })
         .then(response => response.json()) 
         .then(data => {
-            hideSpinner();
             const techniciancomplaintTableBody = document.querySelector('#pendingcomplaintstable tbody');
             techniciancomplaintTableBody.innerHTML = '';
 
@@ -248,7 +246,6 @@
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="9">No pending issues found right now.</td>';
                 techniciancomplaintTableBody.appendChild(row);
-                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
@@ -269,13 +266,12 @@
                         </button></td>
                     `;
                     techniciancomplaintTableBody.appendChild(row);
-                    hideSpinner();
                 });
             }
         })
         .catch(error => {
             console.error('Error fetching recent complaints:', error);
-            hideSpinner();
+            throw error
         });
     }
     function openComplaintOverlay(button) {
@@ -298,9 +294,18 @@
         document.getElementById('complaintOverlay').style.display = 'none';
     }
     document.addEventListener('DOMContentLoaded', () => {
-        getpendingcomplaints();
+        showSpinner();
+        Promise.all([
+        getpendingcomplaints()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
-    
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {

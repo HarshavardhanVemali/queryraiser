@@ -181,8 +181,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script>
     function getallcomplaints(){
-        showSpinner();
-        fetch('/technician_all_complaints/',{
+        return fetch('/technician_all_complaints/',{
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -191,7 +190,6 @@
         })
         .then(response => response.json()) 
         .then(data => {
-            hideSpinner();
             const recentcomplaintTableBody = document.querySelector('#recentcomplaintstable tbody');
             recentcomplaintTableBody.innerHTML = '';
 
@@ -199,7 +197,6 @@
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="7">No Complaints found at this time.</td>';
                 recentcomplaintTableBody.appendChild(row);
-                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
@@ -213,16 +210,26 @@
                         <td style="font-weight:570">${complaint.status}</td>                   
                     `;
                     recentcomplaintTableBody.appendChild(row);
-                    hideSpinner();
                 });
             }
         })
         .catch(error => {
             console.error('Error fetching recent complaints:', error);
+            throw error
         });
     }
     document.addEventListener('DOMContentLoaded', () => {
-        getallcomplaints();
+        showSpinner();
+        Promise.all([
+        getallcomplaints()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
     function getCookie(name) {
         let cookieValue = null;

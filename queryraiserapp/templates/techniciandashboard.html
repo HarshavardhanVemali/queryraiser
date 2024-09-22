@@ -244,8 +244,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script>
         function getcomplaintscount() {
-        showSpinner();
-        fetch('/techniciancomplaintcount/', {
+        return fetch('/techniciancomplaintcount/', {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -306,20 +305,17 @@
                     }]
                 },
             });
-            hideSpinner();
             } else {
                 console.error('Error fetching Complaints count:', data.error);
-                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching Complaints count:', error);
-            hideSpinner();
+            throw error
         });
     }
     function getrecentcomplaints(){
-        showSpinner();
-        fetch('/technicianrecentcomplaints/',{
+        return fetch('/technicianrecentcomplaints/',{
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -328,15 +324,12 @@
         })
         .then(response => response.json()) 
         .then(data => {
-            console.log(data)
             const recentcomplaintTableBody = document.querySelector('#recentcomplaintstable tbody');
             recentcomplaintTableBody.innerHTML = '';
-            hideSpinner();
             if(data.length===0){
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="7">No Complaints found at this time.</td>';
                 recentcomplaintTableBody.appendChild(row);
-                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
@@ -350,18 +343,27 @@
                         <td></td>                    
                     `;
                     recentcomplaintTableBody.appendChild(row);
-                    hideSpinner();
                 });
             }
         })
         .catch(error => {
             console.error('Error fetching recent complaints:', error);
-            hideSpinner();
+            throw error
         });
     }
     document.addEventListener('DOMContentLoaded', () => {
-        getcomplaintscount();
-        getrecentcomplaints();
+        showSpinner();
+        Promise.all([
+        getcomplaintscount(),
+        getrecentcomplaints()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
     function getCookie(name) {
         let cookieValue = null;

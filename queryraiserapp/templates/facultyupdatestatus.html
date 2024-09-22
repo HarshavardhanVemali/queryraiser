@@ -190,8 +190,7 @@
     </script>
     <script>
     function getfacultyassignedcomplaints() {
-        showSpinner();
-        fetch('/facultygetupdates/', {
+        return fetch('/facultygetupdates/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -200,14 +199,12 @@
         })
         .then(response => response.json())
         .then(data => {
-            hideSpinner();
             const updatecompliantTableBody = document.querySelector('#updatecompliantstable tbody');
             updatecompliantTableBody.innerHTML = '';
             if (data.length === 0) {
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="8">No assigned complaints found right now.</td>';
                 updatecompliantTableBody.appendChild(row);
-                hideSpinner();
             } else {
                 data.forEach(complaint => {
                     const row = document.createElement('tr');
@@ -242,8 +239,9 @@
             }
         })
         .catch(error => {
-            hideSpinner();
+            
             console.error('Error fetching complaints:', error);
+            throw error
         });
     }
     function toggleCommentField(complaintId) {
@@ -283,11 +281,9 @@
         .then(data => {
             hideSpinner();
             if (data.success) {
-                hideSpinner();
                 alert('Status Updated Successfully');
                 getfacultyassignedcomplaints();
             } else {
-                hideSpinner();
                 alert('Failed to update status : ' + data.error);
             }
         })
@@ -297,11 +293,19 @@
             alert('Error in changing status. Please try again later.');
         });
     }
-
     document.addEventListener('DOMContentLoaded', () => {
-        getfacultyassignedcomplaints();
+        showSpinner();
+        Promise.all([
+       getfacultyassignedcomplaints()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
-    
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {

@@ -69,6 +69,7 @@
                 <img src="{% static 'images/loading.gif' %}" alt="">
             </div>
         </div>
+        <div id="overlay-container"></div>
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link" href="{% url 'admindashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -333,8 +334,8 @@
     </script>
     <script>
     function getTechnicianPerformance(){
-        showSpinner();
-        fetch('/admintechnicianperformance/', {
+       
+        return fetch('/admintechnicianperformance/', {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -344,7 +345,6 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                hideSpinner();
                 const technicianPerformance = data.technician_performance;
                 const tbody = document.querySelector('.technicianperformance table tbody');
                 tbody.innerHTML = ''; 
@@ -352,7 +352,6 @@
                     const row = document.createElement('tr');
                     row.innerHTML = '<td colspan="5">No Technician found.</td>';
                     tbody.appendChild(row);
-                    hideSpinner();
                 }
                 else{
                     technicianPerformance.forEach(technician => {
@@ -373,16 +372,14 @@
                         `;
                         tbody.appendChild(row);
                     });
-                    hideSpinner();
                 }
             } else {
                 console.error('Error fetching technician performance:', data.error);
-                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching technician performance:', error);
-            hideSpinner();
+            throw error
         });
     }
     let technicianPieChart = null; 
@@ -429,8 +426,17 @@
       });
     }
     document.addEventListener('DOMContentLoaded', () => {
-        getTechnicianPerformance();
-
+        showSpinner();
+        Promise.all([
+        getTechnicianPerformance()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
     function getCookie(name) {
         let cookieValue = null;

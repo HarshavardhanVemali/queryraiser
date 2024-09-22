@@ -182,8 +182,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script>
     function getallcomplaints(){
-        showSpinner();
-        fetch('/technicianresolvedcomplaints/',{
+        return fetch('/technicianresolvedcomplaints/',{
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -192,7 +191,6 @@
         })
         .then(response => response.json()) 
         .then(data => {
-            hideSpinner();
             const resolvedcomplaintTableBody = document.querySelector('#resolvedcomplaintstable tbody');
             resolvedcomplaintTableBody.innerHTML = '';
 
@@ -200,7 +198,6 @@
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="8">No Resolved Complaints found at this time.</td>';
                 resolvedcomplaintTableBody.appendChild(row);
-                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
@@ -215,17 +212,29 @@
                         <td style="font-weight:570">${complaint.status}</td>                   
                     `;
                     resolvedcomplaintTableBody.appendChild(row);
-                    hideSpinner();
                 });
             }
         })
         .catch(error => {
-            hideSpinner();
             console.error('Error fetching resolved complaints:', error);
+            throw error
         });
     }
     document.addEventListener('DOMContentLoaded', () => {
         getallcomplaints();
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        showSpinner();
+        Promise.all([
+        getallcomplaints()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
     function getCookie(name) {
         let cookieValue = null;

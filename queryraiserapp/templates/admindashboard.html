@@ -49,6 +49,7 @@
                 <img src="{% static 'images/loading.gif' %}" alt="">
             </div>
         </div>
+        
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link active" href="{% url 'admindashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -362,8 +363,7 @@
     </script>
     <script>
     function getrecentcomplaints(){
-        showSpinner();
-        fetch('/adminrecentcomplaints/',{
+        return fetch('/adminrecentcomplaints/',{
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -374,12 +374,10 @@
         .then(data => {
             const recentcomplaintTableBody = document.querySelector('#recentcomplaintstable tbody');
             recentcomplaintTableBody.innerHTML = '';
-            hideSpinner();
             if(data.length===0){
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="7">No Complaints found at this time.</td>';
                 recentcomplaintTableBody.appendChild(row);
-                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
@@ -396,17 +394,15 @@
                     `;
                     recentcomplaintTableBody.appendChild(row);
                 });
-                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching recent complaints:', error);
-            hideSpinner();
+            throw error;
         });
     }
     function getcomplaintscount() {
-        showSpinner();
-        fetch('/admincomplaintscount/', {
+        return fetch('/admincomplaintscount/', {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -476,20 +472,17 @@
                     }]
                 },
             });
-            hideSpinner();
             } else {
                 console.error('Error fetching Complaints count:', data.error);
-                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching Complaints count:', error);
-            hideSpinner();
+            throw error;
         });
     }
     function getTechnicianPerformance(){
-        showSpinner();
-        fetch('/admintechnicianperformance/', {
+        return fetch('/admintechnicianperformance/', {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -502,12 +495,10 @@
                 const technicianPerformance = data.technician_performance;
                 const tbody = document.querySelector('.technicianperformance table tbody');
                 tbody.innerHTML = ''; 
-                hideSpinner();
                 if(technicianPerformance.length===0){
                     const row = document.createElement('tr');
                     row.innerHTML = '<td colspan="6">No Technician found.</td>';
                     tbody.appendChild(row);
-                    hideSpinner();
                 }
                 else{
                     technicianPerformance.forEach(technician => {
@@ -522,22 +513,30 @@
                         `;
                         tbody.appendChild(row);
                     });
-                    hideSpinner();
                 }
             } else {
                 console.error('Error fetching technician performance:', data.error);
-                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching technician performance:', error);
-            hideSpinner();
+            throw error;
         });
     }
     document.addEventListener('DOMContentLoaded', () => {
-        getrecentcomplaints();
-        getcomplaintscount();
-        getTechnicianPerformance();
+        showSpinner();
+        Promise.all([
+            getrecentcomplaints(), 
+            getcomplaintscount(), 
+            getTechnicianPerformance()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
     function getCookie(name) {
         let cookieValue = null;

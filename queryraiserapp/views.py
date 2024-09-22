@@ -1877,12 +1877,9 @@ def technicianpendingcomplaints(request):
             return JsonResponse({'success': False, 'error': str(e)})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
-    
-
-
-
-    
+  
 @technician_required
 def technician_logout_view(request):
     logout(request)
     return redirect('index')
+    

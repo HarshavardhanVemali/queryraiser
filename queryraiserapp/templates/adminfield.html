@@ -51,6 +51,7 @@
                 <img src="{% static 'images/loading.gif' %}" alt="">
             </div>
         </div>
+        <div id="overlay-container"></div>
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link" href="{% url 'admindashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -271,11 +272,20 @@ navLinks.forEach(link => {
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-            getFields();
+            showSpinner();
+            Promise.all([
+            getFields()
+            ])
+            .then(() => {
+                hideSpinner(); 
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                hideSpinner();
+            });
         });
-        showSpinner();
         function getFields() {
-            fetch('/getfields/', {
+            return fetch('/getfields/', {
                 method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json',
@@ -286,13 +296,11 @@ navLinks.forEach(link => {
                 if (!response.ok) { 
                     throw new Error('Network response was not ok');
                 }
-                hideSpinner();
                 return response.json(); 
             })
             .then(data => {
                 const fieldTableBody = document.querySelector('#fieldstable tbody');
                 fieldTableBody.innerHTML = '';
-                hideSpinner();
                 if (data.length > 0) {
                     data.forEach(field => {
                         const row = document.createElement('tr');
@@ -306,17 +314,15 @@ navLinks.forEach(link => {
                         `;
                         fieldTableBody.appendChild(row);
                     });
-                    hideSpinner();
                 } else {
                     const row = document.createElement('tr');
                     row.innerHTML = '<td colspan="2">No fields found.</td>';
                     fieldTableBody.appendChild(row);
-                    hideSpinner();
                 }
             })
             .catch(error => {
                 console.error('Error fetching fields:', error);
-                hideSpinner();
+                throw error
             });
         }
         function deleteField(fieldName) {
@@ -331,15 +337,16 @@ navLinks.forEach(link => {
                 body: JSON.stringify({ field_name: fieldName })
             })
             .then(response => {
+                hideSpinner();
                 if (response.ok) {
                     alert('Field deleted successfully.');
                     getFields(); 
                     getTechnicians();
                     getTechnicianFieldsForDropdown(); 
-                    hideSpinner();
+                   
                 } else {
                     alert('Failed to delete field: '+data.error);
-                    hideSpinner();
+                    
                 }
             })
             .catch(error => console.error('Error:', error));
@@ -369,21 +376,20 @@ navLinks.forEach(link => {
             })
             .then(response => response.json())
             .then(data => {
+                hideSpinner();
                 if (data.success) {
                     alert('Field added successfully.');
                     form.reset(); 
                     hideAddForms();
                     getFields(); 
-                    hideSpinner();
                 } else {
                     alert('Failed to add field: '+data.error); 
-                    hideSpinner();
                 }
             })
             .catch(error => {
+                hideSpinner();
                 console.error('Error adding field:', error);
                 alert('Error adding field. Please try again later.', error);
-                hideSpinner();
             });
         });
         function getCookie(name) {

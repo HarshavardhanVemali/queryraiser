@@ -206,8 +206,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script>
     function getassignedcomplaints(){
-        showSpinner();
-        fetch('/get_assigned_complaints_at_technician/', {
+        return fetch('/get_assigned_complaints_at_technician/', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json',
@@ -216,7 +215,6 @@
         })
         .then(response => response.json()) 
         .then(data => {
-            hideSpinner();
             const assignedcomplaintTableBody = document.querySelector('#assignedcomplaintstable tbody');
             assignedcomplaintTableBody.innerHTML = '';
 
@@ -224,7 +222,6 @@
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="7">No assigned complaints found right now.</td>';
                 assignedcomplaintTableBody.appendChild(row);
-                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
@@ -249,13 +246,12 @@
                         </button></td> 
                     `;
                     assignedcomplaintTableBody.appendChild(row);
-                    hideSpinner();
                 });
             }
         })
         .catch(error => {
-            hideSpinner();
             console.error('Error fetching recent complaints:', error);
+            throw error
         });
     }
     function sendmessage(button) {
@@ -282,7 +278,17 @@
         document.getElementById('complaintOverlay').style.display = 'none';
     }
     document.addEventListener('DOMContentLoaded', () => {
-        getassignedcomplaints();
+        showSpinner();
+        Promise.all([
+        getassignedcomplaints()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
     function getCookie(name) {
         let cookieValue = null;

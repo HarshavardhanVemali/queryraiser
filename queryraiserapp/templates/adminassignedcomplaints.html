@@ -50,6 +50,7 @@
                 <img src="{% static 'images/loading.gif' %}" alt="">
             </div>
         </div>
+        <div id="overlay-container"></div>
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link" href="{% url 'admindashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -278,8 +279,7 @@
     </script>
     <script>
     function getassignedcomplaints(){
-        showSpinner();
-        fetch('/getassignedcomplaints/',{
+        return fetch('/getassignedcomplaints/',{
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -288,15 +288,12 @@
         })
         .then(response => response.json()) 
         .then(data => {
-            console.log(data)
             const assignedcomplaintTableBody = document.querySelector('#assignedcomplaintstable tbody');
             assignedcomplaintTableBody.innerHTML = '';
-            hideSpinner();
             if(data.length===0){
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="8">No assigned complaints found right now.</td>';
                 assignedcomplaintTableBody.appendChild(row);
-                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
@@ -317,12 +314,11 @@
                     `;
                     assignedcomplaintTableBody.appendChild(row);
                 });
-                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching recent complaints:', error);
-            hideSpinner();
+            throw error
         });
     }
     function sendmessage(button) {
@@ -335,8 +331,19 @@
         window.open(whatsappLink, '_blank');
     }
     document.addEventListener('DOMContentLoaded', () => {
-        getassignedcomplaints();
+        showSpinner();
+        Promise.all([
+        getassignedcomplaints()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
+
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {

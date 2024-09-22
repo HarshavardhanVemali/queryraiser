@@ -212,12 +212,10 @@
             .then(data => {
                 hideSpinner();
                 if (data.success) {
-                    hideSpinner();
                     form.reset();
                     showOverlay("Complaint has been raised successfully");
                     document.getElementById('overlay').classList.remove('active');
                 } else {
-                    hideSpinner();
                     showOverlay(data.message);
                     
                 }

@@ -49,6 +49,7 @@
             <div class="spinner">
                 <img src="{% static 'images/loading.gif' %}" alt="">
             </div>
+            <div id="overlay-container"></div>
         </div>
         <nav class="sidebar">
             <ul>
@@ -316,8 +317,7 @@ navLinks.forEach(link => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const departmentCode = urlParams.get('dept_code');
-        showSpinner();
-        fetch('/getfaculty/', {
+        return fetch('/getfaculty/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -346,9 +346,7 @@ navLinks.forEach(link => {
             `;
             const facultyTableBody = document.querySelector('#facultytable tbody');
             facultyTableBody.innerHTML='';
-            hideSpinner();
             if (data.faculty.length === 0) {
-                hideSpinner();
                 const noFacultyRow = document.createElement('tr');
                 const noFacultyCell = document.createElement('td');
                 noFacultyCell.setAttribute('colspan', 6);
@@ -381,13 +379,12 @@ navLinks.forEach(link => {
                         </svg>Delete</button></td> 
                     `;
                     facultyTableBody.appendChild(row);
-                    hideSpinner();
                 });
             }
         })
         .catch(error => {
             console.error('Error fetching faculty:', error);
-            hideSpinner();
+            throw error;
         });
     }
     document.getElementById('addfacultyform').addEventListener('submit', function(event) {
@@ -404,21 +401,21 @@ navLinks.forEach(link => {
         })
         .then(response => response.json())
         .then(data => {
+            hideSpinner();
             if (data.success) {
                 alert('Faculty added successfully.');
                 form.reset();
                 document.querySelector('.overlay').classList.remove('active');
                 getfaculty();
-                hideSpinner();
+                
             } else {
                 alert('Failed to add Faculty: ' + data.error);
-                hideSpinner();
             }
         })
         .catch(error => {
-            console.error('Error adding faculty:', error);
-            alert('Error adding faculty Please try again later.');
             hideSpinner();
+            console.error('Error adding faculty:', error);
+            alert('Error adding faculty Please try again later.'); 
         });
     });
     function redirectToFacultyPage(departmentCode) {
@@ -485,21 +482,19 @@ navLinks.forEach(link => {
         body: JSON.stringify({ faculty_id: facultyId, faculty_name: FacultyName ,faculty_number:FacultyNumber})
     })
     .then(response => {
+        hideSpinner();
         if (!response.ok) {
             throw new Error('Network response was not ok.');
         }
         return response.json();
-        hideSpinner();
     })
     .then(data => {
         if(data.success){
-            hideSpinner();
             alert('Changes saved successfully');
             getfaculty();
             
         }
         else{
-            hideSpinner();
             alert('Unable to save changes.');
         }
     })
@@ -520,20 +515,18 @@ navLinks.forEach(link => {
             body:JSON.stringify({faculty_id:facultyId})
         })
         .then(response=>{
+            hideSpinner();
             if(!response.ok){
                 throw new Error('Network response was not ok.');
             }
             return response.json();
-            hideSpinner();
         })
         .then(data=>{
             if(data.success){
-                hideSpinner();
                 alert('Deleted Successfully.');
                 getfaculty();
             }
             else{
-                hideSpinner();
                 alert('Failed to delete.');
             }
         })
@@ -544,7 +537,17 @@ navLinks.forEach(link => {
         });
     }
     document.addEventListener('DOMContentLoaded', () => {
-        getfaculty();
+        showSpinner();
+        Promise.all([
+        getfaculty()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
 
     function getCookie(name) {

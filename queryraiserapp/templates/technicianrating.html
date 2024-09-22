@@ -210,8 +210,7 @@
         return stars.join('');
     }
     function getTechnicianPerformance(){
-        showSpinner();
-        fetch('/technicianrating/',{
+        return fetch('/technicianrating/',{
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': getCookie('csrftoken'),
@@ -220,7 +219,6 @@
             })
             .then(response => response.json()) 
             .then(data => {
-                hideSpinner();
                 const ratingsTableBody = document.querySelector('.technicianperformance table tbody');
                 ratingsTableBody.innerHTML = '';
                 
@@ -228,7 +226,6 @@
                     const row = document.createElement('tr');
                     row.innerHTML = '<td colspan="8">No Ratings found right now.</td>';
                     ratingsTableBody.appendChild(row);
-                    hideSpinner();
                 } else {
                     data.forEach(complaint => { 
                         const row = document.createElement('tr');
@@ -245,7 +242,6 @@
                         `;
                         
                         ratingsTableBody.appendChild(row);
-                        hideSpinner();
                     });
                     const totalAverageRatingDiv = document.getElementById(`total-average-rating`);
                     totalAverageRatingDiv.innerHTML = `
@@ -256,13 +252,21 @@
             })
             .catch(error => {
                 console.error('Error fetching recent complaints:', error);
-                hideSpinner();
+                throw error
             });
     }
-    
     document.addEventListener('DOMContentLoaded', () => {
-        getTechnicianPerformance();
-
+        showSpinner();
+        Promise.all([
+        getTechnicianPerformance()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
     function getCookie(name) {
         let cookieValue = null;

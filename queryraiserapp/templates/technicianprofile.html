@@ -387,8 +387,7 @@
     
 
     function getTechnicianProfile() {
-      showSpinner();
-        fetch('/technicianprofile/', {
+        return fetch('/technicianprofile/', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
@@ -396,7 +395,6 @@
             },
         })
         .then(response => {
-          hideSpinner();
             if (!response.ok) {
             throw new Error('Network response was not ok');
             }
@@ -404,7 +402,6 @@
         })
         .then(data => {
             if (data.success) {
-              hideSpinner();
             document.querySelector('.profile-info h3').textContent = data.technician_name;
             document.querySelector('.rating-info').textContent = `Average Rating : ${data.complaint_counts.average_rating}`;
             document.getElementById('allcomplaints').textContent = data.complaint_counts.all;
@@ -414,17 +411,26 @@
             document.querySelector('#technician_number').textContent = data.technician_number; 
             document.querySelector('#technician_field').textContent = data.technician_field; 
             } else {
-              hideSpinner();
             alert(data.error);
             }
         })
         .catch(error => {
-          hideSpinner();
             console.error('There was a problem with the fetch operation:', error);
+            throw error
         });
     }
-    document.addEventListener('DOMContentLoaded', function () {
-        getTechnicianProfile();
+    document.addEventListener('DOMContentLoaded', () => {
+        showSpinner();
+        Promise.all([
+        getTechnicianProfile()
+        ])
+        .then(() => {
+            hideSpinner(); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            hideSpinner();
+        });
     });
 
    
