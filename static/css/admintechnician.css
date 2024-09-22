@@ -34,7 +34,10 @@
     z-index: 1000;
     opacity: 1;
 }
-
+.dark-mode .form-container{
+    background: #141824;
+    border: 1px solid #373e53;
+}
 
 
 #closebtn {
@@ -63,18 +66,28 @@ form {
 .form-row label {
     display: block;
     margin-bottom: 5px;
-    min-width: 120px; 
+    min-width: 160px; 
 }
 
 .form-row input[type="text"],
 .form-row select { 
-    width: 100%;
+    background: #0f111a;
+    border: 1px solid #373e53;
+}
+.dark-mode .form-row input[type="text"],
+.dark-mode .form-row select{
+    border: 1px solid #333;
+    border-radius: 5px;
+    width: 50%;
     padding: 8px;
     box-sizing: border-box;
-    border: 1px solid #ccc; 
-    border-radius: 5px;
 }
-
+.form-row input[type="text"]:focus,
+.form-row select:focus{
+    outline: none;
+    border-color: #4285f4; 
+    box-shadow: 0px 0px 8px rgba(66, 133, 244, 0.5); 
+} 
 .button-container {
     display: flex;
     justify-content: center;
@@ -92,10 +105,10 @@ form {
     font-weight: 100;
     font-size: 20px;
     margin-top: 10px;
-    background-color: white;
     padding-left: 20px;
     padding-right: 20px;
     border: 1px solid rgba(203, 208, 221, 0.54);
+    border: none;
 }
 .fieldstablecontainer,.techniciantablecontainer{
     display: flex;
@@ -103,7 +116,6 @@ form {
 }
 .table-container{
     margin-top: 12px;
-    background-color: white;
 }
 #fieldstable,#techniciantable {
     width: 100%;
@@ -116,19 +128,13 @@ form {
     font-size: 13px;
     text-align: left;
     font-weight: 200;
-    color: #9fa6bc;
 }
 
 #fieldstable th ,#techniciantable th{
-    border-bottom: 1px solid rgba(203, 208, 221, 0.54);
-    color: black;
     font-size: 16px;
     font-weight: 590;
 }
 
-#fieldstable tbody tr,#techniciantable tbody tr{
-    border-bottom: 1px solid rgba(203, 208, 221, 0.54);
-}
 
 .delete-button {
     background-color: #f44336;

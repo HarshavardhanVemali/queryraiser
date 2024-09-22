@@ -49,6 +49,11 @@
         </div>
     </header>
     <div class="main-container">
+        <div id="loading-spinner" class="spinner-overlay" style="display: none;">
+            <div class="spinner">
+                <img src="{% static 'images/loading.gif' %}" alt="">
+            </div>
+        </div>
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link" href="{% url 'facultydashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -90,7 +95,7 @@
                             <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
                           </svg>Resolved Complaints</a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'adminfield' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'facultyupdatesstatus' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
                             <circle cx="24" cy="24" r="20" fill="none" stroke="#e0e0e0" stroke-width="4"/>
                             <circle cx="24" cy="24" r="20" fill="none" stroke="#4caf50" stroke-width="4"
                                     stroke-dasharray="125.66" stroke-dashoffset="31.42"/>
@@ -116,7 +121,7 @@
                     <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                   </svg>Feedback</a></li>
                 <li class="logout-item">
-                    <a class="nav-link" href="{% url 'adminlogout' %}">
+                    <a class="nav-link" href="{% url 'faculty_logout_view' %}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                             <polyline points="16 17 21 12 16 7" />
@@ -195,6 +200,7 @@
             event.preventDefault();
             const form = event.target;
             const formData = new FormData(form);
+            showSpinner();
             fetch('/raisecomplaint/',{
                 method: form.method,
                 headers: {
@@ -204,15 +210,20 @@
             })
             .then(response => response.json())
             .then(data => {
+                hideSpinner();
                 if (data.success) {
+                    hideSpinner();
                     form.reset();
                     showOverlay("Complaint has been raised successfully");
                     document.getElementById('overlay').classList.remove('active');
                 } else {
+                    hideSpinner();
                     showOverlay(data.message);
+                    
                 }
             })
             .catch(error => {
+                hideSpinner();
                 console.error('Error during Submission: ', error);
                 showOverlay('An error occurred during Submission. Please try again later.');
             });

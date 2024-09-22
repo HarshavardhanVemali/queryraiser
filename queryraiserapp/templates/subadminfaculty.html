@@ -45,6 +45,11 @@
         </div>
     </header>
     <div class="main-container">
+        <div id="loading-spinner" class="spinner-overlay" style="display: none;">
+            <div class="spinner">
+                <img src="{% static 'images/loading.gif' %}" alt="">
+            </div>
+        </div>
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link" href="{% url 'admindashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -233,7 +238,7 @@
                         </div>
                         <div id="form-row">
                             <label for="phone">Phone Number (IN)</label>
-                            <input type="tel" id="phone" name="phone" placeholder="+91-XXXXXXXXXX" pattern="+?[6-9]\d{9,12}" required>     
+                            <input type="tel" id="phone" name="phone" placeholder="98XXXXXXXX" pattern="+?[6-9]\d{9,12}" required>     
                         </div>
                         <div id="form-row">
                             <label for="department">Department</label>
@@ -252,10 +257,9 @@
                 </div>
             </div>
 
-            <div class="facultylist">
-                
+            <div class="tablelist">
                 <div class="table-container">
-                    <table id="facultytable">
+                    <table id="facultytable" class="tables">
                         <thead>
                             <tr>
                                 <th>Faculty</th>
@@ -312,6 +316,7 @@ navLinks.forEach(link => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const departmentCode = urlParams.get('dept_code');
+        showSpinner();
         fetch('/getfaculty/', {
             method: 'POST',
             headers: {
@@ -341,7 +346,9 @@ navLinks.forEach(link => {
             `;
             const facultyTableBody = document.querySelector('#facultytable tbody');
             facultyTableBody.innerHTML='';
+            hideSpinner();
             if (data.faculty.length === 0) {
+                hideSpinner();
                 const noFacultyRow = document.createElement('tr');
                 const noFacultyCell = document.createElement('td');
                 noFacultyCell.setAttribute('colspan', 6);
@@ -359,12 +366,12 @@ navLinks.forEach(link => {
                             </div>
                             <p contenteditable="true" 
                                 id="faculty_name_${faculty.facultyid}" 
-                                style="max-width:150px; color:#000; font-weight:500; font-size:15px;">
+                                style="max-width:150px;font-weight:500; font-size:15px;">
                                 ${faculty.name}
                             </p>    
                          </td>
                         
-                        <td contenteditable="true" id="faculty_phone_${faculty.facultyid}" style="max-width:150px;color:#000;font-weight:500">${faculty.phone_number}</td>
+                        <td contenteditable="true" id="faculty_phone_${faculty.facultyid}" style="max-width:150px;font-weight:500">${faculty.phone_number}</td>
                         <td style="color:#3874ff;">${faculty.facultyid}</td>
                         <td style="color:grey !important;font-weight:100 !important;">${faculty.departmentname}</td>
                         <td><button class="save-button" onclick="savefacultyChanges('${faculty.facultyid}')">Save</button></td> 
@@ -374,19 +381,20 @@ navLinks.forEach(link => {
                         </svg>Delete</button></td> 
                     `;
                     facultyTableBody.appendChild(row);
-                    
+                    hideSpinner();
                 });
             }
         })
         .catch(error => {
             console.error('Error fetching faculty:', error);
+            hideSpinner();
         });
     }
     document.getElementById('addfacultyform').addEventListener('submit', function(event) {
         event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
-
+        showSpinner();
         fetch(form.action, {
             method: form.method,
             headers: {
@@ -401,13 +409,16 @@ navLinks.forEach(link => {
                 form.reset();
                 document.querySelector('.overlay').classList.remove('active');
                 getfaculty();
+                hideSpinner();
             } else {
                 alert('Failed to add Faculty: ' + data.error);
+                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error adding faculty:', error);
             alert('Error adding faculty Please try again later.');
+            hideSpinner();
         });
     });
     function redirectToFacultyPage(departmentCode) {
@@ -464,6 +475,7 @@ navLinks.forEach(link => {
         const phoneRegex = /^[6-9]\d{9}$/;  
         return phoneRegex.test(cleanedPhoneNumber);
     }
+    showSpinner();
     fetch('/savefacultychanges/', {
         method: 'POST',
         headers: {
@@ -477,22 +489,28 @@ navLinks.forEach(link => {
             throw new Error('Network response was not ok.');
         }
         return response.json();
+        hideSpinner();
     })
     .then(data => {
         if(data.success){
+            hideSpinner();
             alert('Changes saved successfully');
             getfaculty();
+            
         }
         else{
+            hideSpinner();
             alert('Unable to save changes.');
         }
     })
     .catch(error => {
+        hideSpinner();
         console.error('Error saving changes:', error);
         alert('Error saving changes. Please try again later.');
     });
     }
     function deleteDepartment(facultyId){
+        showSpinner();
         fetch('/deletefaculty/',{
             method:'POST',
             headers:{
@@ -506,17 +524,21 @@ navLinks.forEach(link => {
                 throw new Error('Network response was not ok.');
             }
             return response.json();
+            hideSpinner();
         })
         .then(data=>{
             if(data.success){
+                hideSpinner();
                 alert('Deleted Successfully.');
                 getfaculty();
             }
             else{
+                hideSpinner();
                 alert('Failed to delete.');
             }
         })
         .catch(error=>{
+            hideSpinner();
             console.error('Error saving changes:', error);
             alert('Error saving changes. Please try again later.');
         });

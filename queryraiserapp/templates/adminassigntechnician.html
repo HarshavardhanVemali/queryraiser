@@ -10,109 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="{% static 'js/scripts.js' %}"></script>
 </head>
-<style>
-.overlay {
-    display: none; 
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); 
-    z-index: 1000; 
-    transition: opacity 0.3s ease-in-out; 
-}
-
-.overlay-content {
-    background-color: #fff;
-    margin: 10% auto; 
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 500px;
-    position: relative;
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
-    animation: slideIn 0.4s ease-in-out; 
-    text-align: center; 
-    font-family: 'Arial', sans-serif; 
-}
-
-.close-button {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #888;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.close-button:hover {
-    color: #e74c3c;
-}
-.overlay-content h3 {
-    font-size: 24px;
-    margin-bottom: 15px;
-    color: #333;
-}
-.overlay-content p {
-    font-size: 16px;
-    margin: 10px 0;
-    color: #555;
-    line-height: 1.5;
-}
-
-.overlay-content p strong {
-    color: #333;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateY(-30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-.overlay-content h3 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #007bff;
-    text-align: center; 
-}
-
-.complaint-details {
-    display: grid;
-    grid-template-columns: 1fr 2fr; 
-    gap: 10px; 
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.complaint-details label {
-    font-weight: bold;
-    text-align: left;
-}
-
-.complaint-details span {
-    text-align: left;
-}
-
-.assign-technician {
-    text-align: center; 
-}
-select{
-    height: 30px;
-    border-radius: 5px;
-}
-select:focus{
-    outline: none;
-    border-color: #4285f4; 
-    box-shadow: 0px 0px 8px rgba(66, 133, 244, 0.5); 
-}
-</style>
 <body>
     <header>
         <div class="header-container">
@@ -147,6 +44,11 @@ select:focus{
         </div>
     </header>
     <div class="main-container">
+        <div id="loading-spinner" class="spinner-overlay" style="display: none;">
+            <div class="spinner">
+                <img src="{% static 'images/loading.gif' %}" alt="">
+            </div>
+        </div>
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link" href="{% url 'admindashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -390,6 +292,7 @@ select:focus{
     </script>
     <script>
     function getnewcomplaints(){
+        showSpinner();
         fetch('/adminnewcomplaintstable/',{
             method: 'POST',
             headers: {
@@ -399,7 +302,7 @@ select:focus{
         })
         .then(response => response.json()) 
         .then(data => {
-            console.log(data)
+            hideSpinner();
             const newcomplaintTableBody = document.querySelector('#newcomplaintstable tbody');
             newcomplaintTableBody.innerHTML = '';
 
@@ -407,6 +310,7 @@ select:focus{
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="6">No new complaints found right now.</td>';
                 newcomplaintTableBody.appendChild(row);
+                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
@@ -415,16 +319,18 @@ select:focus{
                         <td>${complaint.created_at}</td> 
                         <td style="color:#007bff;">${complaint.faculty__faculty_name}</td> 
                         <td style="color:#525b75;">${complaint.department__department_name}</td>
-                        <td style="color:#000;font-weight:590;">${complaint.title}</td> 
+                        <td style="font-weight:570;">${complaint.title}</td> 
                          <td><button onclick="openComplaintOverlay(this)" data-complaint-id="${complaint.id}" data-complaint="${encodeURIComponent(JSON.stringify(complaint))}" class="save-button">Assign Technician
                         </button></td>                   
                     `;
                     newcomplaintTableBody.appendChild(row);
                 });
+                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching recent complaints:', error);
+            hideSpinner();
         });
     }
     function openComplaintOverlay(button) {
@@ -443,6 +349,7 @@ select:focus{
             const technicianNumber = document.getElementById('technicianSelect').value;
             const nationalNumberMatch = technicianNumber.match(/National Number: (\d+)/);
             const nationalNumber = nationalNumberMatch ? nationalNumberMatch[1] : null;
+            showSpinner();
             fetch('/assigntechnician/', {
                 method: 'POST',
                 headers: {
@@ -456,6 +363,7 @@ select:focus{
             })
             .then(response => response.json())
             .then(data => {
+                hideSpinner();
                 if (data.success) {
                     closeComplaintOverlay();
                     alert(data.message); 
@@ -468,6 +376,7 @@ select:focus{
             })
             .catch(error => {
                 console.error('Error assigning technician:', error);
+                hideSpinner();
             });
         });
     }
@@ -479,6 +388,7 @@ select:focus{
         getTechnicianFieldsForDropdown();
     });
     function getTechnicianFieldsForDropdown() {
+        showSpinner();
         fetch('/getfields/', {
             method: 'POST', 
             headers: {
@@ -488,6 +398,7 @@ select:focus{
         }) 
             .then(response => response.json())
             .then(data => {
+                hideSpinner();
                 const technicianFieldSelect = document.getElementById('technicianfield');
                 technicianFieldSelect.innerHTML = '<option value="" disabled selected>Select Field</option>';
                 data.forEach(field => {
@@ -499,10 +410,12 @@ select:focus{
             })
             .catch(error => {
                 console.error('Error fetching technician fields:', error);
+                hideSpinner();
             });
     }
     function updateTechnicianDropdown(field_name) {
         if (field_name) {
+            showSpinner();
             fetch('/get_technicians_by_field/', {
                 method: 'POST',
                 headers: {
@@ -513,6 +426,7 @@ select:focus{
             })
             .then(response => response.json())
             .then(data => {
+                hideSpinner();
                 if (data.success) {
                     const technicianSelect = document.getElementById('technicianSelect'); // Assuming you add a technicianSelect element
                     technicianSelect.innerHTML = '<option value="" disabled selected>Select Technician</option>'; // Clear existing options
@@ -521,13 +435,16 @@ select:focus{
                         option.value = technician.technician_number; 
                         option.text = technician.technician_name;
                         technicianSelect.add(option);
+                        hideSpinner();
                     });
                 } else {
                     console.error('Error fetching technicians:', data.error);
+                    hideSpinner();
                 }
             })
             .catch(error => {
                 console.error('Error fetching technicians:', error);
+                hideSpinner();
             });
         } else {
             const technicianSelect = document.getElementById('technicianSelect');

@@ -11,100 +11,7 @@
     <link rel="stylesheet" href="{% static 'css/pannelstyles.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-<style>
-.overlay {
-    display: none; 
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); 
-    z-index: 1000; 
-    transition: opacity 0.3s ease-in-out; 
-}
 
-.overlay-content {
-    background-color: #fff;
-    margin: 15% auto; 
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 500px;
-    position: relative;
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
-    animation: slideIn 0.4s ease-in-out; 
-    text-align: center; 
-    font-family: 'Arial', sans-serif; 
-}
-
-.close-button {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #888;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.close-button:hover {
-    color: #e74c3c;
-}
-.overlay-content h3 {
-    font-size: 24px;
-    margin-bottom: 15px;
-    color: #333;
-}
-.overlay-content p {
-    font-size: 16px;
-    margin: 10px 0;
-    color: #555;
-    line-height: 1.5;
-}
-
-.overlay-content p strong {
-    color: #333;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateY(-30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-.overlay-content h3 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #007bff;
-    text-align: center; 
-}
-
-.complaint-details {
-    display: grid;
-    grid-template-columns: 1fr 2fr; 
-    gap: 10px; 
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.complaint-details label {
-    font-weight: bold;
-    text-align: left;
-}
-
-.complaint-details span {
-    text-align: left;
-}
-
-.assign-technician {
-    text-align: center; 
-}
-</style>
 <body>
     <header>
         <div class="header-container">
@@ -139,6 +46,11 @@
         </div>
     </header>
     <div class="main-container">
+        <div id="loading-spinner" class="spinner-overlay" style="display: none;">
+            <div class="spinner">
+                <img src="{% static 'images/loading.gif' %}" alt="">
+            </div>
+        </div>
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link" href="{% url 'facultydashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -180,7 +92,7 @@
                             <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
                           </svg>Resolved Complaints</a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'adminfield' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'facultyupdatesstatus' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
                             <circle cx="24" cy="24" r="20" fill="none" stroke="#e0e0e0" stroke-width="4"/>
                             <circle cx="24" cy="24" r="20" fill="none" stroke="#4caf50" stroke-width="4"
                                     stroke-dasharray="125.66" stroke-dashoffset="31.42"/>
@@ -206,7 +118,7 @@
                     <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                   </svg>Feedback</a></li>
                 <li class="logout-item">
-                    <a class="nav-link" href="{% url 'adminlogout' %}">
+                    <a class="nav-link" href="{% url 'faculty_logout_view' %}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                             <polyline points="16 17 21 12 16 7" />
@@ -272,6 +184,7 @@
     </script>
     <script>
     function getassignedcomplaints(){
+        showSpinner();
         fetch('/faculty_assigned_complaints/',{
             method: 'POST',
             headers: {
@@ -281,21 +194,21 @@
         })
         .then(response => response.json()) 
         .then(data => {
-            console.log(data)
+            hideSpinner();
             const assignedcomplaintTableBody = document.querySelector('#assignedcomplaintstable tbody');
             assignedcomplaintTableBody.innerHTML = '';
-
             if(data.length===0){
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="6">No assigned complaints found right now.</td>';
                 assignedcomplaintTableBody.appendChild(row);
+                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td style="color:#007bff;">${complaint.id}</td> 
                         <td>${complaint.created_at}</td> 
-                        <td style="color:#000;font-weight:590;">${complaint.title}</td>
+                        <td style="font-weight:570;">${complaint.title}</td>
                         <td style="color:#525b75;">${complaint.technician__technician_name}</td> 
                         <td style="color:#525b75;">${complaint.technician__technician_number}</td> 
                         <td><button class="save-button" style="display:flex;align-items:center;gap:5px;" onclick="sendmessage(this)" data-complaint="${encodeURIComponent(JSON.stringify(complaint))}">
@@ -306,6 +219,7 @@
                         </button></td>  
                     `;
                     assignedcomplaintTableBody.appendChild(row);
+                    hideSpinner();
                 });
             }
         })

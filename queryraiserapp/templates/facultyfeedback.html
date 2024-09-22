@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="{% static 'css/pannelstyles.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
+<style>
+    .tablelist{
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 10px;
+    }
+</style>
 <body>
     <header>
         <div class="header-container">
@@ -49,6 +56,11 @@
         </div>
     </header>
     <div class="main-container">
+        <div id="loading-spinner" class="spinner-overlay" style="display: none;">
+            <div class="spinner">
+                <img src="{% static 'images/loading.gif' %}" alt="">
+            </div>
+        </div>
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link" href="{% url 'facultydashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -90,7 +102,7 @@
                             <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
                           </svg>Resolved Complaints</a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'adminfield' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'facultyupdatesstatus' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
                             <circle cx="24" cy="24" r="20" fill="none" stroke="#e0e0e0" stroke-width="4"/>
                             <circle cx="24" cy="24" r="20" fill="none" stroke="#4caf50" stroke-width="4"
                                     stroke-dasharray="125.66" stroke-dashoffset="31.42"/>
@@ -116,7 +128,7 @@
                     <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                   </svg>Feedback</a></li>
                 <li class="logout-item">
-                    <a class="nav-link" href="{% url 'adminlogout' %}">
+                    <a class="nav-link" href="{% url 'faculty_logout_view' %}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                             <polyline points="16 17 21 12 16 7" />
@@ -127,104 +139,61 @@
                 </li>
             </ul>
         </nav>
-        <main class="content"> 
-            <div class="subnav d-flex justify-content-between align-items-center"> 
+        <main class="content">
+            <div class="subnav d-flex justify-content-between align-items-center">
                 <div>
-                    {% if  faculty_name%}
-                    <h3>Welcome {{faculty_name}}</h3>
-                    {% else %}
-                    <h3>Welcome</h3>
-                    {% endif %}
+                    <h3 style="display: flex;align-items: center;gap: 10px;">Ratings & Feedback<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#ff8220" class="bi bi-star" viewBox="0 0 16 16">
+                        <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
+                      </svg></h3>
                 </div>
             </div>
-            <div class="tablelist quickstatslist" >
-               
-                <div class="table-container" id="quickstatstable-container">
-                    <table id="quickstatstable" class="tables">
-                        <thead>
-                            <tr>
-                                <th style="border: 1px solid #800080;background-color: #f5e1f5;">
-                                    <span>All Complaints</span> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
-                                      </svg>
-                                 </th>
-                                 <th style="border: 1px solid #fd7e14;background-color: #ffe5cc; ">
-                                    <span>
-                                        Assigned Complaints
-                                    </span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
-                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                                        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                                      </svg>
-                                </th>
-                                <th style="border: 1px solid #ffc107;background-color: #fff3cd;">
-                                    
-                                    <span>
-                                        Pending Complaints
-                                    </span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
-                                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
-                                        <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
-                                        <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
-                                      </svg>
-                                
-                                </th> 
-                                <th style="border: 1px solid #28a745;  background-color: #d4edda;">
-                                    
-                                    <span>
-                                        Complaints Resolved
-                                    </span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
-                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                                      </svg>
-                                </th>
-                                <th style="border: 1px solid #A9A9A9; background-color: #e9e9e9; ">
-                                    <span>Closed Complaints</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
-                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                                      </svg>
-                                </th> 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="complaintstatus">
-                <h3>Complaint Status Overview</h3>
-                <div class="complaintstatusgraph">
-                    <canvas id="complaintPieChart"></canvas> 
-                    <canvas id="complaintBarChart"></canvas> 
-                </div>
-            </div>
-            <div class="recentcomplainttable">
-                <h3>Recent Complaints</h3>
+
+            <div class="ratingcomplainttable">
+                <h4 style="margin-left: 20px;">Unrated Complaints</h4> 
                 <div class="tablelist">
-               
                     <div class="table-container">
-                        <table class="tables" id="recentcomplaintstable">
+                        <table class="tables" id="unratedcomplaintstable">
                             <thead>
                                 <tr>
                                     <th>Complaint ID</th>
-                                    <th>Date Raised</th>
-                                    <th>Title</th>
+                                    <th>Issue Type</th>
                                     <th>Technician</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>Technician Number</th>
+                                    <th>Date Raised</th>
+                                    <th>Date Closed</th>
+                                    <th>Rating</th> 
                                 </tr>
                             </thead>
                             <tbody>
-                                </tbody>
+                            </tbody>
                         </table>
                     </div>
-                    <a href="{% url 'faculty_all_complaints_page' %}" style="font-size: 13px;color: #007bff;display: flex;align-items: center;gap: 5px;" id="viewall">View all <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-                      </svg></a>
                 </div>
             </div>
+
+            <div class="ratingcomplainttable">
+                <h4 style="margin-left: 20px;">Previously Rated Complaints</h4>
+                <div class="tablelist">
+                    <div class="table-container">
+                        <table class="tables" id="ratedcomplaintstable">
+                            <thead>
+                                <tr>
+                                    <th>Complaint ID</th>
+                                    <th>Issue Type</th>
+                                    <th>Technician</th>
+                                    <th>Technician Number</th>
+                                    <th>Date Raised</th>
+                                    <th>Date Closed</th>
+                                    <th>Rating</th> 
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </main> 
         <footer class="footer position-absolute">
             <div>
@@ -251,121 +220,131 @@
         });
         </script>
     <script>
-    function getcomplaintscount() {
-        fetch('/facultycomplaintcount/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json()) 
-        .then(data => {
-            console.log(data);
-
-            const quickstatsTableBody = document.querySelector('#quickstatstable tbody');
-            quickstatsTableBody.innerHTML = '';
-
-            if (data.success) { 
-                const complaintCounts = data.complaint_counts;
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td style="color:#800080;">${complaintCounts.all}</td> 
-                    <td style="color:#fd7e14;">${complaintCounts.assigned}</td> 
-                    <td style="color:#ffc107;">${complaintCounts.pending_review}</td> 
-                    <td style="color:#28a745;">${complaintCounts.resolved}</td> 
-                    <td style="color:#A9A9A9;">${complaintCounts.closed}</td> 
-                `;
-                quickstatsTableBody.appendChild(row); 
-                const chartLabels = Object.keys(complaintCounts);
-                const chartData = Object.values(complaintCounts);
-
-                const pieChartCanvas = document.getElementById('complaintPieChart').getContext('2d');
-                new Chart(pieChartCanvas, {
-                    type: 'pie',
-                    data: {
-                        labels: chartLabels,
-                        datasets: [{
-                            label: 'Complaint Status',
-                            data: chartData,
-                            backgroundColor: [
-                                '#f5e1f5', 
-                                '#fd7e14',
-                                '#ffc107', 
-                                '#28a745', 
-                                '#A9A9A9'  
-                            ],
-                        }]
-                    },
-                });
-
-            const barChartCanvas = document.getElementById('complaintBarChart').getContext('2d');
-            new Chart(barChartCanvas, {
-                type: 'bar',
-                data: {
-                    labels: chartLabels,
-                    datasets: [{
-                        label: 'Complaint Status',
-                        data: chartData,
-                        backgroundColor: [
-                            'rgba(245, 225, 245, 0.5)',  
-                            'rgba(253, 126, 20, 0.5)',  
-                            'rgba(255, 193, 7, 0.5)',  
-                            'rgba(40, 167, 69, 0.5)',  
-                            'rgba(169, 169, 169, 0.5)' 
-                        ],
-                    }]
-                },
-            });
-            } else {
-                console.error('Error fetching Complaints count:', data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching Complaints count:', error);
-        });
-    }
-    function getrecentcomplaints(){
-        fetch('/facultyrecentcomplaints/',{
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-                'Content-Type': 'application/json'
-        }
-        })
-        .then(response => response.json()) 
-        .then(data => {
-            console.log(data)
-            const recentcomplaintTableBody = document.querySelector('#recentcomplaintstable tbody');
-            recentcomplaintTableBody.innerHTML = '';
-
-            if(data.length===0){
-                const row = document.createElement('tr');
-                row.innerHTML = '<td colspan="7">No Complaints found at this time.</td>';
-                recentcomplaintTableBody.appendChild(row);
-            } else {
-                data.forEach(complaint => { 
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td style="color:#007bff;">${complaint.id}</td> 
-                        <td>${complaint.created_at}</td> 
-                        <td style="color:#000;font-weight:590;">${complaint.title}</td> 
-                        <td style="color:#6e7891;">${complaint.technician__technician_name}</td> 
-                        <td style="color:#525b75;">${complaint.status}</td>
-                        <td></td>                    
-                    `;
-                    recentcomplaintTableBody.appendChild(row);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching recent complaints:', error);
-        });
-    }
+    
     document.addEventListener('DOMContentLoaded', () => {
-        getcomplaintscount();
-        getrecentcomplaints();
+        fetchUnratedComplaints();
     });
+    function fetchUnratedComplaints() {
+        showSpinner();
+        fetch('/facultyfeedbacktable/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideSpinner();
+            if (data.unrated_complaints.length === 0) {
+                displayNoComplaintsMessage('unratedcomplaintstable');
+            } else {
+                populateUnratedComplaintsTable(data.unrated_complaints);
+            }
+
+            if (data.rated_complaints.length === 0) {
+                displayNoComplaintsMessage('ratedcomplaintstable');
+            } else {
+                populateRatedComplaintsTable(data.rated_complaints);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function populateUnratedComplaintsTable(complaints) {
+
+        const tableBody = document
+            .getElementById('unratedcomplaintstable')
+            .getElementsByTagName('tbody')[0];
+        tableBody.innerHTML = ''; 
+
+        complaints.forEach(complaint => {
+            const row = tableBody.insertRow();
+            row.insertCell().textContent = complaint.id;
+            row.insertCell().textContent = complaint.title;
+            row.insertCell().textContent = complaint.technician__technician_name;
+            row.insertCell().textContent = complaint.technician__technician_number;
+            row.insertCell().textContent = complaint.created_at;
+            row.insertCell().textContent = complaint.closed_time;
+
+            const ratingCell = row.insertCell();
+            ratingCell.innerHTML = getStarRating(complaint.id);
+        });
+    }
+
+    function getStarRating(complaintId) {
+        return `
+            <div class="rating" data-complaint-id="${complaintId}">
+                <i class="star far fa-star" data-rating="1"></i>
+                <i class="star far fa-star" data-rating="2"></i>
+                <i class="star far fa-star" data-rating="3"></i>
+                <i class="star far fa-star" data-rating="4"></i>
+                <i class="star far fa-star" data-rating="5"></i>
+            </div>
+        `;
+    }
+
+    function populateRatedComplaintsTable(complaints) {
+        const tableBody = document
+            .getElementById('ratedcomplaintstable')
+            .getElementsByTagName('tbody')[0];
+        tableBody.innerHTML = ''; 
+
+        complaints.forEach(complaint => {
+            const row = tableBody.insertRow();
+            row.insertCell().textContent = complaint.id;
+            row.insertCell().textContent = complaint.title;
+            row.insertCell().textContent = complaint.technician__technician_name;
+            row.insertCell().textContent = complaint.technician__technician_number;
+            row.insertCell().textContent = complaint.created_at;
+            row.insertCell().textContent = complaint.closed_time;
+            const ratingCell = row.insertCell();
+            ratingCell.innerHTML = `<span>${complaint.rating} / 5</span>`; 
+        });
+    }
+    const unratedTable = document.getElementById('unratedcomplaintstable');
+    unratedTable.addEventListener('click', function(e) {
+        if (e.target.classList.contains('star')) {
+            const ratingValue = parseInt(e.target.getAttribute('data-rating'));
+            const complaintId = e.target.parentElement.getAttribute('data-complaint-id');
+            submitRating(complaintId, ratingValue);
+        }
+    });
+    function displayNoComplaintsMessage(tableId) {
+        const tableBody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+        const row = tableBody.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 7; 
+        cell.textContent = tableId === 'unratedcomplaintstable' 
+            ? 'No complaints to be rated.' 
+            : 'No complaints have been rated yet.';
+    }
+    function submitRating(complaintId, rating) { 
+        showSpinner();
+        fetch('', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                complaint_id: complaintId,
+                rating: rating
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                hideSpinner();
+                alert('Your Feedback has been registered');
+                location.reload(); 
+                
+            } else {
+                hideSpinner();
+                console.error('Error saving rating.'); 
+            }
+        })
+        .catch(error => console.error('Error:', error));
+        hideSpinner();
+    }
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {

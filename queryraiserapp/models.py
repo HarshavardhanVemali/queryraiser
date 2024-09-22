@@ -112,53 +112,68 @@ class Complaint(models.Model):
         ('assigned', 'Assigned'),
         ('resolved', 'Resolved'),
         ('pending_review', 'Pending Review'),
+        ('pending', 'Pending'),
         ('closed', 'Closed'),
         ('reopened', 'Reopened'),
     ] 
+    
     TECHNICIAN_STATUS_CHOICES = [
         ('resolved', 'Resolved'),
         ('pending', 'Pending'),
     ]
+    
     FACULTY_STATUS_CHOICES = [
         ('resolved', 'Resolved'),
         ('pending', 'Pending'),
     ]
+    
     PRIORITY_CHOICES = [
         ('low', 'Low'),
         ('medium', 'Medium'),
         ('high', 'High'),
     ]
+
     id = models.AutoField(primary_key=True)
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    technician = models.ForeignKey(Technician, on_delete=models.SET_NULL, null=True, blank=True)
+    faculty = models.ForeignKey('Faculty', on_delete=models.CASCADE)
+    department = models.ForeignKey('Department', on_delete=models.CASCADE)
+    technician = models.ForeignKey('Technician', on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=200)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
-    technician_status = models.CharField(max_length=100, choices=TECHNICIAN_STATUS_CHOICES, null=True, blank=True)
-    faculty_status = models.CharField(max_length=100, choices=FACULTY_STATUS_CHOICES, null=True, blank=True)
-    technician_pending_comments = models.TextField(null=True, blank=True)
-    technician_resolved_comments = models.TextField(null=True, blank=True)
+    technician_status = models.CharField(max_length=20, choices=TECHNICIAN_STATUS_CHOICES, null=True, blank=True)
+    faculty_status = models.CharField(max_length=20, choices=FACULTY_STATUS_CHOICES, null=True, blank=True)
+    technician_comments = models.TextField(null=True, blank=True, help_text="Comments from the technician (both pending and resolved)")
+    faculty_comments = models.TextField(null=True, blank=True, help_text="Comments from the faculty (both pending and resolved)")
     technician_resolve_time = models.DateTimeField(null=True, blank=True)
-    faculty_pending_comments = models.TextField(null=True, blank=True) 
-    faculty_resolved_comments = models.TextField(null=True, blank=True)
     faculty_feedback_time = models.DateTimeField(null=True, blank=True)
     rating = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(5)])
     assigned_time = models.DateTimeField(null=True, blank=True)
     closed_time = models.DateTimeField(null=True, blank=True)
     reopen_count = models.IntegerField(default=0)
-    reopen_reason = models.TextField(null=True, blank=True)
+    
     def save(self, *args, **kwargs):
-        if self.technician_status == 'resolved':
+        if self.technician_status == 'resolved' and self.faculty_status is None:
             self.status = 'pending_review'
             self.technician_resolve_time = timezone.now()
+        if self.technician_status == 'pending' or self.faculty_status == 'pending':
+            self.status = 'pending'
         if self.technician_status == 'resolved' and self.faculty_status == 'resolved':
             self.status = 'closed'
             self.closed_time = timezone.now()
+            self.faculty_feedback_time=timezone.now()
+        if self.rating and self.overall_status != 'closed':
+            raise ValueError("Rating can only be provided after the complaint is closed.")
         super().save(*args, **kwargs)
-    
     def __str__(self):
         return f"Complaint #{self.id} - {self.title}"
+
+class ReopenHistory(models.Model):
+    complaint = models.ForeignKey(Complaint, related_name='reopen_history', on_delete=models.CASCADE)
+    reason = models.TextField()
+    reopen_time = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Reopen event for Complaint #{self.complaint.id} at {self.reopen_time}"

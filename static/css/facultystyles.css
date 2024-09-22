@@ -7,10 +7,12 @@
     padding-right: 20px;
     border: 1px solid rgba(203, 208, 221, 0.54);
     padding-bottom: 10px;
+    overflow-x: auto;
+    border-left: none;
+    border-right: none;
 }
 .table-container{
     margin-top: 12px;
-    background-color: #fff;
 }
 .tables {
     width: 100%;
@@ -18,20 +20,35 @@
     margin-bottom: 10px;
 }
 .tables th, .tables  td {
-    padding:15px;
+    padding:20px;
     font-size: 13px;
     text-align: left;
     font-weight: 200;
-
 }
 .tables  th {
     border-bottom: 1px solid rgba(203, 208, 221, 0.54);
-    color: black;
     font-size: 16px;
     font-weight: 590;
+    color: #31374a;
 }
+
 .tables  tbody tr{
     border-bottom: 1px solid rgba(203, 208, 221, 0.54);
+}
+.tables td img {
+    min-width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+#viewall{
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+#viewall:hover{
+    text-decoration: underline;
 }
 .tables td img {
     min-width: 40px;
@@ -159,7 +176,10 @@
     width: 500px; 
     margin: 0 auto;
 }
-
+.dark-mode .complaint-form{
+    background: #141824;
+    border: 1px solid #373e53
+}
 .complaint-form h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -175,7 +195,10 @@ label {
     margin-bottom: 5px;
     color: #555;
 }
-
+.dark-mode label{
+    color:#fff;
+    
+}
 input[type="text"],
 textarea {
     width: 100%;
@@ -185,6 +208,11 @@ textarea {
     box-sizing: border-box;
     max-width: 500px; 
     resize: none;
+}
+.dark-mode input[type="text"],
+.dark-mode textarea{
+    background:#0f111a;
+    border: 1px solid #373e53;
 }
 .form-group input:focus,.form-group textarea:focus {
     outline: none;
@@ -255,4 +283,18 @@ textarea {
 }
 .save-button:hover {
     background-color: #0056b3;
+}
+.commentfield{
+    min-height: 70px;
+    resize: none;
+
+    border-radius:5px ;
+}
+.commentfield:focus{
+    outline: none;
+    border-color: #4285f4; 
+    box-shadow: 0px 0px 8px rgba(66, 133, 244, 0.5); 
+}
+.dark-mode .commentfield{
+    color: #fff;
 }

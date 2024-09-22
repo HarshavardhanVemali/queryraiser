@@ -45,7 +45,6 @@ body{
     flex-direction: column;
     align-items: flex-start; 
     background-color: #f5f7fa;
-    transition: background-color 0.3s ease; 
 }
 header {
     width: 100%;
@@ -110,7 +109,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.3s ease, visibility 0.3s ease; /* Add visibility */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 .theme-control-toggle-light {
     opacity: 1;
@@ -220,7 +219,8 @@ header {
     flex: 1; 
     transition: all 0.3s ease; 
     scroll-behavior: smooth;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
+    padding-bottom: 50px;
 }
 
 @media (max-width: 991px) {
@@ -281,7 +281,7 @@ body.dark-mode header{
     color: #eff2f6;
 }
 .dark-mode .sidebar a.active{
-    color: #fff;
+    color: #3874ff;
 }
 .dark-mode header {
     background-color: #141824; 
@@ -291,8 +291,23 @@ body.dark-mode header{
 .dark-mode #title_name {
     color: #fff; 
 }
-
-
+.dark-mode .tablelist{
+    background: #141824;
+    border: 1px solid #373e53;
+    border-left: none;
+    border-right: none;
+}
+.dark-mode .tables th{
+    color: #9fa6bc;
+    border-bottom: 1px solid #373e53;
+}
+.dark-mode .complaintstatusgraph{
+    background:#141824;
+    border: 1px solid #373e53;
+}
+.dark-mode .tables  tbody tr{
+    border-bottom: 1px solid #373e53;
+}
 .nav-item-wrapper {
   margin-bottom: 10px; 
 }
@@ -371,7 +386,6 @@ body.dark-mode header{
 
 main{
     width: 100%;
-    margin-top: 10px;
 }
 .subnav{
     display: flex;
@@ -398,23 +412,22 @@ main{
 #addbranchesbutton:hover{
     background-color: #004dff;
 }
-
-.hidden {
-    display: none;
-}
-.overlay {
-    position: fixed;
+.deaparment-overlay  {
+    display: none; 
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    display: none;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 1000; 
+    transition: opacity 0.3s ease-in-out; 
 }
-
-.overlay.active {
+.deaparment-overlay.active { 
     display: block;
+}
+.hidden {
+    display: none;
 }
 .adddepartmentsform-container {
     position: fixed;
@@ -432,6 +445,10 @@ main{
 .adddepartmentsform-container form {
     display: flex;
     flex-direction: column;
+}
+.dark-mode .adddepartmentsform-container{
+    background: #141824;
+    border: 1px solid #373e53;
 }
 #form-row {
     margin-bottom: 20px;
@@ -453,6 +470,16 @@ main{
     box-sizing: border-box;
     border: 1px solid #333;
     border-radius: 5px;
+}
+
+.dark-mode #form-row input[type="text"]{
+    background: #0f111a;
+    border: 1px solid #373e53;
+}
+#form-row input[type="text"]:focus{
+    outline: none;
+    border-color: #4285f4; 
+    box-shadow: 0px 0px 8px rgba(66, 133, 244, 0.5);    
 }
 #form-row input[type="file"]{
     border: none;
@@ -498,10 +525,11 @@ main{
     border: 1px solid rgba(203, 208, 221, 0.54);
     padding-bottom: 10px;
     overflow-x: auto;
+    border-left: none;
+    border-right: none;
 }
 .table-container{
     margin-top: 12px;
-    background-color: #fff;
 }
 .tables {
     width: 100%;
@@ -509,16 +537,16 @@ main{
     margin-bottom: 10px;
 }
 .tables th, .tables  td {
-    padding:15px;
+    padding:20px;
     font-size: 13px;
     text-align: left;
     font-weight: 200;
 }
 .tables  th {
     border-bottom: 1px solid rgba(203, 208, 221, 0.54);
-    color: black;
     font-size: 16px;
     font-weight: 590;
+    color: #31374a;
 }
 
 .tables  tbody tr{
@@ -534,6 +562,7 @@ main{
 }
 #viewall{
     text-decoration: none;
+    margin-bottom: 5px;
 }
 #viewall:hover{
     text-decoration: underline;
@@ -622,7 +651,9 @@ main{
     font-size: 20px;
 }
 .complaintstatus>h3{
+    margin-top: 60px;
     margin-left: 20px;
+    margin-bottom: 20px;
 }
 .complaintstatusgraph{
     border: 1px solid rgba(203, 208, 221, 0.54);
@@ -641,10 +672,14 @@ main{
     height: 450px !important;
 }
 .recentcomplainttable>h3{
+    margin-top: 60px;
     margin-left: 20px;
+    margin-bottom: 20px;
 }
 .technicianperformance>h3{
     margin-left: 20px;
+    margin-top: 60px;
+    margin-bottom: 20px;
 }
 .save-button{
     padding: 8px 12px;
@@ -717,4 +752,127 @@ footer a:hover{
 }
 .position-absolute {
     position: absolute !important;
+}
+.overlay {
+    display: none; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 1000; 
+    transition: opacity 0.3s ease-in-out; 
+}
+
+.overlay-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+}
+.dark-mode .overlay-content{
+    background: #141824;
+    border: 1px solid #373e53;
+}
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-button:hover {
+    color: #e74c3c;
+}
+.overlay-content h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+}
+.overlay-content p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #555;
+    line-height: 1.5;
+}
+.dark-mode .overlay-content p h3{
+    color: #9fa6bc;
+}
+.overlay-content p strong {
+    color: #333;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.overlay-content h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #007bff;
+    text-align: center; 
+}
+
+.complaint-details {
+    display: grid;
+    grid-template-columns: 1fr 2fr; 
+    gap: 40px; 
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.complaint-details label {
+    font-weight: bold;
+    text-align: left;
+}
+
+.complaint-details span {
+    text-align: left;
+}
+
+.assign-technician {
+    text-align: center; 
+}
+select{
+    height: 35px;
+    border-radius: 5px;
+}
+select:focus{
+    outline: none;
+    border-color: #4285f4; 
+    box-shadow: 0px 0px 8px rgba(66, 133, 244, 0.5); 
+}
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.spinner img{
+    width: 30px;
+    height: 30px;
 }

@@ -43,7 +43,6 @@ body{
     flex-direction: column;
     align-items: flex-start; 
     background-color: #f5f7fa;
-    transition: background-color 0.3s ease; 
 }
 header {
     width: 100%;
@@ -213,6 +212,10 @@ header {
     background-color: #ea4335;
     color: white;
 }
+.dark-mode .sidebar .logout-item :hover{
+    background-color: #ea4335;
+    color: white;
+}
 .content {
     overflow-y: scroll;
     flex: 1; 
@@ -279,7 +282,7 @@ body.dark-mode header{
     color: #eff2f6;
 }
 .dark-mode .sidebar a.active{
-    color: #fff;
+    color: #3874ff;
 }
 .dark-mode header {
     background-color: #141824; 
@@ -288,6 +291,23 @@ body.dark-mode header{
 .dark-mode #college_sub_title h1, 
 .dark-mode #title_name {
     color: #fff; 
+}
+.dark-mode .tablelist{
+    background: #141824;
+    border: 1px solid #373e53;
+    border-left: none;
+    border-right: none;
+}
+.dark-mode .tables th{
+    color: #9fa6bc;
+    border-bottom: 1px solid #373e53;
+}
+.dark-mode .complaintstatusgraph{
+    background:#141824;
+    border: 1px solid #373e53;
+}
+.dark-mode .tables  tbody tr{
+    border-bottom: 1px solid #373e53;
 }
 
 
@@ -461,4 +481,139 @@ footer a:hover{
 #changepassword:hover{
     background-color: #cbd0dd;
     
+}
+.overlay {
+    display: none; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 1000; 
+    transition: opacity 0.3s ease-in-out; 
+}
+
+.overlay-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+}
+.dark-mode .overlay-content{
+    background: #141824;
+    border: 1px solid #373e53;
+}
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-button:hover {
+    color: #e74c3c;
+}
+.overlay-content h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+}
+.overlay-content p {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #555;
+    line-height: 1.5;
+}
+.dark-mode .overlay-content p h3{
+    color: #9fa6bc;
+}
+.overlay-content p strong {
+    color: #333;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.overlay-content h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #007bff;
+    text-align: center; 
+}
+
+.complaint-details {
+    display: grid;
+    grid-template-columns: 1fr 2fr; 
+    gap: 40px; 
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.complaint-details label {
+    font-weight: bold;
+    text-align: left;
+}
+
+.complaint-details span {
+    text-align: left;
+}
+
+.assign-technician {
+    text-align: center; 
+}
+select{
+    height: 30px;
+    border-radius: 5px;
+}
+select:focus{
+    outline: none;
+    border-color: #4285f4; 
+    box-shadow: 0px 0px 8px rgba(66, 133, 244, 0.5); 
+}
+.dark-mode .spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.spinner-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+.spinner img{
+    width: 30px;
+    height: 30px;
 }

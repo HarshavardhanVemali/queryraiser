@@ -44,6 +44,11 @@
         </div>
     </header>
     <div class="main-container">
+        <div id="loading-spinner" class="spinner-overlay" style="display: none;">
+            <div class="spinner">
+                <img src="{% static 'images/loading.gif' %}" alt="">
+            </div>
+        </div>
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link" href="{% url 'admindashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -204,7 +209,7 @@
                 </div>
             </div>
             
-            <div class="overlay">
+            <div class="deaparment-overlay">
                 <div id="adddepartmentsform-container" class="adddepartmentsform-container hidden">
                     <svg id="closebtn" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" onclick="hideAddDepartmentForm()">
                         <circle cx="12" cy="12" r="10" />
@@ -283,13 +288,14 @@ navLinks.forEach(link => {
     <script>
     function showAddDepartmentForm() {
         document.getElementById('adddepartmentsform-container').classList.remove('hidden');
-        document.querySelector('.overlay').classList.add('active');
+        document.querySelector('.deaparment-overlay').classList.add('active');
     }
     function hideAddDepartmentForm() {
         document.getElementById('adddepartmentsform-container').classList.add('hidden');
-        document.querySelector('.overlay').classList.remove('active');
+        document.querySelector('.deaparment-overlay').classList.remove('active');
     }
     function getdepartments() {
+        showSpinner();
         fetch('/getdepartments/', {
             method: 'POST',
             headers: {
@@ -301,10 +307,12 @@ navLinks.forEach(link => {
         .then(data => {
             const departmentTableBody = document.querySelector('#Departmenttable tbody');
             departmentTableBody.innerHTML = '';
+            hideSpinner();
             if(data.length===0){
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="5">No Departments found.</td>';
                 departmentTableBody.appendChild(row);
+                hideSpinner();
             }
             else{
                 data.forEach(department => {
@@ -332,17 +340,19 @@ navLinks.forEach(link => {
                     department.name = departmentNameCell.textContent.trim();
                 });
                 });
+                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching departments:', error);
+            hideSpinner();
         });
     }
     document.getElementById('adddepartmentform').addEventListener('submit', function(event) {
         event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
-    
+        showSpinner();
         fetch(form.action, {
             method: form.method,
             headers: {
@@ -352,18 +362,22 @@ navLinks.forEach(link => {
         })
         .then(response => response.json())
         .then(data => {
+            hideSpinner();
             if (data.success) {
                 alert('Department added successfully.');
                 form.reset();
                 document.querySelector('.overlay').classList.remove('active');
                 getdepartments();
+                hideSpinner();
             } else {
                 alert('Failed to add department: ' + data.error);
+                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error adding department:', error);
             alert('Error adding department. Please try again later.');
+            hideSpinner();
         });
     });
     function saveChanges(departmentCode) {
@@ -374,6 +388,7 @@ navLinks.forEach(link => {
             getdepartments();
             return;
         }
+        showSpinner();
         fetch('/savedepartmentchanges/', {
             method: 'POST',
             headers: {
@@ -383,26 +398,32 @@ navLinks.forEach(link => {
             body: JSON.stringify({ department_code: departmentCode, department_name: departmentName })
         })
         .then(response => {
+            hideSpinner();
             if (!response.ok) {
                 throw new Error('Network response was not ok.');
             }
             return response.json();
         })
         .then(data => {
+            hideSpinner();
             if(data.success){
                 alert('Changes saved successfully');
                 getdepartments();
+                hideSpinner();
             }
             else{
                 alert('Unable to save changes.');
+                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error saving changes:', error);
             alert('Error saving changes. Please try again later.');
+            hideSpinner();
         });
     }
     function deleteDepartment(departmentCode){
+        showSpinner();
         fetch('/deletedepartment/',{
             method:'POST',
             headers:{
@@ -412,6 +433,7 @@ navLinks.forEach(link => {
             body:JSON.stringify({department_code: departmentCode})
         })
         .then(response=>{
+            hideSpinner();
             if(!response.ok){
                 throw new Error('Network response was not ok.');
             }
@@ -421,14 +443,17 @@ navLinks.forEach(link => {
             if(data.success){
                 alert('Deleted Successfully.');
                 getdepartments();
+                hideSpinner();
             }
             else{
                 alert('Failed to delete.');
+                hideSpinner();
             }
         })
         .catch(error=>{
             console.error('Error saving changes:', error);
             alert('Error saving changes. Please try again later.');
+            hideSpinner();
         });
     }
     document.addEventListener('DOMContentLoaded', () => {

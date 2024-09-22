@@ -44,6 +44,11 @@
         </div>
     </header>
     <div class="main-container">
+        <div id="loading-spinner" class="spinner-overlay" style="display: none;">
+            <div class="spinner">
+                <img src="{% static 'images/loading.gif' %}" alt="">
+            </div>
+        </div>
         <nav class="sidebar">
             <ul>
                 <li><a class="nav-link active" href="{% url 'admindashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
@@ -282,9 +287,9 @@
                             <thead>
                                 <tr>
                                     <th>Complaint ID</th>
-                                    <th>Date Raised</th>
                                     <th>Faculty Name</th>
                                     <th>Department</th>
+                                    <th>Date Raised</th>
                                     <th>Title</th>
                                     <th>Technician</th>
                                     <th>Status</th>
@@ -312,6 +317,7 @@
                                     <th>Assigned</th>
                                     <th>Resolved</th>
                                     <th>Pending</th>
+                                    <th>Closed</th>
                                     <th>Rating</th>
                                 </tr>
                             </thead>
@@ -356,6 +362,7 @@
     </script>
     <script>
     function getrecentcomplaints(){
+        showSpinner();
         fetch('/adminrecentcomplaints/',{
             method: 'POST',
             headers: {
@@ -365,37 +372,40 @@
         })
         .then(response => response.json()) 
         .then(data => {
-            console.log(data)
             const recentcomplaintTableBody = document.querySelector('#recentcomplaintstable tbody');
             recentcomplaintTableBody.innerHTML = '';
-
+            hideSpinner();
             if(data.length===0){
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="7">No Complaints found at this time.</td>';
                 recentcomplaintTableBody.appendChild(row);
+                hideSpinner();
             } else {
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
                     row.innerHTML = `
 
                         <td style="color:#007bff;">${complaint.id}</td> 
-                        <td>${complaint.created_at}</td> 
                         <td style="color:#007bff;">${complaint.faculty__faculty_name}</td> 
                         <td style="color:#525b75;">${complaint.department__department_name}</td>
-                        <td style="color:#000;font-weight:590;">${complaint.title}</td> 
+                        <td>${complaint.created_at}</td> 
+                        <td style="font-weight:bold;">${complaint.title}</td> 
                         <td style="color:#6e7891;">${complaint.technician__technician_name}</td> 
                         <td style="color:#525b75;">${complaint.status}</td>
                         <td></td>                    
                     `;
                     recentcomplaintTableBody.appendChild(row);
                 });
+                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching recent complaints:', error);
+            hideSpinner();
         });
     }
     function getcomplaintscount() {
+        showSpinner();
         fetch('/admincomplaintscount/', {
             method: 'POST',
             headers: {
@@ -409,7 +419,6 @@
 
             const quickstatsTableBody = document.querySelector('#quickstatstable tbody');
             quickstatsTableBody.innerHTML = '';
-
             if (data.success) { 
                 const complaintCounts = data.complaint_counts;
                 const row = document.createElement('tr');
@@ -417,7 +426,7 @@
                     <td style="color:#800080;">${complaintCounts.total}</td> 
                     <td style="color:#007bff;">${complaintCounts.new}</td> 
                     <td style="color:#fd7e14;">${complaintCounts.assigned}</td> 
-                    <td style="color:#ffc107;">${complaintCounts.pending_review}</td> 
+                    <td style="color:#ffc107;">${complaintCounts.pending}</td> 
                     <td style="color:#28a745;">${complaintCounts.resolved}</td>
                     <td style="color:#A9A9A9;">${complaintCounts.closed}</td> 
                     <td style="color:#dc3545;">${complaintCounts.reopened}</td> 
@@ -467,15 +476,19 @@
                     }]
                 },
             });
+            hideSpinner();
             } else {
                 console.error('Error fetching Complaints count:', data.error);
+                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching Complaints count:', error);
+            hideSpinner();
         });
     }
     function getTechnicianPerformance(){
+        showSpinner();
         fetch('/admintechnicianperformance/', {
             method: 'POST',
             headers: {
@@ -489,37 +502,42 @@
                 const technicianPerformance = data.technician_performance;
                 const tbody = document.querySelector('.technicianperformance table tbody');
                 tbody.innerHTML = ''; 
+                hideSpinner();
                 if(technicianPerformance.length===0){
                     const row = document.createElement('tr');
-                    row.innerHTML = '<td colspan="5">No Technician found.</td>';
+                    row.innerHTML = '<td colspan="6">No Technician found.</td>';
                     tbody.appendChild(row);
+                    hideSpinner();
                 }
                 else{
                     technicianPerformance.forEach(technician => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td style="color:#525b75;">${technician.name}</td>
+                            <td style="color:#85a9ff;font-weight:580;">${technician.name}</td>
                             <td style="color:#007bff;">${technician.assigned}</td>
                             <td style="color:#28a745;">${technician.resolved}</td>
-                            <td style="color:#dc3545;">${technician.pending}</td>
+                            <td style="color:#ffc107;">${technician.pending}</td>
+                            <td style="color:#525b75;">${technician.closed}</td>
                             <td style="color:#525b75;">${technician.rating}</td>
                         `;
                         tbody.appendChild(row);
                     });
+                    hideSpinner();
                 }
             } else {
                 console.error('Error fetching technician performance:', data.error);
+                hideSpinner();
             }
         })
         .catch(error => {
             console.error('Error fetching technician performance:', error);
+            hideSpinner();
         });
     }
     document.addEventListener('DOMContentLoaded', () => {
         getrecentcomplaints();
         getcomplaintscount();
         getTechnicianPerformance();
-
     });
     function getCookie(name) {
         let cookieValue = null;

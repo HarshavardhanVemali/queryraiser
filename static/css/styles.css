@@ -101,7 +101,7 @@ header {
     width: 30px;
 }
 
-#username, #password {
+#username, .password {
     width: calc(100% - 40px);
     padding: 12px;
     border: 1px solid #ddd; 
@@ -114,7 +114,7 @@ header {
 }
 
 #username:focus,
-#password:focus {
+.password:focus {
     outline: none;
     border-color: #4285f4; 
 }
@@ -132,8 +132,8 @@ header {
 
 #username:focus + .user-label,
 #username:not(:placeholder-shown) + .user-label,
-#password:focus + .password-label,
-#password:not(:placeholder-shown) + .password-label {
+.password:focus + .password-label,
+.password:not(:placeholder-shown) + .password-label {
     top: 0px;
     left: 30px;
     font-size: 12px;
