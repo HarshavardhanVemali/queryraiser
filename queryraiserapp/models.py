@@ -164,7 +164,7 @@ class Complaint(models.Model):
             self.status = 'closed'
             self.closed_time = timezone.now()
             self.faculty_feedback_time=timezone.now()
-        if self.rating and self.overall_status != 'closed':
+        if self.rating and self.status != 'closed':
             raise ValueError("Rating can only be provided after the complaint is closed.")
         super().save(*args, **kwargs)
     def __str__(self):

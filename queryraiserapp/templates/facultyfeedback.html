@@ -17,6 +17,19 @@
         margin-right: 10px;
         border-radius: 10px;
     }
+    .rating .star {
+    cursor: pointer; 
+    color: #ccc; /* Default star color */
+}
+
+.rating .star:hover,
+.rating .star:hover ~ .star {
+    color: gold; /* Filled star color on hover */
+}
+
+.rating .star.selected {
+    color: gold; /* Filled star color when selected */
+}
 </style>
 <body>
     <header>
@@ -268,6 +281,7 @@
 
             const ratingCell = row.insertCell();
             ratingCell.innerHTML = getStarRating(complaint.id);
+            
         });
     }
 

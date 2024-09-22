@@ -464,7 +464,8 @@ main{
 }
 
 #form-row input[type="text"],
-#form-row input[type="file"] {
+#form-row input[type="file"]
+{
     width: 50%;
     padding: 8px;
     box-sizing: border-box;
@@ -472,9 +473,10 @@ main{
     border-radius: 5px;
 }
 
-.dark-mode #form-row input[type="text"]{
+.dark-mode #form-row input[type="text"],.dark-mode #form-row input[type="tel"]{
     background: #0f111a;
     border: 1px solid #373e53;
+    color: #fff;
 }
 #form-row input[type="text"]:focus{
     outline: none;

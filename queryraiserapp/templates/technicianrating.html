@@ -233,10 +233,10 @@
                     data.forEach(complaint => { 
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td style="color:#525b75;">${complaint.id}</td>
+                            <td style="color:#007bff;">${complaint.id}</td>
                             <td style="color:#007bff;">${complaint.faculty__faculty_name}</td>
-                            <td style="color:#28a745;">${complaint.department__department_name}</td>
-                            <td style="color:#dc3545;">${complaint.title}</td>
+                            <td>${complaint.department__department_name}</td>
+                            <td style="color:#007bff;">${complaint.title}</td>
                             <td style="color:#525b75;">${complaint.created_at}</td>
                             <td style="color:#525b75;">${complaint.assigned_time}</td>
                             <td style="color:#525b75;">${complaint.closed_time}</td>

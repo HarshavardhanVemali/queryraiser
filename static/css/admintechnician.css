@@ -73,6 +73,7 @@ form {
 .form-row select { 
     background: #0f111a;
     border: 1px solid #373e53;
+    color: #fff;
 }
 .dark-mode .form-row input[type="text"],
 .dark-mode .form-row select{

@@ -1774,8 +1774,11 @@ def technicianrating(request):
             for complaint in technician_performance:
                 complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
                 complaint['assigned_time'] = timezone.localtime(complaint['assigned_time']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['closed_time'] = timezone.localtime(complaint['closed_time']).strftime('%Y-%m-%d %H:%M:%S')
                 complaint['rating'] = complaint.get('rating', 'N/A') 
                 complaint['avg_rating'] = complaint.get('avg_rating', 'N/A')
+                if complaint['rating'] is None:
+                    complaint['rating']='Not Given'
 
             return JsonResponse(list(technician_performance), safe=False)
 
