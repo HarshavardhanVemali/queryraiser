@@ -836,6 +836,9 @@ def adminallcomplaints(request):
             ).order_by('-created_at')
             for complaint in all_complaints:
                 complaint['status'] = complaint['status'].capitalize()
+                complaint['faculty_status'] = complaint['faculty_status'].capitalize()
+                complaint['technician_status'] = complaint['technician_status'].capitalize()
+                complaint['title'] = complaint['title'].capitalize()
                 complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
                 if complaint['assigned_time']is not None:
                     complaint['assigned_time'] = timezone.localtime(complaint['assigned_time']).strftime('%Y-%m-%d %H:%M:%S')
@@ -859,7 +862,81 @@ def adminallcomplaints(request):
             return JsonResponse({'success': False, 'error': str(e)})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
-    
+
+@admin_required
+def admindepartmentreportpage(request):
+    return render(request,'admindepartmentreports.html')  
+
+@admin_required
+@require_POST
+@csrf_exempt
+def getdepartmentcomplaintscount(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        department_code = data.get('department_code')
+        if not Department.objects.filter(department_code=department_code).exists():
+            return JsonResponse({'success': False, 'error': f'Department with code {department_code} does not exist.'})
+        try:
+            department = Department.objects.get(department_code=department_code)
+            complaint_counts = {
+                'total': Complaint.objects.filter(department=department).count(), 
+                'new': Complaint.objects.filter(status='new', department=department).count(), 
+                'assigned': Complaint.objects.filter(status='assigned', department=department).count(), 
+                'pending': Complaint.objects.filter(status='pending', department=department).count(),  
+                'resolved': Complaint.objects.filter(status='pending_review', department=department).count(), 
+                'closed': Complaint.objects.filter(status='closed', department=department).count(),  
+                'reopened': Complaint.objects.filter(status='reopened', department=department).count(),
+            }
+            return JsonResponse({'success': True, 'complaint_counts': complaint_counts})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
+@admin_required
+@require_POST
+@csrf_exempt
+def admingetdepartmentcomplaints(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            department_code = data.get('department_code')
+            if not Department.objects.filter(department_code=department_code).exists():
+                return JsonResponse({'success': False, 'error': f'Department with code {department_code} does not exist.'})
+            department = Department.objects.get(department_code=department_code)
+            get_department_name = department.department_name
+            get_department_image = department.department_logo.url if department.department_logo else None
+            complaints = Complaint.objects.filter(department__department_code=department_code).values(
+                'id', 'title', 'created_at',
+                'faculty__faculty_name',
+                'faculty__faculty_phonenumber',
+                'technician__technician_name',
+                'status'
+            ).order_by('-created_at')[:]
+            for complaint in complaints:
+                complaint['status'] = complaint['status'].capitalize()
+                if complaint['technician__technician_name'] is None:
+                    complaint['technician__technician_name'] = "Not Assigned"
+                complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['faculty__faculty_phonenumber'] = format_number(
+                    complaint['faculty__faculty_phonenumber'],
+                    PhoneNumberFormat.NATIONAL
+                ).lstrip('0').strip()
+            response_data = {
+                'success': True,
+                'complaints': list(complaints),
+                'department_name': get_department_name,
+                'department_image': get_department_image
+            }
+            return JsonResponse(response_data)
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
 #facultylogin
 

@@ -29,6 +29,37 @@ function getdepartmentsForFacultySubmenu() {
         console.error('Error fetching departments for submenu:', error);
     });
 }
+function getdepartmentsForSubmenu() {
+    fetch('/getdepartments/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const departmentList = document.getElementById('departments_submenu');
+
+        if (data.length === 0) {
+            departmentList.innerHTML = '<li class="submenu-item"><a class="nav-link">No Departments Found</a></li>';
+        } else {
+            data.forEach(department => {
+                const submenuLink = document.createElement('a');
+                submenuLink.href = `/admindepartmentreports.html?dept_code=${department.code}`;
+                submenuLink.className = 'nav-link';
+                submenuLink.textContent = department.name;
+                const submenuListItem = document.createElement('li');
+                submenuListItem.className = 'submenu-item';
+                submenuListItem.appendChild(submenuLink);
+                departmentList.appendChild(submenuListItem);
+            });
+            setupNav();
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching departments for submenu:', error);
+    });
+}
 
 function setupNav() {
     const navLinks = document.querySelectorAll('.nav-link');
@@ -56,6 +87,7 @@ function setupNav() {
 document.addEventListener('DOMContentLoaded', function() { 
     getdepartmentsForFacultySubmenu();
     setupNav();
+    getdepartmentsForSubmenu();
     const themeToggle = document.getElementById('themeControlToggle');
     const body = document.body;
 
