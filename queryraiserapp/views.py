@@ -17,22 +17,26 @@ from django.utils import timezone
 from django.db.models import Avg 
 import re
 from django.db.models import Q
+from django.utils import timezone
+from openpyxl import Workbook
+from io import BytesIO 
+from django.contrib.auth.models import Permission, ContentType
 
 def admin_required(view_func):
     return user_passes_test(
         lambda u: u.is_superuser or u.has_perm('queryraiserapp.is_admin'), 
-        login_url='/adminlogin/'
+        login_url='/adminlogin/' 
     )(view_func)
 
 def faculty_required(view_func):
     return user_passes_test(
-        lambda u: u.is_active and not u.is_superuser and u.role == 'faculty',  
-        login_url='/facultylogin/'
+        lambda u: (u.is_active or  u.has_perm('queryraiserapp.is_faculty')) and not(u.is_superuser) and not(u.has_perm('queryraiserapp.is_technician')),
+        login_url='/facultylogin/' 
     )(view_func)
 
 def technician_required(view_func):
     return user_passes_test(
-        lambda u: u.is_active and not u.is_superuser and u.role == 'technician', 
+        lambda u: (u.is_active or u.has_perm('queryraiserapp.is_technician')) and not(u.is_superuser) and not(u.has_perm('queryraiserapp.is_faculty')), 
         login_url='/technicianlogin/'
     )(view_func)
 
@@ -236,9 +240,12 @@ def addfaculty(request):
                     password=hashed_password,
                     role='faculty'
                 )
-                faculty_permission = Permission.objects.get(codename='is_faculty')
-                faculty.user_permissions.add(faculty_permission) 
-                faculty = Faculty.objects.get(pk=faculty.pk)
+                faculty_permission, created = Permission.objects.get_or_create(
+                        codename='is_faculty',
+                        name='Can access faculty-specific features',
+                        content_type=ContentType.objects.get_for_model(Faculty)
+                    )
+                faculty.user_permissions.add(faculty_permission)
                 if faculty:
                     return JsonResponse({'success': True})
                 else:
@@ -278,7 +285,29 @@ def deletefaculty(request):
         return JsonResponse({'success': False, 'error': 'Faculty not found.'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
-    
+
+@admin_required
+@require_POST
+@csrf_exempt
+def resetfacultypassword(request):
+    if request.method=='POST':
+        try:
+            data = json.loads(request.body)
+            faculty_id = data.get('faculty_id')
+            if not faculty_id:
+                return JsonResponse({'success': False, 'message': 'Faculty ID is required.'})
+            faculty = Faculty.objects.filter(faculty_id=faculty_id).first()
+            if faculty:
+                faculty.password = make_password(faculty_id)
+                faculty.save()
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'message': 'Faculty not found.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success':False,'error':'Invalid request method.'})
+
 @admin_required
 def admintechnician(request):
     return render(request,'admintechnician.html')
@@ -370,9 +399,12 @@ def addtechnician(request):
                 password=hashed_password,
                 role='technician',
             )
-            technician_permission = Permission.objects.get(codename='is_technician')
+            technician_permission, created = Permission.objects.get_or_create(
+                codename='is_technician',
+                name='Can access technician-specific features',
+                content_type=ContentType.objects.get_for_model(Technician)
+            )
             technician.user_permissions.add(technician_permission)
-            technician = Technician.objects.get(pk=technician.pk) 
             if technician:
                 return JsonResponse({'success': True})
             else:
@@ -440,6 +472,30 @@ def deletetechnician(request):
 
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method.'})
+
+@admin_required
+@require_POST
+@csrf_exempt
+def resettechnicianpassword(request):
+    if request.method=='POST':
+        try:
+            data = json.loads(request.body)
+            technician_number = data.get('technician_number')
+            if not technician_number:
+                return JsonResponse({'success': False, 'message': 'Technician ID is required.'})
+            technician = Technician.objects.filter(technician_number=technician_number).first()
+            if technician:
+                technician_number = technician_number.strip()
+                technician_number=technician_number.replace(' ','')
+                technician.password = make_password(technician_number)
+                technician.save()
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'message': 'Technician not found.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success':False,'error':'Invalid request method.'})
 
 @admin_required
 @require_POST
@@ -836,8 +892,10 @@ def adminallcomplaints(request):
             ).order_by('-created_at')
             for complaint in all_complaints:
                 complaint['status'] = complaint['status'].capitalize()
-                complaint['faculty_status'] = complaint['faculty_status'].capitalize()
-                complaint['technician_status'] = complaint['technician_status'].capitalize()
+                if complaint['faculty_status'] is not None:
+                    complaint['faculty_status'] = complaint['faculty_status'].capitalize()
+                if complaint['technician_status'] is not None:
+                    complaint['technician_status'] = complaint['technician_status'].capitalize()
                 complaint['title'] = complaint['title'].capitalize()
                 complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
                 if complaint['assigned_time']is not None:
@@ -851,10 +909,10 @@ def adminallcomplaints(request):
                     complaint['technician__technician_name']='Not Assigned'
                     complaint['technician__technician_status']='--'
                     complaint['assigned_time']=='Not Assigned'
-                if complaint['faculty_status'] is None:
-                    complaint['faculty_status']='--'
                 if complaint['technician_status']=='Resolved' and complaint['faculty_status'] is None:
                     complaint['faculty_status']='Pending_Review'
+                if complaint['faculty_status'] is None:
+                    complaint['faculty_status']='--'
                 if complaint['technician_status'] is None:
                     complaint['technician_status']='--'
             return JsonResponse(list(all_complaints), safe=False)
@@ -937,6 +995,203 @@ def admingetdepartmentcomplaints(request):
 
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
+@admin_required    
+@csrf_exempt
+def download_overall_report(request):
+    if request.method == 'POST':
+        try:
+            all_complaints = Complaint.objects.all().values(
+                'id',
+                'title',
+                'faculty__faculty_name',
+                'department__department_name',
+                'technician__technician_name',
+                'technician__technician_number',
+                'created_at',
+                'status',
+                'faculty_status',
+                'technician_status',
+                'description',
+                'assigned_time',
+            ).order_by('-created_at')
+            
+            for complaint in all_complaints:
+                complaint['status'] = complaint['status'].capitalize()
+                if complaint['faculty_status'] is not None:
+                    complaint['faculty_status'] = complaint['faculty_status'].capitalize()
+                if complaint['technician_status'] is not None:
+                    complaint['technician_status'] = complaint['technician_status'].capitalize()
+                complaint['title'] = complaint['title'].capitalize()
+                complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+                if complaint['assigned_time'] is not None:
+                    complaint['assigned_time'] = timezone.localtime(complaint['assigned_time']).strftime('%Y-%m-%d %H:%M:%S')
+                if complaint['technician__technician_number'] is not None:
+                    complaint['technician__technician_number'] = format_number(
+                        complaint['technician__technician_number'], 
+                        PhoneNumberFormat.NATIONAL
+                    ).lstrip('0').strip() 
+                if complaint['status'] == 'New':
+                    complaint['technician__technician_number'] = 'Not Assigned'
+                    complaint['technician__technician_name'] = 'Not Assigned'
+                    complaint['technician_status'] = '--' 
+                    complaint['assigned_time'] = 'Not Assigned'
+                if complaint['technician_status'] == 'Resolved' and complaint['faculty_status'] is None:
+                    complaint['faculty_status'] = 'Pending Review' 
+                if complaint['faculty_status'] is None:
+                    complaint['faculty_status'] = '--'
+                if complaint['technician_status'] is None:
+                    complaint['technician_status'] = '--'
+            wb = Workbook()
+            ws = wb.active
+            ws.title = "All Complaints" 
+            headers = [
+                'Complaint ID',
+                'Raised By',
+                'Department',
+                'Title',
+                'Description',
+                'Technician',
+                'Technician Number',
+                'Date Raised',
+                'Date Assigned',
+                'Status',
+                'Faculty Status',
+                'Technician Status',
+                 
+            ]
+            for col_num, header in enumerate(headers, 1):  
+                ws.cell(row=1, column=col_num, value=header)
+                ws.column_dimensions[chr(ord('A') + col_num - 1)].width = 20 
+            for row_num, complaint in enumerate(all_complaints, 2):  
+                ws.cell(row=row_num, column=1, value=complaint['id'])
+                ws.cell(row=row_num, column=2, value=complaint['faculty__faculty_name'])
+                ws.cell(row=row_num, column=3, value=complaint['department__department_name'])
+                ws.cell(row=row_num, column=4, value=complaint['title'])
+                ws.cell(row=row_num, column=5, value=complaint['description'])
+                ws.cell(row=row_num, column=6, value=complaint['technician__technician_name'])
+                ws.cell(row=row_num, column=7, value=complaint['technician__technician_number'])
+                ws.cell(row=row_num, column=8, value=complaint['created_at'])
+                ws.cell(row=row_num, column=9, value=complaint['assigned_time'])
+                ws.cell(row=row_num, column=10, value=complaint['status'])
+                ws.cell(row=row_num, column=11, value=complaint['faculty_status'])
+                ws.cell(row=row_num, column=12, value=complaint['technician_status'])
+                
+                
+            output = BytesIO()
+            wb.save(output)  
+            output.seek(0) 
+
+            response = HttpResponse(
+                output.read(),
+                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+            response['Content-Disposition'] = 'attachment; filename=All_Complaints_Report.xlsx'
+
+            return response
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
+
+        except Exception as e: 
+            return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'error': 'Method not allowed. Use POST.'}, status=405)
+
+@admin_required
+@csrf_exempt
+def download_closed_report(request):
+    if request.method == 'POST':
+        try:
+            closed_complaints=Complaint.objects.filter(technician_status='resolved',faculty_status='resolved').values(
+            'id',
+            'title',
+            'faculty__faculty_name',
+            'department__department_name',
+            'technician__technician_name',
+            'technician__technician_number',
+            'created_at',
+            'assigned_time',
+            'technician_resolve_time',
+            'description',
+            'technician_comments',
+            'faculty_comments',
+            'rating',
+            'closed_time',
+            'faculty_feedback_time'
+            ).order_by('-created_at')
+            for complaint in closed_complaints:
+                complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['faculty_feedback_time']=timezone.localtime(complaint['faculty_feedback_time']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['technician_resolve_time'] = timezone.localtime(complaint['technician_resolve_time']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['closed_time'] = timezone.localtime(complaint['closed_time']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['assigned_time'] = timezone.localtime(complaint['assigned_time']).strftime('%Y-%m-%d %H:%M:%S')
+                complaint['technician__technician_number'] = format_number(
+                    complaint['technician__technician_number'], 
+                    PhoneNumberFormat.NATIONAL
+                ).lstrip('0').strip()  
+                if complaint['technician_comments'] == "":
+                    complaint['technician_comments']='--'
+                if complaint['faculty_comments']=="":
+                    complaint['faculty_comments']=='--'
+                if complaint['rating'] is None:
+                    complaint['rating']='N/A'
+            wb = Workbook()
+            ws = wb.active
+            ws.title = "Closed Complaints" 
+            headers = [
+                'Complaint ID',
+                'Raised By',
+                'Department',
+                'Title',
+                'Description',
+                'Technician',
+                'Technician Number',
+                'Date Raised',
+                'Date Assigned',
+                'Closed Date',
+                'Faculty Comments',
+                'Technician Comments',
+                'Rating',
+                 
+            ]
+            for col_num, header in enumerate(headers, 1):  
+                ws.cell(row=1, column=col_num, value=header)
+                ws.column_dimensions[chr(ord('A') + col_num - 1)].width = 20 
+            for row_num, complaint in enumerate(closed_complaints, 2):  
+                ws.cell(row=row_num, column=1, value=complaint['id'])
+                ws.cell(row=row_num, column=2, value=complaint['faculty__faculty_name'])
+                ws.cell(row=row_num, column=3, value=complaint['department__department_name'])
+                ws.cell(row=row_num, column=4, value=complaint['title'])
+                ws.cell(row=row_num, column=5, value=complaint['description'])
+                ws.cell(row=row_num, column=6, value=complaint['technician__technician_name'])
+                ws.cell(row=row_num, column=7, value=complaint['technician__technician_number'])
+                ws.cell(row=row_num, column=8, value=complaint['created_at'])
+                ws.cell(row=row_num, column=9, value=complaint['assigned_time'])
+                ws.cell(row=row_num, column=10, value=complaint['closed_time'])
+                ws.cell(row=row_num, column=11, value=complaint['faculty_comments'])
+                ws.cell(row=row_num, column=12, value=complaint['technician_comments'])
+                ws.cell(row=row_num, column=13, value=complaint['rating'])
+                
+                
+            output = BytesIO()
+            wb.save(output)  
+            output.seek(0) 
+
+            response = HttpResponse(
+                output.read(),
+                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+            response['Content-Disposition'] = 'attachment; filename=Closed_Complaints_Report.xlsx'
+
+            return response
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
+
+        except Exception as e: 
+            return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'error': 'Method not allowed. Use POST.'}, status=405)
+
 
 #facultylogin
 
@@ -1075,6 +1330,7 @@ def faculty_assigned_complaints(request):
                 'technician__technician_name',
                 'technician__technician_number',
                 'description',
+                'faculty__department__department_name'
             ).order_by('-created_at')[:]
 
             for complaint in recent_complaints:
@@ -1959,4 +2215,3 @@ def technicianpendingcomplaints(request):
 def technician_logout_view(request):
     logout(request)
     return redirect('index')
-    

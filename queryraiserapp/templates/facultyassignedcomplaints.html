@@ -226,7 +226,7 @@
     }
     function sendmessage(button) {
         const complaint = JSON.parse(decodeURIComponent(button.dataset.complaint));
-        const message = `New Complaint!\n\nComplaint ID: ${complaint.id}\nTitle: ${complaint.title}\nDescription: ${complaint.description}\nRaised On: ${complaint.created_at}`;
+        const message = `New Complaint!\n\nComplaint ID: ${complaint.id}\nDepartment: ${complaint.faculty__department__department_name}\nTitle: ${complaint.title}\nDescription: ${complaint.description}\nRaised On: ${complaint.created_at}`;
         let technicianNumber = complaint.technician__technician_number;
         technicianNumber = technicianNumber.replace(/\s/g, '');
         technicianNumber = '+91' + technicianNumber; 

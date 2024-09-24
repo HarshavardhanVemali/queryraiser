@@ -203,8 +203,7 @@ header {
 
 
 .sidebar .logout-item {
-    position: absolute;
-    bottom: 20px;
+    position: sticky;
     width: 80%; 
     margin-left: 10px;
     align-items: center;
@@ -378,12 +377,12 @@ body.dark-mode header{
     padding-left: 20px !important;
     margin-top: 5px !important; 
     margin-left: 10px !important;
+    max-height: 350px !important;
 }
 
 .submenu .nav-link {
     padding: 8px 15px; 
 }
-
 main{
     width: 100%;
 }
@@ -393,7 +392,7 @@ main{
     justify-content: space-between;
     margin: 20px;
 }
-#addbranchesbutton{
+#addbranchesbutton,#downloadreport{
     background-color: white;
     border: none;
     display: flex;
@@ -406,10 +405,10 @@ main{
     font-size: 12px;
     font-weight: 400;
 }
-#addbranchesbutton svg{
+#addbranchesbutton svg,#downloadreport svg{
     margin-right: 5px;
 }
-#addbranchesbutton:hover{
+#addbranchesbutton:hover,#downloadreport:hover{
     background-color: #004dff;
 }
 .deaparment-overlay  {

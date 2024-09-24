@@ -69,14 +69,17 @@ form {
     min-width: 160px; 
 }
 
-.form-row input[type="text"],
-.form-row select { 
+.dark-mode .form-row input[type="text"],
+.dark-mode .form-row select { 
     background: #0f111a;
     border: 1px solid #373e53;
     color: #fff;
 }
-.dark-mode .form-row input[type="text"],
-.dark-mode .form-row select{
+#technicianfield{
+    width: 160px;
+}
+.form-row input[type="text"],
+.form-row select{
     border: 1px solid #333;
     border-radius: 5px;
     width: 50%;

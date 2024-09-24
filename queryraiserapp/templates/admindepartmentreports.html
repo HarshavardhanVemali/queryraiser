@@ -448,6 +448,12 @@ navLinks.forEach(link => {
                     const row = document.createElement('tr');
                     row.innerHTML = '<td colspan="7">No Complaints found at this time.</td>';
                     complaintTableBody.appendChild(row);
+                    departmentInformation.innerHTML = `
+                        ${data.department_image 
+                          ? `<img src="${data.department_image}" alt="${data.department_name} Logo">`
+                          : '<span class="no-image">N/A</span>'}
+                        <h3 style="font-weight:590;">${data.department_name}</h3>
+                    `;
                 } else {
                     data.complaints.forEach(complaint => { 
                         const row = document.createElement('tr');
@@ -466,7 +472,7 @@ navLinks.forEach(link => {
                         ${data.department_image 
                           ? `<img src="${data.department_image}" alt="${data.department_name} Logo">`
                           : '<span class="no-image">N/A</span>'}
-                        <h3 style="font-weight:590;">${data.department_name}</h3>
+                        <h3 style="font-weight:590;">Reports of ${data.department_name}</h3>
                     `;
                 }
             } else {

@@ -266,6 +266,7 @@
                             <th>Field</th>
                             <th></th>
                             <th></th> 
+                            <th></th>
                         </thead>
                         <tbody>
                         </tbody>
@@ -360,17 +361,23 @@
                                 <td contenteditable="true" id="technician_number_${technician.technician_number}">${technician.technician_number}</td>
                                 <td id="technician_field_${technician.technician_number}" style="color:#9fa6bc;">${technician.technician_field__field_name}</td>
                                 <td><button class="save-button" onclick="saveTechnician('${technician.technician_number}')">Save</button></td> 
-                                <td><button class="delete-button" onclick="deleteTechnician('${technician.technician_number}','${technician.technician_field__field_name}')">
+                                <td><button class="delete-button" onclick="deleteTechnician('${technician.technician_number}','${technician.technician_field__field_name}')" style="display:flex;align-items:center;gap:3px;">
                                     <svg style="margin-right: 3px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="h-5 w-5 shrink-0">
                                     <path fill="currentColor" fill-rule="evenodd" d="M10.556 4a1 1 0 0 0-.97.751l-.292 1.14h5.421l-.293-1.14A1 1 0 0 0 13.453 4zm6.224 1.892-.421-1.639A3 3 0 0 0 13.453 2h-2.897A3 3 0 0 0 7.65 4.253l-.421 1.639H4a1 1 0 1 0 0 2h.1l1.215 11.425A3 3 0 0 0 8.3 22H15.7a3 3 0 0 0 2.984-2.683l1.214-11.425H20a1 1 0 1 0 0-2zm1.108 2H6.112l1.192 11.214A1 1 0 0 0 8.3 20H15.7a1 1 0 0 0 .995-.894zM10 10a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1m4 0a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1" clip-rule="evenodd"></path>
                                 </svg>Delete</button></td> 
+                                <td><button onclick="resetpassword('${technician.technician_number}')" class="save-button" style="display:flex;align-items:center;gap:3px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"/>
+                                </svg>
+                                Reset</button></td>
                 
                             `;
                             technicianTableBody.appendChild(row);
                         });
                     } else {
                         const row = document.createElement('tr');
-                        row.innerHTML = '<td colspan="4">No technicians found.</td>'; 
+                        row.innerHTML = '<td colspan="6">No technicians found.</td>'; 
                         technicianTableBody.appendChild(row);
                     }
                 })
@@ -379,7 +386,32 @@
                     throw error
                 });
         }
-
+        function resetpassword(technicianNumber){
+            showSpinner();
+            technicianNumber = technicianNumber.replace(/\s+/g, '');
+            fetch('/resettechnicianpassword/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    'technician_number': technicianNumber
+                })
+            }).then(response => response.json())
+            .then(data => {
+                hideSpinner();
+                if (data.success) {
+                    alert('Password reset successful.');
+                } else {
+                    alert('Failed to reset password: ', data.message);
+                }
+            })
+            .catch(error => {
+                hideSpinner();
+                console.log('Error in changing password: ', error);
+            });
+        }
         function getTechnicianFieldsForDropdown() {
             return fetch('/getfields/', {
                 method: 'POST', 
