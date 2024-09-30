@@ -1586,7 +1586,7 @@ h input[type="date"]:disabled{
         left: 0; 
         border-left: none;
         margin-left: 0; 
-        font-size: 7px; 
+        font-size: 6px; 
     }
     .sidebar .logout-item :hover{
         background-color: transparent;
