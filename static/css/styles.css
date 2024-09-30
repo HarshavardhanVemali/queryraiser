@@ -1,3 +1,4 @@
+/* General Styles (Apply to all sizes unless overwritten) */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -21,8 +22,6 @@ header {
     padding: 15px 20px;
     max-width: 1200px; 
     margin: 0 auto;
-
-
 }
 
 #college_logo {
@@ -59,8 +58,7 @@ header {
     width: 100%;
     flex-wrap: wrap;
     padding: 50px 20px;
-    max-width: 1200px; 
-    
+    max-width: 1200px;
     margin: 0 auto;
     margin-top: 5%;
 }
@@ -178,7 +176,6 @@ header {
 
 .btn-login:hover {
     background-color: dodgerblue;
-
 }
 
 .error-message {
@@ -187,16 +184,19 @@ header {
     font-size: 12px;
     margin-bottom: 0px;
 }
+
 footer {
     position: fixed;
     bottom: 0;
     width: 100%;
 }
+
 footer{
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 .footer {
     bottom: 0;
     border-top: 1px solid #cbd0dd;
@@ -204,20 +204,235 @@ footer{
     font-size: 14px; 
     align-items: center;
     display: flex;
-    background-color: #f5f7fa;;
+    background-color: #f5f7fa;
     justify-content: space-between;
 }
+
 .footer p{
     padding: 0 1.3rem 0 1.3rem;
     font-weight: 100;
     color: rgb(49, 55, 74);
-
 }
+
 .footer a{
     color: #3874ff;
     text-decoration: none;
     font-weight: 100;
 }
+
 footer a:hover{
     text-decoration: underline;
+}
+@media only screen and (max-width: 375px) {
+    #college_title {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #college_logo {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    #college_logo img {
+        height: 60px;
+    }
+    .login-section {
+        padding: 0px;
+    }
+    #college_sub_title h1 {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+    .login-container {
+        transition: none;
+        box-shadow: none;
+    }
+
+    .login-container:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    #title_name {
+        font-size: 1rem;
+    }
+
+    .login-container {
+        width: 90%;
+    }    
+    .footer {
+        height: 1rem;
+        font-size: 6px; 
+
+    }  
+    footer a:hover{
+        text-decoration: none;
+    }
+}
+@media only screen and (min-width: 376px) and (max-width: 480px) {
+    #college_title {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #college_logo {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    #college_logo img {
+        height: 60px;
+    }
+    .login-section {
+        padding: 0px;
+    }
+    #college_sub_title h1 {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+    .login-section{
+        margin-bottom: 20px;
+    }
+    .login-container {
+        transition: none;
+        box-shadow: none;
+    }
+
+    .login-container:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    #title_name {
+        font-size: 1rem;
+    }
+
+    .login-container {
+        width: 90%;
+    }
+
+    
+    .footer {
+        height: 1.5rem;
+        font-size: 10px; 
+    }
+    footer a:hover{
+        text-decoration: none;
+    }
+}
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    #college_title {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #college_logo {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    #college_logo img {
+        height: 60px;
+    }
+    .login-section {
+        padding: 0px;
+    }
+    #college_sub_title h1 {
+        font-size: 1rem;
+        text-align: center;
+    }
+    .login-container {
+        max-width: 350px;
+        background-color: #fff;
+    }
+    .login-section{
+        margin-bottom: 20px;
+    }
+    .login-container {
+        transition: none;
+        box-shadow: none;
+    }
+
+    .login-container:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    #title_name {
+        font-size: 1rem;
+    }
+
+    .login-container {
+        width: 90%;
+    }
+
+    
+    .footer {
+        height: 1.5rem;
+        font-size: 7px; 
+    }
+    footer a:hover{
+        text-decoration: none;
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 979px) {
+    #college_title {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #college_logo {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    #college_logo img {
+        height: 60px;
+    }
+    .login-section {
+        padding: 0px;
+        margin-bottom: 50px;
+    }
+    #college_sub_title h1 {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+    #college_logo img {
+        height: 80px;
+    }
+
+    .login-container {
+        width: 400px;
+    }
+    .login-container {
+        transition: none;
+        box-shadow: none;
+    }
+
+    .login-container:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    .footer {
+        height: 1.5rem;
+        font-size: 12px; 
+    }
+    footer a:hover{
+        text-decoration: none;
+    }
+}
+
+/* Laptops (980px - 1024px) */
+@media only screen and (min-width: 980px) and (max-width: 1024px) {
+    #college_sub_title h1 {
+        font-size: 1.2rem;
+    }
+}
+
+@media only screen and (min-width: 1025px) and (max-width: 1399px) {
+    #college_sub_title h1 {
+        font-size: 1.2rem;
+    }
+    .login-container {
+        width: 500px;
+    }
 }

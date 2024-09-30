@@ -221,6 +221,21 @@ header {
     margin-bottom: 40px;
     padding-bottom: 50px;
 }
+#sidebarToggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 1.5rem;
+  }
+  
+  #sidebarToggle .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: black; 
+    margin: 5px 0; 
+  }
 
 @media (max-width: 991px) {
     .sidebar {
@@ -235,7 +250,6 @@ header {
 
     .content {
         margin-left: 0; 
-        padding: 10px; 
     }
     .sidebar a {
         padding: 10px 15px; 
@@ -245,10 +259,7 @@ header {
         display: none;
     }
 
-    .header-container {
-        flex-direction: column; 
-        align-items: flex-start; 
-    }
+
 
     .theme-switch {
         align-self: flex-end; 
@@ -258,6 +269,7 @@ header {
         margin-top: 10px; 
     }
 }
+
 body.dark-mode {
     background-color: #0f111a;
     color: #fff;
@@ -852,14 +864,17 @@ footer a:hover{
 .assign-technician {
     text-align: center; 
 }
-select{
+select,input[type="date"]{
     height: 35px;
     border-radius: 5px;
 }
-select:focus{
+select:focus,input[type="date"]:focus{
     outline: none;
     border-color: #4285f4; 
     box-shadow: 0px 0px 8px rgba(66, 133, 244, 0.5); 
+}
+h input[type="date"]:disabled{
+    color:#fff;
 }
 .spinner-overlay {
     position: fixed;
@@ -877,3 +892,270 @@ select:focus{
     width: 30px;
     height: 30px;
 }
+.search {
+    display: flex;
+    align-items: center; 
+    border: 1px solid #cbd0dd;
+    border-radius: 40px;
+    padding-left: 5px;
+    padding-right: 5px; 
+    background-color: white;
+}
+.search:hover,.search:focus{
+    outline: none;
+    border-color: #4285f4; 
+    box-shadow: 0px 0px 8px rgba(66, 133, 244, 0.5); 
+}
+.search input[type="text"] {
+    border: none;
+    padding: 10px; 
+    outline: none;
+    background: transparent;
+    width: 250px;
+     
+}
+
+.search svg {
+    margin-left: 3px;
+    width: 15px; 
+    height: 15px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.dark-mode .search svg{
+    color: #0f111a;
+}
+.menu-toggle{
+    display: none;
+}
+@media only screen and (max-width: 375px) {
+    .menu-toggle{
+        display: block;
+        font-size: 20px;
+        font-weight: 100;
+        width: 25px;
+    }
+    #college_sub_title{
+        display: none;
+    }
+    .header-container {
+        flex-direction: row; 
+        align-items: flex-start;
+         align-items: center;
+         padding: 10px;
+
+    }
+    #college_title{
+        gap: 5px;
+    }
+    #college_logo a img{
+        width: 60px;
+        height: 40px;
+    }
+    .sidebar{
+        display: none;
+    }
+    .subnav{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 3px;
+    }
+    h3{
+        font-size: 15px;
+    }
+    #addbranchesbutton,#downloadreport{
+        background-color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        padding: 2px 2px; 
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #3874ff;
+        color: white;
+        font-size: 8px;
+        font-weight: 400;
+    }
+    #addbranchesbutton svg,#downloadreport svg{
+        margin-right: 5px;
+        width: 10px;
+
+    }
+    #addbranchesbutton:hover, 
+    #downloadreport:hover {
+        background-color: #3874ff; 
+    }
+    @media (hover: none), (pointer: coarse) { 
+    
+        #addbranchesbutton:hover, 
+        #downloadreport:hover {
+            background-color: #3874ff;
+        }
+    }
+    #allcomplaintsfilter{
+        display: flex;
+        flex-direction: column;
+    }
+    #allsubfilters{
+        margin-bottom: 10px;
+    } 
+    #allsubfilters label{
+        font-size: 10px;
+    }
+    #allsubfilters>div>div{
+        gap:5px !important;
+    }
+    #allsubfilters select{
+        height: 20px;
+        font-size: 9px;
+        max-width: 60px;
+    }
+    .search input[type="text"]{
+        font-size: 10px;
+    }
+    .tablelist{
+        font-size: 10px;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-bottom: 5px;
+    }
+    .table-container{
+        margin-top: 12px;
+    }
+    .tables {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+    }
+    .tables th, .tables  td {
+        font-size: 10px;
+    }
+    .tables  th {
+        font-size: 10px;
+    }
+    .tables td{
+        padding: 10px 20px;
+        font-size: 8px;
+    }
+    .save-button {
+        padding: 4px 6px;
+        cursor: pointer;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 4px;
+        font-size: 8px;
+        transition: background-color 0.3s ease;
+    } 
+    .save-button:hover {
+        background-color: #007bff; 
+    }
+    .overlay-content {
+        padding: 15px;
+        width: 300px;
+    }
+    .close-button {
+        font-size: 14px;
+    }
+    .close-button:hover{
+        color: #888;
+    }
+    #noResults{
+        font-size: 8px !important;
+        text-align: left !important;
+        padding-left: 20px;
+    }
+    @media (hover: none), (pointer: coarse) {  
+        .close-button:hover {
+            color: #888;
+        }
+    }
+    @media (hover: none), (pointer: coarse) {  
+        .save-button:hover {
+            background-color: #007bff;
+        }
+    }
+    .overlay-content h3 {
+        font-size: 10px;
+    }
+    .complaint-details{
+        font-size: 10px;
+    }
+    .save-button svg{
+        width: 10px;
+    }
+    .footer {
+        width: 100%;
+        height: 1.5rem;
+        left: 0;
+        border-left: none;
+        margin-left: 0px;
+        font-size: 6px;
+        
+    }
+
+}
+@media only screen and (min-width: 376px) and (max-width: 480px) {
+    .menu-toggle{
+        display: block;
+        font-size: 20px;
+        font-weight: 100;
+        width: 25px;
+    }
+    #college_sub_title{
+        display: none;
+    }
+    .header-container {
+        flex-direction: row; 
+        align-items: flex-start;
+         align-items: center;
+
+    }
+    #college_title{
+        gap: 5px;
+    }
+    #college_logo a img{
+        width: 60px;
+        height: 40px;
+    }
+    .sidebar{
+        display: none;
+    }
+    
+}
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    .menu-toggle{
+        display: block;
+        font-size: 20px;
+        font-weight: 100;
+        width: 25px;
+    }
+    #college_sub_title{
+        display: none;
+    }
+    .header-container {
+        flex-direction: row; 
+        align-items: flex-start;
+         align-items: center;
+
+    }
+    #college_title{
+        gap: 5px;
+    }
+    #college_logo a img{
+        width: 60px;
+        height: 40px;
+    }
+
+}
+@media only screen and (min-width: 769px) and (max-width: 979px) {
+
+}
+@media only screen and (min-width: 980px) and (max-width: 1024px){
+
+}
+@media only screen and (min-width: 1025px) and (max-width: 1399px){
+    
+}
+

@@ -143,17 +143,14 @@
                             <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                           </svg>Closed Complaints</a></li>
-                          <li class="nav-item"><a class="nav-link" href="{% url 'admintechnician' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 9.9-2" /> 
-                            <path d="M17 11h3" />
-                          </svg>Reopened Complaints</a></li>
+                         
                     </ul>
                 </li>
-                <li><a class="nav-link" href="{% url 'adminassigntechnician' %}" style="font-weight: 100;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                    <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                  </svg>Assign Technician</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'adminupdatestatuspage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
+                    <circle cx="24" cy="24" r="20" fill="none" stroke="#e0e0e0" stroke-width="4"/>
+                    <circle cx="24" cy="24" r="20" fill="none" stroke="#4caf50" stroke-width="4"
+                            stroke-dasharray="125.66" stroke-dashoffset="31.42"/>
+                  </svg>Update Status</a></li>
                 <li><a class="nav-link" href="{% url 'adminpage' %}" style="font-weight: 100;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-app-indicator" viewBox="0 0 16 16">
                     <path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1z"/>
                     <path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -204,8 +201,9 @@
         <main class="content"> 
             <div class="subnav d-flex justify-content-between align-items-center"> 
                 <div>
-                    <h3>New Complaints</h3>
+                    <h3>Assign Technician</h3>
                 </div>
+                
             </div>
             <div class="newcomplainttable">
                 <div class="tablelist">
@@ -251,13 +249,25 @@
                         <label for="overlayDate">Date Raised</label>
                         <span id="overlayDate"></span>
                     </div>
-                    <div>
-                        <button id="assigntechnician" class="save-button">
+                    <div class="complaint-details">
+                        <label for="technicianfield">Field</label> 
+                        <select name="technicianfield" id="technicianfield" required onchange="updateTechnicianDropdown(this.value)">
+                            <option value="" disabled selected>Select Field</option>
+                        </select>
+                    </div>
+                    <div class="complaint-details">
+                        <label for="technicianSelect">Technician</label> 
+                        <select name="technicianSelect" id="technicianSelect" required>
+                            <option value="" disabled selected>Select Technician</option>
+                        </select>
+                    </div>
+                    <div class="assign-technician">
+                        <button id="assign-technician" class="save-button">
                             Assign Technician
                         </button>
                     </div>
                 </div>
-            </div>            
+            </div>             
         </main> 
         <footer class="footer position-absolute">
             <div>
@@ -287,6 +297,7 @@
     </script>
     <script>
     function getnewcomplaints(){
+        
         return fetch('/adminnewcomplaintstable/',{
             method: 'POST',
             headers: {
@@ -298,6 +309,7 @@
         .then(data => {
             const newcomplaintTableBody = document.querySelector('#newcomplaintstable tbody');
             newcomplaintTableBody.innerHTML = '';
+
             if(data.length===0){
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="6">No new complaints found right now.</td>';
@@ -306,17 +318,13 @@
                 data.forEach(complaint => { 
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td style="color:#007bff;">${complaint.id}</td> 
+                        <td style="color:#007bff;" id="complaint_${complaint.id}">${complaint.id}</td> 
                         <td>${complaint.created_at}</td> 
                         <td style="color:#007bff;">${complaint.faculty__faculty_name}</td> 
                         <td style="color:#525b75;">${complaint.department__department_name}</td>
                         <td style="font-weight:570;">${complaint.title}</td> 
-                        <td><button onclick="openComplaintOverlay(this)" data-complaint="${encodeURIComponent(JSON.stringify(complaint))}" class="save-button" style="display:flex;align-items:center;gap:5px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-                            </svg> View
-                        </button></td>                
+                         <td><button onclick="openComplaintOverlay(this)" data-complaint-id="${complaint.id}" data-complaint="${encodeURIComponent(JSON.stringify(complaint))}" class="save-button">Assign Technician
+                        </button></td>                   
                     `;
                     newcomplaintTableBody.appendChild(row);
                 });
@@ -324,25 +332,56 @@
         })
         .catch(error => {
             console.error('Error fetching recent complaints:', error);
-            throw error
+            throw error;
         });
     }
     function openComplaintOverlay(button) {
+        const complaintId = button.dataset.complaintId;
         const complaint = JSON.parse(decodeURIComponent(button.dataset.complaint));
-
         document.getElementById('overlayTitle').textContent = complaint.title;
         document.getElementById('overlayDescription').textContent = complaint.description;
         document.getElementById('overlayComplaintId').textContent=complaint.id;
         document.getElementById('overlayFaculty').textContent = complaint.faculty__faculty_name;
         document.getElementById('overlayDepartment').textContent = complaint.department__department_name;
         document.getElementById('overlayDate').textContent = complaint.created_at;
-        const assignTechnicianButton = document.getElementById('assigntechnician');
-        assignTechnicianButton.addEventListener('click', function(event) {
-            event.preventDefault(); 
-            const redirectUrl = "{% url 'adminassigntechnician' %}#complaint_" + complaint.id;
-            window.open(redirectUrl,'_parent'); 
-        });
+
         document.getElementById('complaintOverlay').style.display = 'block';
+        document.getElementById('assign-technician').addEventListener('click',function(event){
+            const technicianField = document.getElementById('technicianfield').value;
+            const technicianNumber = document.getElementById('technicianSelect').value;
+            const nationalNumberMatch = technicianNumber.match(/National Number: (\d+)/);
+            const nationalNumber = nationalNumberMatch ? nationalNumberMatch[1] : null;
+            showSpinner();
+            fetch('/assigntechnician/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ 
+                    'complaint_id': complaintId, 
+                    'technician': nationalNumber 
+                }) 
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideSpinner();
+                if (data.success) {
+                    closeComplaintOverlay();
+                    alert(data.message); 
+                    getnewcomplaints();
+
+                } else {
+                    console.error('Error assigning technician:', data.error);
+                    alert(data.error); 
+                }
+            })
+            .catch(error => {
+                hideSpinner();
+                console.error('Error assigning technician:', error);
+                
+            });
+        });
     }
     function closeComplaintOverlay() {
         document.getElementById('complaintOverlay').style.display = 'none';
@@ -350,7 +389,8 @@
     document.addEventListener('DOMContentLoaded', () => {
         showSpinner();
         Promise.all([
-        getnewcomplaints()
+        getnewcomplaints(),
+        getTechnicianFieldsForDropdown()
         ])
         .then(() => {
             hideSpinner(); 
@@ -360,9 +400,68 @@
             hideSpinner();
         });
     });
-    document.addEventListener('DOMContentLoaded', () => {
-        getnewcomplaints();
-    });
+    function getTechnicianFieldsForDropdown() {
+        return fetch('/getfields/', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        }) 
+            .then(response => response.json())
+            .then(data => {
+                const technicianFieldSelect = document.getElementById('technicianfield');
+                technicianFieldSelect.innerHTML = '<option value="" disabled selected>Select Field</option>';
+                data.forEach(field => {
+                    const option = document.createElement('option');
+                    option.value = field.field_name;
+                    option.text = field.field_name;
+                    technicianFieldSelect.add(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching technician fields:', error);
+                throw error;
+            });
+    }
+    function updateTechnicianDropdown(field_name) {
+        if (field_name) {
+            showSpinner();
+            fetch('/get_technicians_by_field/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ 'field_name': field_name }) 
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideSpinner();
+                if (data.success) {
+                    const technicianSelect = document.getElementById('technicianSelect'); // Assuming you add a technicianSelect element
+                    technicianSelect.innerHTML = '<option value="" disabled selected>Select Technician</option>'; // Clear existing options
+                    data.technicians.forEach(technician => {
+                        const option = document.createElement('option');
+                        option.value = technician.technician_number; 
+                        option.text = technician.technician_name;
+                        technicianSelect.add(option);
+                    });
+                } else {
+                    console.error('Error fetching technicians:', data.error);
+                }
+            })
+            .catch(error => {
+                hideSpinner();
+                console.error('Error fetching technicians:', error);
+                
+            });
+        } else {
+            const technicianSelect = document.getElementById('technicianSelect');
+            technicianSelect.innerHTML = '<option value="" disabled selected>Select Technician</option>';
+        }
+    }
+    
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {

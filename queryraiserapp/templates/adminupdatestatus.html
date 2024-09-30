@@ -93,7 +93,7 @@
                     </ul>
                 </li>
                 <li class="nav-item has-submenu">
-                    <a href="#" class="nav-link active">
+                    <a href="#" class="nav-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                           </svg>
@@ -139,15 +139,13 @@
                             <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
                           </svg>Resolved Complaints</a></li>
                           
-                          <li class="nav-item"><a class="nav-link active" href="{% url 'adminclosedcomplaintspage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <li class="nav-item"><a class="nav-link" href="{% url 'adminclosedcomplaintspage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                           </svg>Closed Complaints</a></li>
-                          
                     </ul>
                 </li>
-
-                  <li class="nav-item"><a class="nav-link" href="{% url 'adminupdatestatuspage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
+                <li class="nav-item"><a class="nav-link active" href="{% url 'adminupdatestatuspage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
                     <circle cx="24" cy="24" r="20" fill="none" stroke="#e0e0e0" stroke-width="4"/>
                     <circle cx="24" cy="24" r="20" fill="none" stroke="#4caf50" stroke-width="4"
                             stroke-dasharray="125.66" stroke-dashoffset="31.42"/>
@@ -202,108 +200,42 @@
         <main class="content"> 
             <div class="subnav d-flex justify-content-between align-items-center"> 
                 <div>
-                    <h3>Closed Complaints</h3>
+                    <h3>Update Complaint Status</h3>
                 </div>
-                <div class="addbranches" style="display: flex;gap: 10px;"> 
-                    <div>
-                        <button id="downloadreport" onclick="downloadOverallReport()" style="gap: 3px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-spreadsheet" viewBox="0 0 16 16">
-                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V9H3V2a1 1 0 0 1 1-1h5.5zM3 12v-2h2v2zm0 1h2v2H4a1 1 0 0 1-1-1zm3 2v-2h3v2zm4 0v-2h3v1a1 1 0 0 1-1 1zm3-3h-3v-2h3zm-7 0v-2h3v2z"/>
-                              </svg>
-                          <span>Download Sheets</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download" viewBox="0 0 16 16">
-                            <path d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/>
-                            <path d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708z"/>
-                          </svg>
-                        </button>
+                <div>
+                    <div class="search">
+                        <input type="text" placeholder="Search...">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
                     </div>
-                  </div>
+                </div>
             </div>
-            <div class="closedcomplainttable">
+            <div class="updatecomplianttable">
                 <div class="tablelist">
                     <div class="table-container">
-                        <table class="tables" id="closedcomplaintstable">
+                        <table class="tables" id="updatecompliantstable">
                             <thead>
                                 <tr>
                                     <th>Complaint ID</th>
-                                    <th>Faculty Name</th>
-                                    <th>Department</th>
-                                    <th>Title</th>
-                                    <th>Technician</th>
-                                    <th>Technician Number</th>
                                     <th>Date Raised</th>
-                                    <th>Date Closed</th>
+                                    <th>Title</th>
+                                    <th>Department</th>
+                                    <th>Technician</th>
+                                    <th>Technician Status</th>
+                                    <th>Technician Resolved Date</th>
+                                    <th>Faculty Status</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 </tbody>
                         </table>
+                        <p id="noResults" style="display: none;font-size: 14px;text-align: center;">No results found...!</p>
                     </div>
-                </div>
-            </div>
-            <div id="complaintOverlay" class="overlay">
-                <div class="overlay-content">
-                    <span class="close-button" onclick="closeComplaintOverlay()">×</span>
-                    <h3 id="overlayTitle"></h3> 
-                    <div class="complaint-details">
-                        <label for="overlayDescription">Description</label>
-                        <span id="overlayDescription"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayComplaintId">Complaint ID</label>
-                        <span id="overlayComplaintId"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayDepartment">Department</label>
-                        <span id="overlayDepartment"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayFaculty">Complaint Raised By</label>
-                        <span id="overlayFaculty"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayDate">Date Raised</label>
-                        <span id="overlayDate"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayDateAssigned">Date Assigned</label>
-                        <span id="overlayDateAssigned"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayAssignedTechnician">Assigned Technician</label>
-                        <span id="overlayAssignedTechnician"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayTechnicianNumber">Technician Number</label>
-                        <span id="overlayTechnicianNumber"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayTechnicianResolved">Technician Resolved Date</label>
-                        <span id="overlayTechnicianResolved"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayTechniciancomments">Technician Comments</label>
-                        <span id="overlayTechniciancomments"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayFacultyResolved">Faculty Resolved Date</label>
-                        <span id="overlayFacultyResolved"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayFacultycomments">Faculty Comments</label>
-                        <span id="overlayFacultycomments"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayRating">Rating</label>
-                        <span id="overlayRating"></span>
-                    </div>
-                    <div class="complaint-details">
-                        <label for="overlayClosedDate">Closed Date</label>
-                        <span id="overlayClosedDate"></span>
-                    </div>
-                </div>
-            </div>         
+                </div> 
+            </div>       
         </main> 
         <footer class="footer position-absolute">
             <div>
@@ -332,113 +264,135 @@
 
     </script>
     <script>
-    function getclosedcomplaints(){
-        return fetch('/admin_get_closed_complaints/',{
+    function admin_get_update_status() {
+        return fetch('/admin_get_update_status/', {
             method: 'POST',
             headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
             }
         })
-        .then(response => response.json()) 
+        .then(response => response.json())
         .then(data => {
-            const closedcomplaintTableBody = document.querySelector('#closedcomplaintstable tbody');
-            closedcomplaintTableBody.innerHTML = '';
-            if(data.length===0){
+            const updatecompliantTableBody = document.querySelector('#updatecompliantstable tbody');
+            updatecompliantTableBody.innerHTML = '';
+
+            if (data.length === 0) {
                 const row = document.createElement('tr');
-                row.innerHTML = '<td colspan="8">No closed complaints found right now.</td>';
-                closedcomplaintTableBody.appendChild(row);
+                row.innerHTML = '<td colspan="8">No assigned complaints found right now.</td>';
+                updatecompliantTableBody.appendChild(row);
             } else {
-                data.forEach(complaint => { 
+                data.forEach(complaint => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td style="color:#007bff;">${complaint.id}</td> 
-                        <td style="color:#007bff;">${complaint.faculty__faculty_name}</td> 
-                        <td style="color:#525b75;">${complaint.department__department_name}</td>
-                        <td style="font-weight:570;">${complaint.title}</td>
-                        <td style="color:#525b75;">${complaint.technician__technician_name}</td> 
-                        <td style="color:#525b75;">${complaint.technician__technician_number}</td> 
                         <td>${complaint.created_at}</td>  
-                        <td>${complaint.technician_resolve_time}</td>
-                        <td><button onclick="openComplaintOverlay(this)" data-complaint="${encodeURIComponent(JSON.stringify(complaint))}" class="save-button" style="display:flex;align-items:center;gap:5px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-                            </svg> View
-                        </button></td>
+                        <td style="font-weight:570;">${complaint.title}</td> 
+                        <td style="color:#525b75;">${complaint.department__department_name}</td>
+                        <td style="color:#525b75;">${complaint.technician__technician_name}</td> 
+                        <td> 
+                            <select name="technicianStatus" id="technicianStatus_${complaint.id}">
+                                <option value="" disabled ${complaint.technician_status == null ? 'selected' : ''}>Not Updated</option>
+                                <option value="resolved" style="color:#28a745;" ${complaint.technician_status === 'resolved' ? 'selected' : ''}>Resolved</option>
+                                <option value="pending" style="color:#dc3545;" ${complaint.technician_status === 'pending' ? 'selected' : ''}>Pending</option>
+                            </select>
+                        </td>
+                        <td> 
+                            <input type="date" id="technician_date_field_${complaint.id}" min="${complaint.assigned_time ? complaint.assigned_time : ''}" ${complaint.technician_resolve_time ? `value="${complaint.technician_resolve_time}"` : ''} ${complaint.technician_status === 'resolved' ? 'disabled' : ''}>
+                        </td>
+                        <td>
+                            <select name="facultyStatus" id="facultystatus_${complaint.id}">
+                                <option value="" disabled ${complaint.faculty_status == null ? 'selected' : ''}>Not Updated</option>
+                                <option value="resolved" style="color:#28a745;" ${complaint.faculty_status === 'resolved' ? 'selected' : ''}>Resolved</option>
+                                <option value="pending" style="color:#dc3545;" ${complaint.faculty_status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="pending_review" style="color:#ffc107;" ${complaint.faculty_status === 'Pending Review' ? 'selected' : ''}>Pending Review</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button onclick="adminupdatestatus(${complaint.id})" class="save-button" style="display:flex;align-items:center;gap:5px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-up" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M3.5 10a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 0 0 1h2A1.5 1.5 0 0 0 14 9.5v-8A1.5 1.5 0 0 0 12.5 0h-9A1.5 1.5 0 0 0 2 1.5v8A1.5 1.5 0 0 0 3.5 11h2a.5.5 0 0 0 0-1z"/>
+                                    <path fill-rule="evenodd" d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708z"/>
+                                </svg>
+                                Update
+                            </button>
+                        </td> 
                     `;
-                    closedcomplaintTableBody.appendChild(row);
-                });
+                    updatecompliantTableBody.appendChild(row);
+                })
             }
         })
         .catch(error => {
-            console.error('Error fetching recent complaints:', error);
+            
+            console.error('Error fetching complaints:', error);
             throw error
         });
     }
-    function openComplaintOverlay(button) {
-        const complaint = JSON.parse(decodeURIComponent(button.dataset.complaint));
-
-        document.getElementById('overlayTitle').textContent = complaint.title;
-        document.getElementById('overlayDescription').textContent = complaint.description;
-        document.getElementById('overlayComplaintId').textContent=complaint.id;
-        document.getElementById('overlayFaculty').textContent = complaint.faculty__faculty_name;
-        document.getElementById('overlayDepartment').textContent = complaint.department__department_name;
-        document.getElementById('overlayDate').textContent = complaint.created_at;
-        document.getElementById('overlayDateAssigned').textContent = complaint.assigned_time;
-        document.getElementById('overlayAssignedTechnician').textContent = complaint.technician__technician_name;
-        document.getElementById('overlayTechnicianNumber').textContent = complaint.technician__technician_number;
-        document.getElementById('overlayTechnicianResolved').textContent = complaint.technician_resolve_time;
-        document.getElementById('overlayTechniciancomments').textContent = complaint.technician_comments;
-        document.getElementById('overlayFacultyResolved').textContent = complaint.faculty_feedback_time;
-        document.getElementById('overlayFacultycomments').textContent = complaint.faculty_comments;
-        document.getElementById('overlayRating').textContent = complaint.rating;
-        document.getElementById('overlayClosedDate').textContent = complaint.closed_time; 
-        document.getElementById('complaintOverlay').style.display = 'block';
-    }
-    function closeComplaintOverlay() {
-        document.getElementById('complaintOverlay').style.display = 'none';
-    }
-    function downloadOverallReport() {
-        showSpinner(); 
-        fetch('/download_closed_report/', { 
+    function adminupdatestatus(complaintId) { 
+        const technicianStatus = document.getElementById(`technicianStatus_${complaintId}`).value;
+        const facultyStatus = document.getElementById(`facultystatus_${complaintId}`).value; 
+        const resolvedTime=document.getElementById(`technician_date_field_${complaintId}`).value;
+        showSpinner();
+        fetch('/adminupdatestatus/', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', 
+                'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken')
             },
+            body: JSON.stringify({ 
+                complaint_id: complaintId,
+                technician_status: technicianStatus,
+                faculty_status: facultyStatus ,
+                resolved_time:resolvedTime
+            })
         })
-        .then(response => {
-            hideSpinner(); 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`); 
+        .then(response => response.json())
+        .then(data => {
+            hideSpinner();
+            if (data.success) {
+                alert('Status Updated Successfully');
+                admin_get_update_status(); 
+            } else {
+                alert('Failed to update status: ' + data.error);
             }
-            return response.blob();
-        })
-        .then(blob => {
-            hideSpinner(); 
-            const url = window.URL.createObjectURL(blob); 
-            const a = document.createElement('a');
-            a.style.display = 'none'; 
-            a.href = url;
-            a.download = 'Closed_Complaints_Report.xlsx'; 
-            document.body.appendChild(a);
-            a.click(); 
-            window.URL.revokeObjectURL(url); 
-            document.body.removeChild(a); 
         })
         .catch(error => {
-            console.error('Error downloading report:', error); 
-            alert('An error occurred while downloading the report.');
             hideSpinner();
+            console.error('Error in changing status:', error);
+            alert('Error in changing status. Please try again later.');
         });
-    } 
+    }
+    function Search() {
+        const searchText = this.value.toLowerCase(); 
+        const tableRows = document.querySelectorAll('#updatecompliantstable tbody tr');
+        const noResultsMessage = document.getElementById('noResults');
+
+        let hasVisibleRow = false; 
+        tableRows.forEach(row => {
+            const ComplaintId = row.querySelector('td:first-child').textContent.toLowerCase().replace(/\s+/g, '').trim();
+            const TechnicianName = row.querySelector('td:nth-child(5)').textContent.toLowerCase().replace(/\s+/g, '').trim();
+            const cleanSearchText = searchText.toLowerCase().replace(/\s+/g, '').trim();
+            if (ComplaintId.includes(cleanSearchText) || TechnicianName.includes(cleanSearchText)) {
+                row.style.display = ''; 
+                hasVisibleRow = true;
+            } else {
+                row.style.display = 'none'; 
+            }
+        });
+        if (!hasVisibleRow) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none'; 
+        }
+    }
     document.addEventListener('DOMContentLoaded', () => {
         showSpinner();
         Promise.all([
-        getclosedcomplaints()
+        admin_get_update_status()
         ])
         .then(() => {
+            const searchInput = document.querySelector('.search input');
+            searchInput.addEventListener('input', Search); 
             hideSpinner(); 
         })
         .catch(error => {
@@ -446,7 +400,6 @@
             hideSpinner();
         });
     });
-
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {

@@ -84,6 +84,10 @@ function setupNav() {
         });
     });
 }
+function toggleNav() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('show'); 
+}
 document.addEventListener('DOMContentLoaded', function() { 
     getdepartmentsForFacultySubmenu();
     setupNav();

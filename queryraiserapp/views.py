@@ -21,6 +21,7 @@ from django.utils import timezone
 from openpyxl import Workbook
 from io import BytesIO 
 from django.contrib.auth.models import Permission, ContentType
+import phonenumbers 
 
 def admin_required(view_func):
     return user_passes_test(
@@ -116,14 +117,12 @@ def adddepartments(request):
     if request.method == 'POST':
         if request.POST.get('form_type') == 'adddepartmentsform':
             department_name = request.POST.get('departmentname')
-            department_code = request.POST.get('departmentcode')
             department_image = request.FILES.get('departmentimage')
             try:
-                check_department=Department.objects.filter(department_code=department_code)
+                check_department=Department.objects.filter(department_name=department_name)
                 if check_department:
-                    return JsonResponse({'success': False, 'error': f'Department with id {department_code} already exists'})
+                    return JsonResponse({'success': False, 'error': f'Department already exists'})
                 department = Department.objects.create(
-                    department_code=department_code,
                     department_name=department_name,
                     department_logo=department_image
                 )
@@ -217,26 +216,38 @@ def addfaculty(request):
     if request.method=='POST':
         if request.POST.get('form_type') == 'addfacultyform':
             facultyname=request.POST.get('facultyname')
-            registenumber=request.POST.get('registernumber')
             department=request.POST.get('department')
             faculty_image=request.POST.get('facultyimage')
-            phone_number=request.POST.get('phone')
+            phone_number = request.POST.get('phone')
+            phone_number = ''.join(filter(str.isdigit, phone_number))
+
+            if len(phone_number) != 10:
+                return JsonResponse({'success': False, 'error': 'Invalid phone number. Must be 10 digits.'})
             try:
-                check_faculty=Faculty.objects.filter(faculty_id =registenumber)
+                parsed_number = phonenumbers.parse(f"+91{phone_number}", "IN") 
+                if not phonenumbers.is_valid_number(parsed_number):
+                    return JsonResponse({'success': False, 'error': 'Invalid Indian phone number.'})
+                formatted_phone_number = phonenumbers.format_number(
+                    parsed_number, phonenumbers.PhoneNumberFormat.NATIONAL
+                ) 
+            except phonenumbers.NumberParseException:
+                return JsonResponse({'success': False, 'error': 'Invalid phone number format.'})
+            try:
+                check_faculty=Faculty.objects.filter(faculty_id=phone_number)
                 if check_faculty:
-                    return JsonResponse({'success': False, 'error': f'Faculty with id {registenumber} already exists'})
+                    return JsonResponse({'success': False, 'error': f'Faculty with {phone_number} already exists'})
                 try:
                     department = Department.objects.get(department_code=department) 
                 except Department.DoesNotExist:
                     return JsonResponse({'success': False, 'error': 'Invalid department selected.'})
-                hashed_password = make_password(registenumber)
+                hashed_password = make_password(phone_number)
                 faculty = Faculty.objects.create(
-                    faculty_id=registenumber,
+                    faculty_id=phone_number,
                     faculty_name=facultyname,
                     department=department,
                     faculty_phonenumber=phone_number,
                     faculty_image=faculty_image,
-                    username=registenumber, 
+                    username=phone_number, 
                     password=hashed_password,
                     role='faculty'
                 )
@@ -259,15 +270,22 @@ def addfaculty(request):
 def savefacultychanges(request):
     try:
         data = json.loads(request.body)
-        facultyid = data.get('faculty_id')
+        facultyid = data.get('faculty_id') 
         faculty_name = data.get('faculty_name')
-        faculty_number=data.get('faculty_number')
+        faculty_number = data.get('faculty_number')
         current_faculty = Faculty.objects.get(faculty_id=facultyid)
-        current_faculty.faculty_name=faculty_name
-        current_faculty.faculty_phonenumber=faculty_number
+        current_faculty.faculty_name = faculty_name
+        current_faculty.faculty_phonenumber = faculty_number
         current_faculty.save()
-        
+        try:
+            user = User.objects.get(username=facultyid)
+        except User.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'User not found for this faculty.'})
+        user.username = faculty_number 
+        user.password = make_password(faculty_number) 
+        user.save()
         return JsonResponse({'success': True})
+
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
 
@@ -382,7 +400,6 @@ def addtechnician(request):
         technician_name = request.POST.get('technicianname')
         technician_field_name = request.POST.get('technicianfield') 
         technician_phone = request.POST.get('phone')
-        print(technician_field_name, technician_name, technician_phone)
         try:
             if Technician.objects.filter(technician_number=technician_phone, technician_field__field_name=technician_field_name).exists():
                 return JsonResponse({'success': False, 'error': f'Technician with Phone number {technician_phone} and Field {technician_field_name} already exists'})
@@ -509,7 +526,6 @@ def admincomplaintscount(request):
                 'pending': Complaint.objects.filter(status='pending').count(),
                 'resolved': Complaint.objects.filter(status='pending_review').count(),
                 'closed': Complaint.objects.filter(status='closed').count(),
-                'reopened': Complaint.objects.filter(status='reopened').count(),
             }
             return JsonResponse({'success': True, 'complaint_counts': complaint_counts})
 
@@ -889,6 +905,7 @@ def adminallcomplaints(request):
             'technician_status',
             'description',
             'assigned_time',
+            'technician__technician_field__field_name',
             ).order_by('-created_at')
             for complaint in all_complaints:
                 complaint['status'] = complaint['status'].capitalize()
@@ -900,10 +917,11 @@ def adminallcomplaints(request):
                 complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
                 if complaint['assigned_time']is not None:
                     complaint['assigned_time'] = timezone.localtime(complaint['assigned_time']).strftime('%Y-%m-%d %H:%M:%S')
-                complaint['technician__technician_number'] = format_number(
-                    complaint['technician__technician_number'], 
-                    PhoneNumberFormat.NATIONAL
-                ).lstrip('0').strip() 
+                if complaint['technician__technician_number'] is not None:
+                        complaint['technician__technician_number'] = format_number(
+                        complaint['technician__technician_number'], 
+                        PhoneNumberFormat.NATIONAL
+                    ).lstrip('0').strip() 
                 if complaint['status']=='new':
                     complaint['technician__technician_number']='Not Assigned'
                     complaint['technician__technician_name']='Not Assigned'
@@ -943,7 +961,6 @@ def getdepartmentcomplaintscount(request):
                 'pending': Complaint.objects.filter(status='pending', department=department).count(),  
                 'resolved': Complaint.objects.filter(status='pending_review', department=department).count(), 
                 'closed': Complaint.objects.filter(status='closed', department=department).count(),  
-                'reopened': Complaint.objects.filter(status='reopened', department=department).count(),
             }
             return JsonResponse({'success': True, 'complaint_counts': complaint_counts})
 
@@ -971,6 +988,7 @@ def admingetdepartmentcomplaints(request):
                 'faculty__faculty_name',
                 'faculty__faculty_phonenumber',
                 'technician__technician_name',
+                'technician__technician_field__field_name',
                 'status'
             ).order_by('-created_at')[:]
             for complaint in complaints:
@@ -1098,6 +1116,114 @@ def download_overall_report(request):
         return JsonResponse({'error': 'Method not allowed. Use POST.'}, status=405)
 
 @admin_required
+@require_POST
+@csrf_exempt
+def downloaddepartmentreport(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            department_code = data.get('department_code')
+            if not Department.objects.filter(department_code=department_code).exists():
+                return JsonResponse({'success': False, 'error': f'Department with code {department_code} does not exist.'})
+            department = Department.objects.get(department_code=department_code)
+            all_complaints = Complaint.objects.filter(department__department_code=department_code).values(
+                'id',
+                'title',
+                'faculty__faculty_name',
+                'department__department_name',
+                'technician__technician_name',
+                'technician__technician_number',
+                'created_at',
+                'status',
+                'faculty_status',
+                'technician_status',
+                'description',
+                'assigned_time',
+            ).order_by('-created_at')
+            
+            for complaint in all_complaints:
+                complaint['status'] = complaint['status'].capitalize()
+                if complaint['faculty_status'] is not None:
+                    complaint['faculty_status'] = complaint['faculty_status'].capitalize()
+                if complaint['technician_status'] is not None:
+                    complaint['technician_status'] = complaint['technician_status'].capitalize()
+                complaint['title'] = complaint['title'].capitalize()
+                complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+                if complaint['assigned_time'] is not None:
+                    complaint['assigned_time'] = timezone.localtime(complaint['assigned_time']).strftime('%Y-%m-%d %H:%M:%S')
+                if complaint['technician__technician_number'] is not None:
+                    complaint['technician__technician_number'] = format_number(
+                        complaint['technician__technician_number'], 
+                        PhoneNumberFormat.NATIONAL
+                    ).lstrip('0').strip() 
+                if complaint['status'] == 'New':
+                    complaint['technician__technician_number'] = 'Not Assigned'
+                    complaint['technician__technician_name'] = 'Not Assigned'
+                    complaint['technician_status'] = '--' 
+                    complaint['assigned_time'] = 'Not Assigned'
+                if complaint['technician_status'] == 'Resolved' and complaint['faculty_status'] is None:
+                    complaint['faculty_status'] = 'Pending Review' 
+                if complaint['faculty_status'] is None:
+                    complaint['faculty_status'] = '--'
+                if complaint['technician_status'] is None:
+                    complaint['technician_status'] = '--'
+            wb = Workbook()
+            ws = wb.active
+            ws.title = "All Complaints" 
+            headers = [
+                'Complaint ID',
+                'Raised By',
+                'Department',
+                'Title',
+                'Description',
+                'Technician',
+                'Technician Number',
+                'Date Raised',
+                'Date Assigned',
+                'Status',
+                'Faculty Status',
+                'Technician Status',
+                 
+            ]
+            for col_num, header in enumerate(headers, 1):  
+                ws.cell(row=1, column=col_num, value=header)
+                ws.column_dimensions[chr(ord('A') + col_num - 1)].width = 20 
+            for row_num, complaint in enumerate(all_complaints, 2):  
+                ws.cell(row=row_num, column=1, value=complaint['id'])
+                ws.cell(row=row_num, column=2, value=complaint['faculty__faculty_name'])
+                ws.cell(row=row_num, column=3, value=complaint['department__department_name'])
+                ws.cell(row=row_num, column=4, value=complaint['title'])
+                ws.cell(row=row_num, column=5, value=complaint['description'])
+                ws.cell(row=row_num, column=6, value=complaint['technician__technician_name'])
+                ws.cell(row=row_num, column=7, value=complaint['technician__technician_number'])
+                ws.cell(row=row_num, column=8, value=complaint['created_at'])
+                ws.cell(row=row_num, column=9, value=complaint['assigned_time'])
+                ws.cell(row=row_num, column=10, value=complaint['status'])
+                ws.cell(row=row_num, column=11, value=complaint['faculty_status'])
+                ws.cell(row=row_num, column=12, value=complaint['technician_status'])
+                
+                
+            output = BytesIO()
+            wb.save(output)  
+            output.seek(0) 
+
+            response = HttpResponse(
+                output.read(),
+                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+            response['Content-Disposition'] = f'attachment; filename={department.department_name}_Complaints_Report.xlsx'
+
+            return response
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
+
+        except Exception as e: 
+            return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'error': 'Method not allowed. Use POST.'}, status=405)
+
+
+@admin_required
 @csrf_exempt
 def download_closed_report(request):
     if request.method == 'POST':
@@ -1192,6 +1318,74 @@ def download_closed_report(request):
     else:
         return JsonResponse({'error': 'Method not allowed. Use POST.'}, status=405)
 
+@admin_required
+def adminupdatestatuspage(request):
+    return render(request,'adminupdatestatus.html')
+
+@admin_required
+@require_POST
+@csrf_exempt
+def admin_get_update_status(request):
+    if request.method=='POST':
+        try:
+            get_complaints = Complaint.objects.filter(
+                Q(faculty_status__isnull=True, technician_status__isnull=True) | 
+                Q(technician_status='resolved', faculty_status__isnull=True) | 
+                Q(technician_status='pending',faculty_status__isnull=True)  |
+                Q(technician_status='resolved',faculty_status='pending')
+            ).values(
+                'id',
+                'title',
+                'created_at',
+                'department__department_name',
+                'technician__technician_name',
+                'description',
+                'technician_status',
+                'faculty_status',
+                'technician_resolve_time',
+                'assigned_time',
+            ).order_by('-created_at')
+
+            for complaint in get_complaints:
+                if complaint['assigned_time'] is not None:
+                    complaint['assigned_time'] = timezone.localtime(complaint['technician_resolve_time']).strftime('%Y-%m-%d')
+                if complaint['technician_resolve_time'] is not None:
+                    complaint['technician_resolve_time'] = timezone.localtime(complaint['technician_resolve_time']).strftime('%Y-%m-%d')
+                complaint['created_at'] = timezone.localtime(complaint['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+                if complaint['faculty_status'] is None and complaint['technician_status']=='resolved':
+                    complaint['faculty_status'] = 'Pending Review'
+            return JsonResponse(list(get_complaints), safe=False)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
+@admin_required
+@require_POST
+@csrf_exempt
+def adminupdatestatus(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            complaint_id = data.get('complaint_id')
+            technician_status = data.get('technician_status')
+            faculty_status = data.get('faculty_status') 
+            resolved_time=data.get('resolved_time')
+            complaint = Complaint.objects.get(id=complaint_id)
+            if technician_status:
+                complaint.technician_status = technician_status
+            if faculty_status:
+                complaint.faculty_status = faculty_status
+            if resolved_time:
+                complaint.technician_resolve_time=resolved_time
+            complaint.save()
+            return JsonResponse({'success': True})
+        except Complaint.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Complaint not found.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
 #facultylogin
 
@@ -1738,13 +1932,12 @@ def faculty_logout_view(request):
 def techniciandashboard(request):
     technician_name= request.session.get('technician_name')
     technician_number = request.session.get('technician_number')
-    print(technician_number)
     context = {
         'technician_name': technician_name,
         'technician_number': technician_number,
     }
     return render(request, 'techniciandashboard.html', context)
-
+@csrf_exempt
 def technicianlogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -1762,7 +1955,7 @@ def technicianlogin(request):
                     technician = Technician.objects.get(technician_number=username)
                     request.session['technician_number'] = str(technician.technician_number) 
                     request.session['technician_name'] = technician.technician_name
-                    return redirect('techniciandashboard') 
+                    return redirect('techniciandashboard')
                 else:
                     return render(request, 'index.html', {'technician_error_message': 'Invalid username or password'})
             else:

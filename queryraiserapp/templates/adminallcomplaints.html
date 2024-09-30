@@ -14,7 +14,11 @@
 <body>
     <header>
         <div class="header-container">
+            
             <div id="college_title">
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i> 
+                </div>
                 <div id="college_logo">
                     <a href="https://www.mvgrce.com/" target="_blank">
                         <img src="{% static 'images/college_logo.png' %}" alt="college_logo">
@@ -144,17 +148,13 @@
                             <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                           </svg>Closed Complaints</a></li>
-                          <li class="nav-item"><a class="nav-link" href="{% url 'admintechnician' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 9.9-2" /> 
-                            <path d="M17 11h3" />
-                          </svg>Reopened Complaints</a></li>
                     </ul>
                 </li>
-                <li><a class="nav-link" href="{% url 'adminassigntechnician' %}" style="font-weight: 100;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                    <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                  </svg>Assign Technician</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'adminupdatestatuspage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
+                    <circle cx="24" cy="24" r="20" fill="none" stroke="#e0e0e0" stroke-width="4"/>
+                    <circle cx="24" cy="24" r="20" fill="none" stroke="#4caf50" stroke-width="4"
+                            stroke-dasharray="125.66" stroke-dashoffset="31.42"/>
+                  </svg>Update Status</a></li>
                 <li><a class="nav-link" href="{% url 'adminpage' %}" style="font-weight: 100;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-app-indicator" viewBox="0 0 16 16">
                     <path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1z"/>
                     <path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -222,6 +222,46 @@
                     </div>
                   </div>
             </div>
+            <div class="subnav d-flex justify-content-between align-items-center" id="allcomplaintsfilter"> 
+                <div class="addbranches" style="display: flex;gap: 10px;" id="allsubfilters"> 
+                    <div style="display: flex;align-items: center;gap: 20px;">
+                        <div style="display: flex;align-items: center;gap: 10px;">
+                            <label for="technicianfield">Field</label>
+                            <select name="technicianfield" id="technicianfield" required>
+                                <option value="" disabled selected>Select Field</option>
+                            </select>
+                        </div>
+                        <div style="display: flex;align-items: center;gap: 10px;">
+                            <label for="departmentfield">Department</label>
+                            <select name="departmentfield" id="departmentfield" required>
+                                <option value="" disabled selected>Select Department</option>
+                            </select>
+                        </div>
+                        <div style="display: flex;align-items: center;gap: 10px;">
+                            <label for="statusfilter">Status</label>
+                            <select name="statusfilter" id="statusfilter" required>
+                                <option value="" selected>All</option>
+                                <option value="New">New</option>
+                                <option value="Assigned">Assigned</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Pending_Review">Pending_Review</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="search">
+                        <input type="text" placeholder="Search...">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+                </div>
+                
+            </div>
             <div class="allcomplainttable">
                 <div class="tablelist">
                     <div class="table-container">
@@ -237,12 +277,14 @@
                                     <th>Status</th>
                                     <th>TechnicianStatus</th>
                                     <th>FacultyStatus</th>
+                                    <th style="display: none;"></th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 </tbody>
                         </table>
+                        <p id="noResults" style="display: none;font-size: 14px;text-align: center;">No results found...!</p>
                     </div>
                 </div>
             </div>
@@ -378,6 +420,7 @@
                         <td style="color: ${statusColor}; font-weight: 500;">${complaint.status}</td> 
                         <td>${complaint.technician_status}</td>
                         <td>${complaint.faculty_status}</td>
+                        <td style="display:none;">${complaint.technician__technician_field__field_name}</td>
                         <td><button onclick="openComplaintOverlay(this)" data-complaint="${encodeURIComponent(JSON.stringify(complaint))}" class="save-button" style="display:flex;align-items:center;gap:5px;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                                 <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
@@ -414,6 +457,108 @@
     }
     function closeComplaintOverlay() {
         document.getElementById('complaintOverlay').style.display = 'none';
+    }
+    function getTechnicianFieldsForDropdown() {
+        return fetch('/getfields/', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const technicianFieldSelect = document.getElementById('technicianfield');
+            technicianFieldSelect.innerHTML = '<option value="" selected>All Fields</option>'; 
+            data.forEach(field => {
+                const option = document.createElement('option');
+                option.value = field.field_name; 
+                option.text = field.field_name;
+                technicianFieldSelect.add(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching technician fields:', error);
+            throw error;
+        });
+    }
+    function getDepartments() {
+        return fetch('/getdepartments/', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const departmentFieldSelect = document.getElementById('departmentfield');
+            departmentFieldSelect.innerHTML = '<option value="" selected>All Department</option>';
+            data.forEach(department => {
+                const option = document.createElement('option');
+                option.value = department.name; 
+                option.text = department.name;
+                departmentFieldSelect.add(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching department fields:', error);
+            throw error;
+        });
+    }
+    function filterTable() {
+        const selectedField = document.getElementById('technicianfield').value.toLowerCase();
+        const selectedDepartment = document.getElementById('departmentfield').value.toLowerCase();
+        const selectedStatus = document.getElementById('statusfilter').value.toLowerCase();
+        const tableRows = document.querySelectorAll('#allcomplaintstable tbody tr');
+        const noResultsMessage = document.getElementById('noResults');
+        let hasVisibleRow = false;
+
+        tableRows.forEach(row => {
+            const technicianField = row.querySelector('td:nth-child(10)').textContent.toLowerCase();
+            const department = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            const status = row.querySelector('td:nth-child(7)').textContent.toLowerCase(); 
+            const title = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+
+            const matchField = selectedField === '' || technicianField === selectedField;
+            const matchDepartment = selectedDepartment === '' || department === selectedDepartment;
+            const matchStatus = selectedStatus === '' || status === selectedStatus;
+
+            if (matchField && matchDepartment && matchStatus) {
+                row.style.display = '';
+                hasVisibleRow = true;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        if (!hasVisibleRow) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none'; 
+        }
+    }
+    function Search() {
+        const searchText = this.value.toLowerCase(); 
+        const tableRows = document.querySelectorAll('#allcomplaintstable tbody tr');
+        const noResultsMessage = document.getElementById('noResults');
+
+        let hasVisibleRow = false; 
+        tableRows.forEach(row => {
+            const ComplaintId = row.querySelector('td:first-child').textContent.toLowerCase().replace(/\s+/g, '').trim();
+            const TechnicianName = row.querySelector('td:nth-child(5)').textContent.toLowerCase().replace(/\s+/g, '').trim();
+            const cleanSearchText = searchText.toLowerCase().replace(/\s+/g, '').trim();
+            if (ComplaintId.includes(cleanSearchText) || TechnicianName.includes(cleanSearchText)) {
+                row.style.display = ''; 
+                hasVisibleRow = true;
+            } else {
+                row.style.display = 'none'; 
+            }
+        });
+        if (!hasVisibleRow) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none'; 
+        }
     }
     function downloadOverallReport() {
         showSpinner(); 
@@ -452,9 +597,16 @@
     document.addEventListener('DOMContentLoaded', () => {
         showSpinner();
         Promise.all([
-        getallcomplaints()
+        getallcomplaints(),
+        getTechnicianFieldsForDropdown(),
+        getDepartments(),
         ])
         .then(() => {
+            document.getElementById('technicianfield').addEventListener('change', filterTable);
+            document.getElementById('departmentfield').addEventListener('change', filterTable);
+            document.getElementById('statusfilter').addEventListener('change', filterTable);
+            const searchInput = document.querySelector('.search input');
+            searchInput.addEventListener('input', Search); 
             hideSpinner(); 
         })
         .catch(error => {

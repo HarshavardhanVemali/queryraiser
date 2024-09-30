@@ -144,17 +144,14 @@
                             <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                           </svg>Closed Complaints</a></li>
-                          <li class="nav-item"><a class="nav-link" href="{% url 'admintechnician' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 9.9-2" /> 
-                            <path d="M17 11h3" />
-                          </svg>Reopened Complaints</a></li>
+                          
                     </ul>
                 </li>
-                <li><a class="nav-link" href="{% url 'adminassigntechnician' %}" style="font-weight: 100;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                    <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                  </svg>Assign Technician</a></li>
+                  <li class="nav-item"><a class="nav-link" href="{% url 'adminupdatestatuspage' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
+                    <circle cx="24" cy="24" r="20" fill="none" stroke="#e0e0e0" stroke-width="4"/>
+                    <circle cx="24" cy="24" r="20" fill="none" stroke="#4caf50" stroke-width="4"
+                            stroke-dasharray="125.66" stroke-dashoffset="31.42"/>
+                  </svg>Update Status</a></li>
                 <li><a class="nav-link" href="{% url 'adminpage' %}" style="font-weight: 100;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-app-indicator" viewBox="0 0 16 16">
                     <path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1z"/>
                     <path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -266,14 +263,6 @@
                                         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                                       </svg>
                                 </th> 
-                                <th style="border: 1px solid #dc3545;background-color: #f8d7da;  ">
-                                    <span>Reopened Complaints</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="3" y="11" width="18" height="10" rx="2" ry="2" />
-                                        <path d="M7 11V7a5 5 0 0 1 9.9-2" /> 
-                                        <path d="M17 11h3" />
-                                      </svg>
-                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -289,7 +278,32 @@
                 </div>
             </div>
             <div class="recentcomplainttable">
-                <h3>Complaints</h3>
+                <div style="display: flex;align-items: center;justify-content: space-between;margin-left:20px ;margin-right: 20px;">
+                    <h3>Complaints</h3>
+                    <div style="display: flex;align-items: center;gap: 20px;">
+                        <div style="display: flex;align-items: center;gap: 10px;">
+                            <label for="technicianfield">Field</label>
+                            <select name="technicianfield" id="technicianfield" required>
+                                <option value="" disabled selected>Select Field</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <button id="downloadreport" onclick="downloadOverallReport()" style="gap: 3px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-spreadsheet" viewBox="0 0 16 16">
+                                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V9H3V2a1 1 0 0 1 1-1h5.5zM3 12v-2h2v2zm0 1h2v2H4a1 1 0 0 1-1-1zm3 2v-2h3v2zm4 0v-2h3v1a1 1 0 0 1-1 1zm3-3h-3v-2h3zm-7 0v-2h3v2z"/>
+                                  </svg>
+                              <span>Download Sheets</span>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download" viewBox="0 0 16 16">
+                                <path d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/>
+                                <path d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708z"/>
+                              </svg>
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+                
                 <div class="tablelist">
                
                     <div class="table-container">
@@ -302,6 +316,7 @@
                                     <th>Date Raised</th>
                                     <th>Title</th>
                                     <th>Technician</th>
+                                    <th style="display: none;"></th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -309,6 +324,7 @@
 
                             </tbody>
                         </table>
+                        <p id="noResults" style="display: none;font-size: 14px;text-align: center;">No results found...!</p>
                     </div>
                 </div>
             </div>
@@ -354,7 +370,6 @@ navLinks.forEach(link => {
         })
         .then(response => response.json()) 
         .then(data => {
-            console.log(data);
 
             const quickstatsTableBody = document.querySelector('#quickstatstable tbody');
             quickstatsTableBody.innerHTML = '';
@@ -368,7 +383,6 @@ navLinks.forEach(link => {
                     <td style="color:#ffc107;">${complaintCounts.pending}</td> 
                     <td style="color:#28a745;">${complaintCounts.resolved}</td>
                     <td style="color:#A9A9A9;">${complaintCounts.closed}</td> 
-                    <td style="color:#dc3545;">${complaintCounts.reopened}</td> 
                 `;
                 quickstatsTableBody.appendChild(row); 
                 const chartLabels = Object.keys(complaintCounts);
@@ -464,6 +478,7 @@ navLinks.forEach(link => {
                             <td>${complaint.created_at}</td> 
                             <td style="font-weight:bold;">${complaint.title}</td> 
                             <td style="color:#6e7891;">${complaint.technician__technician_name}</td> 
+                            <td style="color:#6e7891;display:none;">${complaint.technician__technician_field__field_name}</td>
                             <td style="font-weight:590;">${complaint.status}</td>                 
                         `;
                         complaintTableBody.appendChild(row);
@@ -484,13 +499,113 @@ navLinks.forEach(link => {
             throw error;
         });
     }
+    function getTechnicianFieldsForDropdown() {
+        return fetch('/getfields/', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const technicianFieldSelect = document.getElementById('technicianfield');
+            technicianFieldSelect.innerHTML = '<option value="" selected>All Fields</option>'; 
+            data.forEach(field => {
+                const option = document.createElement('option');
+                option.value = field.field_name; 
+                option.text = field.field_name;
+                technicianFieldSelect.add(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching technician fields:', error);
+            throw error;
+        });
+    }
+    function filterByTechnicianField() {
+        const selectedField = this.value;
+        const tableRows = document.querySelectorAll('#complaintstable tbody tr');
+        const noResultsMessage = document.getElementById('noResults');
+
+        let hasVisibleRow = false;
+        tableRows.forEach(row => {
+            const technicianFieldCell = row.querySelector('td:nth-child(7)');
+            if (technicianFieldCell) {
+                const technicianField = technicianFieldCell.textContent.replace(/\s+/g, '').trim();
+                if (selectedField === '' || technicianField === selectedField) {
+                    row.style.display = '';
+                    hasVisibleRow = true;
+                } else {
+                    row.style.display = 'none';
+                }
+            } else {
+                console.warn('Missing technician field cell in row:', row);
+            }
+        });
+
+        if (!hasVisibleRow) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none'; 
+        }
+    }
+    function downloadOverallReport() {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const departmentCode = urlParams.get('dept_code');
+        showSpinner(); 
+        fetch('/downloaddepartmentreport/', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ department_code: departmentCode })
+        })
+        .then(response => {
+            hideSpinner(); 
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`); 
+            }
+            const disposition = response.headers.get('Content-Disposition');
+            let filename = 'report'; 
+            if (disposition && disposition.indexOf('attachment') !== -1) {
+                const matches = /filename="(.+?)"/.exec(disposition);
+                if (matches != null && matches[1]) { 
+                    filename = matches[1];
+                }
+            }
+            return response.blob().then(blob => ({ blob, filename })); 
+        })
+        .then(({ blob, filename }) => {
+            hideSpinner(); 
+            const url = window.URL.createObjectURL(blob); 
+            const a = document.createElement('a');
+            a.style.display = 'none'; 
+            a.href = url;
+            a.download = filename; 
+            document.body.appendChild(a);
+            a.click(); 
+            window.URL.revokeObjectURL(url); 
+            document.body.removeChild(a); 
+        })
+        .catch(error => {
+            console.error('Error downloading report:', error); 
+            alert('An error occurred while downloading the report.');
+            hideSpinner();
+        });
+    }
     document.addEventListener('DOMContentLoaded', () => {
         showSpinner();
         Promise.all([
         getcomplaints(),
-        getdepartmentcomplaintscount()
+        getdepartmentcomplaintscount(),
+        getTechnicianFieldsForDropdown()
         ])
         .then(() => {
+            const technicianFieldSelect = document.getElementById('technicianfield');
+            technicianFieldSelect.addEventListener('change', filterByTechnicianField);
             hideSpinner(); 
         })
         .catch(error => {

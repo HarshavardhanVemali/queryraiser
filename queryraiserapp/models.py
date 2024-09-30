@@ -76,7 +76,7 @@ class User(AbstractUser):
         super().save(*args, **kwargs)
 
 class Department(models.Model):
-    department_code = models.CharField(max_length=50, unique=True)
+    department_code = models.AutoField(primary_key=True)
     department_name = models.CharField(max_length=250)
     department_logo = models.ImageField(upload_to='department_logo/', blank=True, null=True)
     
@@ -134,7 +134,7 @@ class Complaint(models.Model):
     ]
 
     id = models.AutoField(primary_key=True)
-    faculty = models.ForeignKey('Faculty', on_delete=models.CASCADE)
+    faculty = models.ForeignKey('Faculty', on_delete=models.SET_NULL,null=True, blank=True)
     department = models.ForeignKey('Department', on_delete=models.CASCADE)
     technician = models.ForeignKey('Technician', on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=200)
