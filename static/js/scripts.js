@@ -127,6 +127,11 @@ links.forEach(link => {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('loading-spinner').style.display = 'none';
 });
+function toggleSidebar() {
+    var sidebar = document.getElementById("mySidebar");
+    var mainContent = document.getElementById("mainContent"); 
+    sidebar.classList.toggle("show");
+}
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

@@ -155,13 +155,144 @@ form {
     margin-right: 5px;
 }
 @media only screen and (max-width: 375px) {
+    .add-field-button-container button,
+    .add-technician-button-container button {
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: 8px;
+        margin-right: 5px;
+        transition: background-color 0.3s ease;
+    }
 
+    .add-field-button-container button svg,
+    .add-technician-button-container button svg {
+        width: 12px;
+    }
+
+    .add-field-button-container button:hover,
+    .add-technician-button-container button:hover {
+        background-color: #3874ff;
+    }
+
+    #fieldstable th,
+    #fieldstable td,
+    #techniciantable th,
+    #techniciantable td {
+        font-size: 12px;
+        min-width: 100px;
+    }
+
+    #fieldstable th,
+    #techniciantable th {
+        font-size: 13px;
+    }
+
+    #technicianmenu {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #techniciansearch {
+        width: 200px;
+    }
+
+    .delete-button {
+        padding: 8px 8px;
+    }
 }
+
 @media only screen and (min-width: 376px) and (max-width: 480px) {
+    .add-field-button-container button,
+    .add-technician-button-container button {
+        padding: 2px 8px; 
+        border-radius: 4px;
+        font-size: 9px; 
+        margin-right: 6px; 
+        transition: background-color 0.3s ease;
+    }
 
+    .add-field-button-container button svg,
+    .add-technician-button-container button svg {
+        width: 14px; 
+    }
+
+    .add-field-button-container button:hover,
+    .add-technician-button-container button:hover {
+        background-color: #3874ff;
+    }
+
+    #fieldstable th,
+    #fieldstable td,
+    #techniciantable th,
+    #techniciantable td {
+        font-size: 13px; 
+        min-width: 110px; 
+    }
+
+    #fieldstable th,
+    #techniciantable th {
+        font-size: 14px; 
+    }
+
+    #technicianmenu {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #techniciansearch {
+        width: 220px; 
+    }
+
+    .delete-button {
+        padding: 7px 10px; 
+    }
 }
-@media only screen and (min-width: 481px) and (max-width: 768px) {
 
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    .add-field-button-container button,
+    .add-technician-button-container button {
+        padding: 3px 10px; 
+        border-radius: 4px;
+        font-size: 10px; 
+        margin-right: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+    .add-field-button-container button svg,
+    .add-technician-button-container button svg {
+        width: 16px; /* Larger icon */
+    }
+
+    .add-field-button-container button:hover,
+    .add-technician-button-container button:hover {
+        background-color: #3874ff;
+    }
+
+    #fieldstable th,
+    #fieldstable td,
+    #techniciantable th,
+    #techniciantable td {
+        font-size: 14px; 
+        min-width: 120px; 
+    }
+
+    #fieldstable th,
+    #techniciantable th {
+        font-size: 16px; 
+    }
+
+    #technicianmenu {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #techniciansearch {
+        width: 250px;
+    }
+
+    .delete-button {
+        padding: 8px 12px; 
+    }
 }
 @media only screen and (min-width: 769px) and (max-width: 979px) {
 

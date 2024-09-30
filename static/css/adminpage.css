@@ -236,40 +236,6 @@ header {
     background-color: black; 
     margin: 5px 0; 
   }
-
-@media (max-width: 991px) {
-    .sidebar {
-        width: 70px; 
-        position: static; 
-        height: auto; 
-    }
-    .sidebar .logout-item {
-        position: relative; 
-        bottom: 0; 
-    }
-
-    .content {
-        margin-left: 0; 
-    }
-    .sidebar a {
-        padding: 10px 15px; 
-    }
-
-    .sidebar a span {
-        display: none;
-    }
-
-
-
-    .theme-switch {
-        align-self: flex-end; 
-        margin-top: 10px; 
-    }
-    #college_sub_title {
-        margin-top: 10px; 
-    }
-}
-
 body.dark-mode {
     background-color: #0f111a;
     color: #fff;
@@ -548,12 +514,14 @@ main{
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 10px;
+    table-layout: auto;
 }
 .tables th, .tables  td {
     padding:20px;
     font-size: 13px;
     text-align: left;
     font-weight: 200;
+    white-space: nowrap;
 }
 .tables  th {
     border-bottom: 1px solid rgba(203, 208, 221, 0.54);
@@ -695,7 +663,7 @@ main{
     margin-bottom: 20px;
 }
 .save-button{
-    padding: 8px 12px;
+    padding: 9px 12px;
     cursor: pointer;
     border: none;
     background-color: #007bff;
@@ -867,6 +835,12 @@ footer a:hover{
 select,input[type="date"]{
     height: 35px;
     border-radius: 5px;
+    border: 1px solid #888;
+}
+.dark-mode select{
+    background-color: #141824;
+    border: 1px solid #373e53;
+    color: #fff;
 }
 select:focus,input[type="date"]:focus{
     outline: none;
@@ -922,8 +896,12 @@ h input[type="date"]:disabled{
     cursor: pointer;
     margin-right: 10px;
 }
-.dark-mode .search svg{
-    color: #0f111a;
+.dark-mode .search input[type="text"]{
+    color: #fff;
+}
+.dark-mode .search  {
+    background-color: #141824;
+    border: 1px solid #373e53;
 }
 .menu-toggle{
     display: none;
@@ -952,28 +930,52 @@ h input[type="date"]:disabled{
         width: 60px;
         height: 40px;
     }
-    .sidebar{
-        display: none;
+    .sidebar {
+        width: 0;
+        height: auto;
+        position: relative;
+        border: none;
+    }
+    .sidebar.show {
+        width: 100%; 
+    }
+    .main-container {
+        margin-left: 0;
     }
     .subnav{
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: 3px;
+        margin: 5px;
+        margin-left: 10px;
+    }
+    .sidebar .logout-item :hover{
+        background-color: transparent;
+        color: #525b75;
+    }
+    .nav-link:hover {
+        background-color: transparent;
+      }
+      .dark-mode .sidebar a:hover {
+        background-color: transparent; 
+        color: #9fa6bc;
     }
     h3{
         font-size: 15px;
     }
+
+    .theme-control-toggle-light:hover {
+        background-color: rgba(255, 204, 133, 0.24);
+        color: #e5780b;
+    }
+
+    .theme-control-toggle-dark:hover {
+        background-color: rgba(133, 169, 255, 0.24);
+        color: #3874ff;
+    } 
     #addbranchesbutton,#downloadreport{
-        background-color: white;
-        border: none;
-        display: flex;
-        align-items: center;
-        padding: 2px 2px; 
+        padding: 2px 4px; 
         border-radius: 4px;
-        cursor: pointer;
-        background-color: #3874ff;
-        color: white;
         font-size: 8px;
         font-weight: 400;
     }
@@ -1032,18 +1034,14 @@ h input[type="date"]:disabled{
         font-size: 10px;
     }
     .tables  th {
-        font-size: 10px;
+        font-size: 13px;
     }
     .tables td{
         padding: 10px 20px;
-        font-size: 8px;
+        font-size: 12px;
     }
     .save-button {
-        padding: 4px 6px;
-        cursor: pointer;
-        border: none;
-        background-color: #007bff;
-        color: #fff;
+        padding: 6px 8px;
         border-radius: 4px;
         font-size: 8px;
         transition: background-color 0.3s ease;
@@ -1076,8 +1074,133 @@ h input[type="date"]:disabled{
             background-color: #007bff;
         }
     }
+    .quickstatslist {
+        margin-left: 10px;
+        margin-right: 10px;
+      
+    }
+    #quickstatstable-container{
+        margin-top: 30px;
+        
+    }
+    #quickstatstable {
+        margin-bottom: 10px;
+        margin-left: 10px;
+        
+    }
+    .quickstatslist{
+        min-height: 150px;
+    }
+
+
+    #quickstatstable th {
+        font-size: 14px;
+    }
+    #quickstatstable td{
+        padding-top: 50px;
+        font-size: 20px;
+    }
+    .complaintstatus>h3{
+        margin-top: 30px;
+        margin-left: 10px;
+        margin-bottom: 20px;
+    }
+    .complaintstatusgraph{
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+    #complaintPieChart,#complaintBarChart{
+        width: 300px !important;
+        height: 300px !important;
+    }
+    .recentcomplainttable>h3{
+        margin-top: 30px;
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+    .technicianperformance>h3{
+        margin-left: 10px;
+        margin-top: 30px;
+        margin-bottom: 10px;
+    }
+    #viewall {
+        text-decoration: none;
+        margin-bottom: 5px;
+        margin-left: 10px;
+        font-size: 12px;
+    }
+    #viewall:hover {
+        text-decoration: none;
+
+    }
+    .content {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+    }
+    .delete-button {
+        padding: 4px 6px;
+        font-size: 8px;
+       
+    }
+    
+    .delete-button:hover {
+        background-color: #dc3545; 
+    }
+    .delete-button svg{
+        width: 11px;
+        height: 11px;
+    }
+    .deaparment-overlay  {
+        min-width: 300px;
+    }
+    .deaparment-overlay.active { 
+        display: block;
+    }
+    .hidden {
+        display: none;
+    }
+    .adddepartmentsform-container {
+        min-width: 300px;  
+    }
+    #closebtn {
+        position: relative;
+        left: 100%; 
+        transform: translateX(-100%); 
+        cursor: pointer;    
+        margin-bottom: 10px; 
+    }
+    #closebtn:hover{
+        fill: none;
+        stroke-width: 2;
+    }
+    #facultymenu{
+        display: flex;
+        flex-direction: column;
+    }
+    #facultysearch{
+        width: 200px;
+    }
+    #updatemenu{
+        display: flex;
+        flex-direction: column;
+    }
     .overlay-content h3 {
         font-size: 10px;
+    }
+    select {
+        height: 20px;
+        font-size: 9px;
+        max-width: 60px;
+    }
+    input[type="date"]{
+        height: 20px;
+        font-size: 9px;
+        max-width: 60px;
+        border: 1px solid #888;
     }
     .complaint-details{
         font-size: 10px;
@@ -1094,60 +1217,766 @@ h input[type="date"]:disabled{
         font-size: 6px;
         
     }
+    a:focus {
+        outline: none;
+    }
+    @media (hover: none) and (pointer: coarse) {
+        a:focus {
+            outline: none;
+        }
+    }
+    
+    
 
 }
 @media only screen and (min-width: 376px) and (max-width: 480px) {
-    .menu-toggle{
+    .menu-toggle {
         display: block;
-        font-size: 20px;
+        font-size: 22px; 
         font-weight: 100;
-        width: 25px;
+        width: 28px; 
+        cursor: pointer;
     }
-    #college_sub_title{
-        display: none;
-    }
-    .header-container {
-        flex-direction: row; 
-        align-items: flex-start;
-         align-items: center;
 
-    }
-    #college_title{
-        gap: 5px;
-    }
-    #college_logo a img{
-        width: 60px;
-        height: 40px;
-    }
-    .sidebar{
+    #college_sub_title {
         display: none;
+    }
+
+    .header-container {
+        flex-direction: row;
+        align-items: center;
+        padding: 12px; 
+    }
+
+    #college_title {
+        gap: 8px; 
+    }
+
+    #college_logo a img {
+        width: 70px;
+        height: 45px; 
+    }
+
+    .sidebar {
+        width: 0;
+        height: auto;
+        position: relative;
+        border: none;
+    }
+    .sidebar.show {
+        width: 100%; 
+    }
+
+    .main-container {
+        margin-left: 0;
+        transition: margin-left 0.5s;
+    }
+
+    .sidebar .logout-item:hover {
+        background-color: transparent;
+        color: #525b75; 
+    }
+
+    .nav-link:hover {
+        background-color: transparent;
+    }
+
+    .dark-mode .sidebar a:hover {
+        background-color: transparent; 
+        color: #9fa6bc;
+    }
+
+    h3 {
+        font-size: 18px; 
+    }
+
+    .theme-control-toggle-light:hover {
+        background-color: rgba(255, 204, 133, 0.24);
+        color: #e5780b;
+    }
+
+    .theme-control-toggle-dark:hover {
+        background-color: rgba(133, 169, 255, 0.24);
+        color: #3874ff;
+    } 
+
+    #addbranchesbutton, 
+    #downloadreport {
+        padding: 3px 6px; 
+        border-radius: 4px;
+        font-size: 10px;  
+        font-weight: 400;
+    }
+
+    #addbranchesbutton svg, 
+    #downloadreport svg {
+        margin-right: 5px; 
+        width: 12px;  
+    }
+
+    #addbranchesbutton:hover, 
+    #downloadreport:hover {
+        background-color: #3874ff;
+    }
+
+    @media (hover: none), (pointer: coarse) {  
+        #addbranchesbutton:hover, 
+        #downloadreport:hover {
+            background-color: #3874ff; 
+        }
+    }
+
+    #allcomplaintsfilter {
+        display: flex;
+        flex-direction: column; 
+    }
+
+    #allsubfilters {
+        margin-bottom: 10px; 
+    } 
+
+    #allsubfilters label {
+        font-size: 12px; 
+    }
+
+    #allsubfilters > div > div {
+        gap: 5px !important;
+    }
+
+    #allsubfilters select {
+        height: 25px;
+        font-size: 11px;
+        max-width: 80px; 
+    }
+
+    .search input[type="text"] {
+        font-size: 12px; 
+    }
+
+    .tablelist {
+        font-size: 12px;
+        padding-left: 5px; 
+        padding-right: 5px;
+        padding-bottom: 5px; 
+    }
+
+    .table-container {
+        margin-top: 12px;
+    }
+
+    .tables {
+        width: 100%; 
+        border-collapse: collapse; 
+        margin-bottom: 10px; 
+    }
+
+    .tables th, 
+    .tables td {
+        font-size: 12px; 
+    }
+
+    .tables th {
+        font-size: 15px; 
+    }
+
+    .tables td {
+        padding: 12px 20px;
+        font-size: 14px;  
+    }
+
+    .save-button {
+        padding: 7px 10px;
+        border-radius: 4px;
+        font-size: 10px;  
+        transition: background-color 0.3s ease; 
+    } 
+
+    @media (hover: none), (pointer: coarse) {  
+        .save-button:hover {
+            background-color: #007bff; 
+        }
+    }
+
+    .overlay-content {
+        padding: 18px; 
+        width: 320px;  
+    }
+
+    .close-button {
+        font-size: 16px;
+    }
+
+    .close-button:hover {
+        color: #888;
+    }
+
+    @media (hover: none), (pointer: coarse) {  
+        .close-button:hover {
+            color: #888;
+        }
+    }
+
+    #noResults {
+        font-size: 10px !important; 
+        text-align: left !important;
+        padding-left: 20px;
+    }
+
+    .quickstatslist {
+        margin-left: 12px; 
+        margin-right: 12px;
+    }
+
+    #quickstatstable-container {
+        margin-top: 30px; 
+    }
+
+    #quickstatstable {
+        margin-bottom: 10px; 
+        margin-left: 12px;
+    }
+
+    .quickstatslist {
+        min-height: 160px; 
+    }
+
+    #quickstatstable th {
+        font-size: 16px;
+    }
+
+    #quickstatstable td {
+        padding-top: 50px; 
+        font-size: 22px; 
+    }
+
+    .complaintstatus > h3 {
+        margin-top: 30px; 
+        margin-left: 12px;
+        margin-bottom: 20px; 
+    }
+
+    .complaintstatusgraph {
+        margin-left: 12px; 
+        margin-right: 12px; 
+        border-radius: 10px;
+        padding: 20px; 
+        display: flex;
+        flex-direction: column; 
+    }
+
+    #complaintPieChart, 
+    #complaintBarChart {
+        width: 320px !important;  
+        height: 320px !important;  
+    }
+
+    .recentcomplainttable > h3 {
+        margin-top: 30px; 
+        margin-left: 12px;
+        margin-bottom: 10px; 
+    }
+
+    .technicianperformance > h3 {
+        margin-left: 12px;
+        margin-top: 30px;
+        margin-bottom: 10px; 
+    }
+
+    #viewall {
+        text-decoration: none; 
+        margin-bottom: 5px;
+        margin-left: 12px;
+        font-size: 14px; 
+    }
+
+    #viewall:hover {
+        text-decoration: none;
+    }
+
+    .content {
+        margin-bottom: 20px; 
+        padding-bottom: 10px;
+    }
+
+    .delete-button {
+        padding: 5px 8px; 
+        font-size: 10px; 
+    }
+
+    .delete-button:hover {
+        background-color: #dc3545;
+    }
+
+    .delete-button svg {
+        width: 13px;  
+        height: 13px;  
+    }
+
+    .deaparment-overlay {
+        min-width: 320px; 
+    }
+
+    .deaparment-overlay.active {
+        display: block; 
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .adddepartmentsform-container {
+        min-width: 320px;  
+    }
+
+    #closebtn {
+        position: relative;
+        left: 100%; 
+        transform: translateX(-100%); 
+        cursor: pointer; 
+        margin-bottom: 10px;
+    }
+
+    #closebtn:hover {
+        fill: none; 
+        stroke-width: 2;
+    }
+
+    #facultymenu {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #facultysearch {
+        width: 220px;  
+    }
+
+    #updatemenu {
+        display: flex;
+        flex-direction: column; 
+    }
+
+    .overlay-content h3 {
+        font-size: 12px; 
+    }
+
+    select {
+        height: 25px; 
+        font-size: 11px; 
+        max-width: 80px; 
+    }
+
+    input[type="date"] {
+        height: 25px;
+        font-size: 11px; 
+        max-width: 80px;  
+        border: 1px solid #888; 
+    }
+
+    .complaint-details {
+        font-size: 12px;  
+    }
+
+    .save-button svg {
+        width: 12px;  
+    }
+
+    .footer {
+        width: 100%; 
+        height: 2rem; 
+        left: 0; 
+        border-left: none;
+        margin-left: 0; 
+        font-size: 7px; 
+    }
+    .sidebar .logout-item :hover{
+        background-color: transparent;
+        color: #525b75;
+    }
+    a:focus {
+        outline: none;
+    }
+    @media (hover: none) and (pointer: coarse) {
+        a:focus {
+            outline: none;
+        }
     }
     
 }
 @media only screen and (min-width: 481px) and (max-width: 768px) {
-    .menu-toggle{
+   .menu-toggle {
         display: block;
-        font-size: 20px;
+        font-size: 22px; 
         font-weight: 100;
-        width: 25px;
+        width: 28px; 
+        cursor: pointer;
     }
-    #college_sub_title{
+
+    #college_sub_title {
         display: none;
     }
+
     .header-container {
-        flex-direction: row; 
-        align-items: flex-start;
-         align-items: center;
-
-    }
-    #college_title{
-        gap: 5px;
-    }
-    #college_logo a img{
-        width: 60px;
-        height: 40px;
+        flex-direction: row;
+        align-items: center;
+        padding: 12px; 
     }
 
+    #college_title {
+        gap: 8px; 
+    }
+
+    #college_logo a img {
+        width: 70px;
+        height: 45px; 
+    }
+
+    .sidebar {
+        width: 0;
+        height: auto;
+        position: relative;
+        border: none;
+    }
+    .sidebar.show {
+        width: 100%; 
+    }
+
+    .main-container {
+        margin-left: 0;
+        transition: margin-left 0.5s;
+    }
+
+    .sidebar .logout-item:hover {
+        background-color: transparent;
+        color: #525b75; 
+    }
+
+    .nav-link:hover {
+        background-color: transparent;
+    }
+
+    .dark-mode .sidebar a:hover {
+        background-color: transparent; 
+        color: #9fa6bc;
+    }
+
+    h3 {
+        font-size: 18px; 
+    }
+
+    .theme-control-toggle-light:hover {
+        background-color: rgba(255, 204, 133, 0.24);
+        color: #e5780b;
+    }
+
+    .theme-control-toggle-dark:hover {
+        background-color: rgba(133, 169, 255, 0.24);
+        color: #3874ff;
+    } 
+
+    #addbranchesbutton, 
+    #downloadreport {
+        padding: 3px 6px; 
+        border-radius: 4px;
+        font-size: 10px;  
+        font-weight: 400;
+    }
+
+    #addbranchesbutton svg, 
+    #downloadreport svg {
+        margin-right: 5px; 
+        width: 12px;  
+    }
+
+    #addbranchesbutton:hover, 
+    #downloadreport:hover {
+        background-color: #3874ff;
+    }
+
+    @media (hover: none), (pointer: coarse) {  
+        #addbranchesbutton:hover, 
+        #downloadreport:hover {
+            background-color: #3874ff; 
+        }
+    }
+
+    #allcomplaintsfilter {
+        display: flex;
+        flex-direction: column; 
+    }
+
+    #allsubfilters {
+        margin-bottom: 10px; 
+    } 
+
+    #allsubfilters label {
+        font-size: 12px; 
+    }
+
+    #allsubfilters > div > div {
+        gap: 5px !important;
+    }
+
+    #allsubfilters select {
+        height: 25px;
+        font-size: 11px;
+        max-width: 80px; 
+    }
+
+    .search input[type="text"] {
+        font-size: 12px; 
+    }
+
+    .tablelist {
+        font-size: 12px;
+        padding-left: 5px; 
+        padding-right: 5px;
+        padding-bottom: 5px; 
+    }
+
+    .table-container {
+        margin-top: 12px;
+    }
+
+    .tables {
+        width: 100%; 
+        border-collapse: collapse; 
+        margin-bottom: 10px; 
+    }
+
+    .tables th, 
+    .tables td {
+        font-size: 12px; 
+    }
+
+    .tables th {
+        font-size: 15px; 
+    }
+
+    .tables td {
+        padding: 12px 20px;
+        font-size: 14px;  
+    }
+
+    .save-button {
+        padding: 7px 10px;
+        border-radius: 4px;
+        font-size: 10px;  
+        transition: background-color 0.3s ease; 
+    } 
+
+    @media (hover: none), (pointer: coarse) {  
+        .save-button:hover {
+            background-color: #007bff; 
+        }
+    }
+
+    .overlay-content {
+        padding: 18px; 
+        width: 320px;  
+    }
+
+    .close-button {
+        font-size: 16px;
+    }
+
+    .close-button:hover {
+        color: #888;
+    }
+
+    @media (hover: none), (pointer: coarse) {  
+        .close-button:hover {
+            color: #888;
+        }
+    }
+
+    #noResults {
+        font-size: 10px !important; 
+        text-align: left !important;
+        padding-left: 20px;
+    }
+
+    .quickstatslist {
+        margin-left: 12px; 
+        margin-right: 12px;
+    }
+
+    #quickstatstable-container {
+        margin-top: 30px; 
+    }
+
+    #quickstatstable {
+        margin-bottom: 10px; 
+        margin-left: 12px;
+    }
+
+    .quickstatslist {
+        min-height: 160px; 
+    }
+
+    #quickstatstable th {
+        font-size: 16px;
+    }
+
+    #quickstatstable td {
+        padding-top: 50px; 
+        font-size: 22px; 
+    }
+
+    .complaintstatus > h3 {
+        margin-top: 30px; 
+        margin-left: 12px;
+        margin-bottom: 20px; 
+    }
+
+    .complaintstatusgraph {
+        margin-left: 12px; 
+        margin-right: 12px; 
+        border-radius: 10px;
+        padding: 20px; 
+        display: flex;
+        flex-direction: column; 
+        justify-content: center;
+        text-align: center;
+    }
+
+    #complaintPieChart, 
+    #complaintBarChart {
+        width: 400px !important;  
+        height: 320px !important;  
+    }
+
+    .recentcomplainttable > h3 {
+        margin-top: 30px; 
+        margin-left: 12px;
+        margin-bottom: 10px; 
+    }
+
+    .technicianperformance > h3 {
+        margin-left: 12px;
+        margin-top: 30px;
+        margin-bottom: 10px; 
+    }
+
+    #viewall {
+        text-decoration: none; 
+        margin-bottom: 5px;
+        margin-left: 12px;
+        font-size: 14px; 
+    }
+
+    #viewall:hover {
+        text-decoration: none;
+    }
+
+    .content {
+        margin-bottom: 30px; 
+        padding-bottom: 10px;
+    }
+
+    .delete-button {
+        padding: 6px 8px; 
+        font-size: 10px; 
+    }
+
+    .delete-button:hover {
+        background-color: #dc3545;
+    }
+
+    .delete-button svg {
+        width: 13px;  
+        height: 13px;  
+    }
+
+    .deaparment-overlay {
+        min-width: 320px; 
+    }
+
+    .deaparment-overlay.active {
+        display: block; 
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .adddepartmentsform-container {
+        min-width: 320px;  
+    }
+
+    #closebtn {
+        position: relative;
+        left: 100%; 
+        transform: translateX(-100%); 
+        cursor: pointer; 
+        margin-bottom: 10px;
+    }
+
+    #closebtn:hover {
+        fill: none; 
+        stroke-width: 2;
+    }
+
+    #facultymenu {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #facultysearch {
+        width: 220px;  
+    }
+
+    #updatemenu {
+        display: flex;
+        flex-direction: column; 
+    }
+
+    .overlay-content h3 {
+        font-size: 12px; 
+    }
+
+    select {
+        height: 25px; 
+        font-size: 11px; 
+        max-width: 80px; 
+    }
+
+    input[type="date"] {
+        height: 25px;
+        font-size: 11px; 
+        max-width: 80px;  
+        border: 1px solid #888; 
+    }
+
+    .complaint-details {
+        font-size: 12px;  
+    }
+
+    .save-button svg {
+        width: 12px;  
+    }
+
+    .footer {
+        width: 100%; 
+        height: 2rem; 
+        left: 0; 
+        border-left: none;
+        margin-left: 0; 
+        font-size: 9px; 
+    }
+    .sidebar .logout-item :hover{
+        background-color: transparent;
+        color: #525b75;
+    }
+    a:focus {
+        outline: none;
+    }
+    
+    @media (hover: none) and (pointer: coarse) {
+        a:focus {
+            outline: none;
+        }
+    }
+    
 }
 @media only screen and (min-width: 769px) and (max-width: 979px) {
 

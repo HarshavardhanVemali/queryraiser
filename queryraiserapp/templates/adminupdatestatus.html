@@ -13,7 +13,14 @@
 <body>
     <header>
         <div class="header-container">
-            <div id="college_title">
+            <div id="college_title" style="display: flex;align-items: center;">
+                <div class="menu-toggle" style="margin-right: 5px;margin-top: 3px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#888" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" onclick="toggleSidebar()">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </div>
                 <div id="college_logo">
                     <a href="https://www.mvgrce.com/" target="_blank">
                         <img src="{% static 'images/college_logo.png' %}" alt="college_logo">
@@ -50,7 +57,7 @@
             </div>
         </div>
         <div id="overlay-container"></div>
-        <nav class="sidebar">
+        <nav class="sidebar" id="mySidebar">
             <ul>
                 <li><a class="nav-link" href="{% url 'admindashboard' %}" ><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart">
                     <line x1="12" y1="20" x2="12" y2="10"></line>
@@ -198,7 +205,7 @@
             </ul>
         </nav>
         <main class="content"> 
-            <div class="subnav d-flex justify-content-between align-items-center"> 
+            <div class="subnav d-flex justify-content-between align-items-center" id="updatemenu"> 
                 <div>
                     <h3>Update Complaint Status</h3>
                 </div>

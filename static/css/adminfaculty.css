@@ -208,13 +208,75 @@
     margin-right: 10px;
 }
 @media only screen and (max-width: 375px) {
-
+    #facultytable th, #facultytable td {
+        padding: 10px;
+        font-size: 13px;
+        min-width: 120px;
+    }
+    
+    #facultytable th {
+        font-size: 13px;
+        font-weight: 590;
+    }
+    
+    #facultytable td img {
+        min-width: 30px;
+        min-width: 30px;
+        max-width: 30px;
+        max-height: 30px;
+    }
+    a:focus {
+        outline: none;
+    }
+    
 }
+
 @media only screen and (min-width: 376px) and (max-width: 480px) {
-
+    #facultytable th, #facultytable td {
+        padding: 12px; 
+        font-size: 14px; 
+        min-width: 130px; 
+    }
+    
+    #facultytable th {
+        font-size: 14px; 
+        font-weight: 590;
+    }
+    
+    #facultytable td img {
+        min-width: 30px; 
+        min-width: 30px;
+        max-width: 30px;
+        max-height: 30px;
+    }
+    a:focus {
+        outline: none;
+    }
+    
 }
-@media only screen and (min-width: 481px) and (max-width: 768px) {
 
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    #facultytable th, #facultytable td {
+        padding: 14px; 
+        font-size: 15px; 
+        min-width: 140px; 
+    }
+    
+    #facultytable th {
+        font-size: 16px; 
+        font-weight: 590;
+    }
+    
+    #facultytable td img {
+        min-width: 40px; 
+        min-width: 40px;
+        max-width: 40px;
+        max-height: 40px;
+    }
+    a:focus {
+        outline: none;
+    }
+    
 }
 @media only screen and (min-width: 769px) and (max-width: 979px) {
 
