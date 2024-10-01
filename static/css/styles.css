@@ -318,6 +318,14 @@ footer a:hover{
     footer a:hover{
         text-decoration: none;
     }
+    .btn-login:hover {
+        background-color: none;
+    }
+    @media (hover: none) and (pointer: coarse) {
+        button:focus {
+            outline: none;
+        }
+    }
 }
 @media only screen and (min-width: 481px) and (max-width: 768px) {
     #college_title {
@@ -372,6 +380,14 @@ footer a:hover{
     footer a:hover{
         text-decoration: none;
     }
+    .btn-login:hover {
+        background-color: none;
+    }
+    @media (hover: none) and (pointer: coarse) {
+        button:focus {
+            outline: none;
+        }
+    }
 }
 
 @media only screen and (min-width: 769px) and (max-width: 979px) {
@@ -418,6 +434,14 @@ footer a:hover{
     }
     footer a:hover{
         text-decoration: none;
+    }
+    .btn-login:hover {
+        background-color: none;
+    }
+    @media (hover: none) and (pointer: coarse) {
+        button:focus {
+            outline: none;
+        }
     }
 }
 
