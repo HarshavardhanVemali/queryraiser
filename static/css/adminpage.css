@@ -210,7 +210,7 @@ header {
     transition: transform 0.3s ease-in-out;
 }
 .sidebar .logout-item :hover{
-    background-color: #ea4335;
+    background-color: #ff5200;
     color: white;
 }
 .content {
@@ -315,7 +315,7 @@ body.dark-mode header{
     -webkit-transition: width .2s ease;
     -o-transition: width .2s ease;
     transition: width .2s ease;
-    background-color: #fff;;
+    background-color: #fff;
 }
 
 .nav-list {
